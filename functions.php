@@ -272,6 +272,10 @@ else
 	}
 	
    }
+	
+	if( !( isset($_SESSION['vhdl_msg']) && is_array($_SESSION['vhdl_msg']) ) ){
+		$_SESSION['vhdl_msg'] = array();
+	}
 
 } //end function session dasygenis
 

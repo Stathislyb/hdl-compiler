@@ -1,120 +1,58 @@
+
 <?php
-/*
-   Copyright 2014, Minas Dasygenis, http://arch.icte.uowm.gr/mdasygenis
+// load necessary files
+include('loader.php');
 
-   Licensed under the Apache License, Version 2.0 (the "License");
-   you may not use this file except in compliance with the License.
-   You may obtain a copy of the License at
+// init. objects
+$db = new Database;
+$messages = new Messages;
 
-       http://www.apache.org/licenses/LICENSE-2.0
-
-   Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   See the License for the specific language governing permissions and
-   limitations under the License.
-*/
-?>
-<?php
-require_once('functions.php');
-session_dasygenis(); ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<title>HDL Everywhere: A web based VHDL Compiler &amp; Simulator</title>
-
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
-<meta http-equiv="Content-Style-Type" content="text/css" /> 
-<meta http-equiv="Content-Script-Type" content="text/javascript" /> 
-<link rel="stylesheet" type="text/css" href="index.css" media="screen" /> 
-
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/
-libs/jquery/1.3.0/jquery.min.js"></script>
-
-<script type="text/javascript" src="functions.js"></script>
-
-</head>
-<body id="body1" bgcolor="white" text="black">
-<div id="Content">
-<h1>HDL Everywhere</h1>
-<h2>Welcome to the web based VHDL Compiler &amp; Simulator!</h2>
-
-<table style="width: 100%;" cellpadding="0" cellspacing="10">
-<tbody>
-<tr class="data" valign="top">
-<td colspan="2">
-<div class="status">Status:
-<?php require('status.php'); ?>
-</div>
-</td>
-</tr>
-
-<tr>
-<td>
-Step1
-</td>
-
-<td>
-<div class="topic1" id="pid">
-<?php require('sid.php');?>
-</div>
-</td>
-</tr>
-
-<?php 
-//Only show the rest of the forms if PID is set
-	if (empty($_SESSION['PID'])) 
-	{
-	$_SESSION['PID']=0; 
-	print '<tr><td colspan="2"><div class="red">No session set. Please Set or Create a SessionID!</div></td></tr>';
+// confirm log in information (id > 0){if given)
+if(isset($_POST["login"]) && $_POST["login"]==1){
+	$id = $db->confirm_user($_POST["username"],$_POST["password"]);
+	if($id > 0){
+		$_SESSION['vhdl_user']['username'] = $_POST["username"];
+		$_SESSION['vhdl_user']['id'] = $id;
+		$_SESSION['vhdl_user']['loged_in'] = 1;
+		array_push($_SESSION['vhdl_msg'],"success_login");
+	}else{
+		array_push($_SESSION['vhdl_msg'],"fail_login");
 	}
-else
-{
-
-echo '<tr><td>Step2</td><td>';
-echo '<div class="topic2" id="files">';
-require('files.php');
-echo '</div></td></tr>';
-
-
-echo '<tr><td>Step3</td><td><div class="topic1" id="listfiles">';
-require('listfiles.php');
-echo '</div></td></tt>';
-
-echo '<tr><td>Step4</td><td><div class="topic2" id="link">';
-require('link.php');
-echo '</div></td></tr>';
+}
+// login pseudo user with session id
+if(isset($_SESSION['PID']) && $_SESSION['PID']>0){
+	$_SESSION['vhdl_user']['username'] = "Guest";
+	$_SESSION['vhdl_user']['loged_in'] = 1;
 }
 
+// log user out (if requested)
+if(isset($_POST["logout"]) && $_POST["logout"]==1){
+	unset($_SESSION['vhdl_user']);
+	unset($_SESSION['PID']);
+	setcookie("PID", 0, time()-3600);
+}
+
+// register user
+if(isset($_POST["register"]) && $_POST["register"]==1){
+	if($_POST["password"] == $_POST["password_confirm"]){
+		if($db->register_user($_POST["username"],$_POST["password"])){
+			array_push($_SESSION['vhdl_msg'], 'success_register');	
+		}else{
+			array_push($_SESSION['vhdl_msg'], 'fail_register');
+		}
+	}else{
+		array_push($_SESSION['vhdl_msg'], 'fail_register_confirm');	
+	}
+}
+
+// display the appropriate home page for logged in and out users
+if(isset($_SESSION['vhdl_user']['loged_in']) && $_SESSION['vhdl_user']['loged_in']==1){
+	include('main_loggedin.php');
+}else{
+	include('main_loggedout.php');
+}
+
+// display messages from the user's last interaction
+$messages->display_msg($_SESSION['vhdl_msg']);
+
 ?>
-
-
-</tbody>
-</table>
-<div id="copyright">
-Copyright 2014,<br />
-Non-disclosed information for blind review
-</div>
-
-<div id="copyright2" style="visibility: hidden">
-Copyright 2014, Minas Dasygenis, <a href="http://arch.icte.uowm.gr/mdasygenis"> http://arch.icte.uowm.gr/mdasygenis</a>.
-<br />
-Licensed under the Apache License, Version 2.0 (the "License").
-http://www.apache.org/licenses/LICENSE-2.0
-</div>
-<div id="download">
-The source code can be downloaded [<a href="..\webvhdl-trunk.tar.gz">Here</a>].
-
-    <a href="http://validator.w3.org/check?uri=referer"><img
-      src="http://www.w3.org/Icons/valid-xhtml10" alt="Valid XHTML 1.0 Transitional" height="31" width="88" /></a>
-
- <a href="http://jigsaw.w3.org/css-validator/check/referer">
-        <img style="border:0;width:88px;height:31px"
-            src="http://jigsaw.w3.org/css-validator/images/vcss"
-            alt="Valid CSS!" />
-	</a>
-
-</div>
-</div>
-</body>
-</html>
