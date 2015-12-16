@@ -1,0 +1,34 @@
+<?php
+
+class Messages {
+	// Database class variables
+	public $messages=array(
+	"fail_login" => "The Username or Password were wrong.",
+	"success_login" => "Logged in successfully.",
+	"success_register" => "Registered user successfully. An e-mail will be sent to the adress you provided with details about activating your account.",
+	"fail_register" => "The user could not be registered. Make sure the values you gave were correct and try a different username.",
+	"fail_register_confirm" => "The confirmation password did not match.",
+	"invalid_mail" => "The e-mail address you provided was invalid."
+	);
+	
+	// Class constractor function
+	public function __construct(){
+	}
+	// Class destractor function
+	public function __destruct(){
+		$this->messages = null;
+	}
+	
+	// Display messages
+	public function display_msg($msg_codes_array) {
+		foreach($msg_codes_array as $msg_id){
+			echo $this->messages[$msg_id]."<br />";
+		}
+		$_SESSION['vhdl_msg']=array();
+	}
+}
+
+
+
+
+?>
