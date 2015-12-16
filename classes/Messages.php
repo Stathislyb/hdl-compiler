@@ -8,7 +8,10 @@ class Messages {
 	"success_register" => "Registered user successfully. An e-mail will be sent to the adress you provided with details about activating your account.",
 	"fail_register" => "The user could not be registered. Make sure the values you gave were correct and try a different username.",
 	"fail_register_confirm" => "The confirmation password did not match.",
+<<<<<<< HEAD
 	"invalid_mail" => "The e-mail address you provided was invalid."
+=======
+>>>>>>> 00fa1210890c7e9040427907264ca63341466945
 	);
 	
 	// Class constractor function

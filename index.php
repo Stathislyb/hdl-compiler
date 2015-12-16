@@ -1,6 +1,9 @@
 
 <?php
+<<<<<<< HEAD
 
+=======
+>>>>>>> 00fa1210890c7e9040427907264ca63341466945
 // load necessary files
 include('loader.php');
 
@@ -35,6 +38,7 @@ if(isset($_POST["logout"]) && $_POST["logout"]==1){
 
 // register user
 if(isset($_POST["register"]) && $_POST["register"]==1){
+<<<<<<< HEAD
 	if(filter_var($_POST["email"], FILTER_VALIDATE_EMAIL) && strlen($_POST["email"])<=50 ) {
 		if($_POST["password"] == $_POST["password_confirm"]){
 			if($db->register_user($_POST["username"],$_POST["password"],$_POST["email"])){
@@ -61,10 +65,29 @@ if(isset($_SESSION['vhdl_user']['loged_in']) && $_SESSION['vhdl_user']['loged_in
 	include('theme/header.php');
 	include('pages/main_loggedout.php');
 	include('theme/footer.php');
+=======
+	if($_POST["password"] == $_POST["password_confirm"]){
+		if($db->register_user($_POST["username"],$_POST["password"])){
+			array_push($_SESSION['vhdl_msg'], 'success_register');	
+		}else{
+			array_push($_SESSION['vhdl_msg'], 'fail_register');
+		}
+	}else{
+		array_push($_SESSION['vhdl_msg'], 'fail_register_confirm');	
+	}
+}
+
+// display the appropriate home page for logged in and out users
+if(isset($_SESSION['vhdl_user']['loged_in']) && $_SESSION['vhdl_user']['loged_in']==1){
+	include('main_loggedin.php');
+}else{
+	include('main_loggedout.php');
+>>>>>>> 00fa1210890c7e9040427907264ca63341466945
 }
 
 // display messages from the user's last interaction
 $messages->display_msg($_SESSION['vhdl_msg']);
+<<<<<<< HEAD
 if(isset($_GET)){
 	echo "<br/>GET :<br/>";
 	var_dump($_GET);
@@ -80,5 +103,7 @@ if(isset($_SESSION)){
 	var_dump($_SESSION);
 	echo "<br/>";
 }
+=======
+>>>>>>> 00fa1210890c7e9040427907264ca63341466945
 
 ?>

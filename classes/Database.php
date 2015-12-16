@@ -40,6 +40,7 @@ class Database {
 		return 0;
 	}
 	
+<<<<<<< HEAD
 	// Register user in database, returns id on success and false on failure
 	public function register_user($username, $password, $email) {
 		$password = md5($password);
@@ -55,6 +56,15 @@ class Database {
 		$statement->execute();
 		return $statement->fetchAll();
 	}
+=======
+	// Register user in database
+	public function register_user($username, $password) {
+		$password = md5($password);
+		$query = "INSERT INTO users (username, password) Values('".$username."','".$password."')"; 
+		$statement = $this->conn->prepare($query); 
+		return $statement->execute();
+	}
+>>>>>>> 00fa1210890c7e9040427907264ca63341466945
 }
 
 
