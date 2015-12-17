@@ -40,22 +40,13 @@ class Database {
 		return 0;
 	}
 	
-<<<<<<< HEAD
 	// Register user in database, returns id on success and 0 on failure
-=======
-<<<<<<< HEAD
-	// Register user in database, returns id on success and false on failure
->>>>>>> ac9df3641598402b41bfd9320c1517fda865170b
 	public function register_user($username, $password, $email) {
 		$password = md5($password);
 		$query = "INSERT INTO users (username, password, email) Values('".$username."','".$password."','".$email."')"; 
 		$statement = $this->conn->prepare($query); 
-<<<<<<< HEAD
 		$statement->execute();
 		return $this->conn->lastInsertId();
-=======
-		return $statement->execute();
->>>>>>> ac9df3641598402b41bfd9320c1517fda865170b
 	}
 	
 	// Select the user's projects, returns a list of the projects on success and false on failure
@@ -65,7 +56,22 @@ class Database {
 		$statement->execute();
 		return $statement->fetchAll();
 	}
-<<<<<<< HEAD
+	
+	// Select project by short-code, returns the project on success and false on failure
+	public function get_project($project_code) {
+		$query = "SELECT * FROM projects WHERE projects.short_code = '".$project_code."'"; 
+		$statement = $this->conn->prepare($query); 
+		$statement->execute();
+		return $statement->fetch();
+	}
+	
+	// Select project editors by project id, returns the project's editors on success and false on failure
+	public function get_project_editors($project_id) {
+		$query = "SELECT users.username,projects_editors.user_type FROM users JOIN projects_editors ON projects_editors.user_id = users.id WHERE projects_editors.project_id = '".$project_id."'"; 
+		$statement = $this->conn->prepare($query); 
+		$statement->execute();
+		return $statement->fetchAll();
+	}
 	
 	// Create new project, returns id on success and 0 on failure
 	public function create_project($name, $description, $short_code) {
@@ -86,17 +92,13 @@ class Database {
 		$statement->execute();
 		return $this->conn->lastInsertId();
 	}
-=======
-=======
-	// Register user in database
-	public function register_user($username, $password) {
-		$password = md5($password);
-		$query = "INSERT INTO users (username, password) Values('".$username."','".$password."')"; 
+	
+	// Create new project, returns true on success and false on failure
+	public function edit_project($name, $description, $short_code, $project_id) {
+		$query = "UPDATE projects SET name='".$name."', description='".$description."', short_code='".$short_code."' WHERE projects.id='".$project_id."'"; 
 		$statement = $this->conn->prepare($query); 
 		return $statement->execute();
 	}
->>>>>>> 00fa1210890c7e9040427907264ca63341466945
->>>>>>> ac9df3641598402b41bfd9320c1517fda865170b
 }
 
 

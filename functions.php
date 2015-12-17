@@ -47,17 +47,8 @@ $GLOBALS['BASE']=$BASE;
 
 //Check the existance of the BASE directory and the JOBDIRECTORY
 if ( ! file_exists($BASE) ) { mkdir($BASE,0777,true);echo "TEMP1_MKD"; } 
-<<<<<<< HEAD
 if ( ! file_exists($JOBDIRECTORY) ) { mkdir($JOBDIRECTORY,0777,true); echo "TEMP2_MKD2"; }
 if ( ! file_exists($STATUSDIR) ) { mkdir($STATUSDIR,0777,true); echo "TEMP3_MKD3"; }
-=======
-<<<<<<< HEAD
-if ( ! file_exists($JOBDIRECTORY) ) { mkdir($JOBDIRECTORY,0777,true); echo "TEMP2_MKD2"; }
-if ( ! file_exists($STATUSDIR) ) { mkdir($STATUSDIR,0777,true); echo "TEMP3_MKD3"; }
-=======
-if ( ! file_exists($JOBDIRECTORY) ) { mkdir($JOBDIRECTORY,0777,true); echo "TEMP2_MKD2"; } 
->>>>>>> 00fa1210890c7e9040427907264ca63341466945
->>>>>>> ac9df3641598402b41bfd9320c1517fda865170b
 
 
 
@@ -794,7 +785,6 @@ unset($_SESSION['reload']);
 }
 
 }
-<<<<<<< HEAD
 
 function create_short_code($string){
 	$replace_pairs = array(
@@ -868,6 +858,4 @@ function create_short_code($string){
 	$string = preg_replace("/-+/","-",$string);
 	return $string;
 }
-=======
->>>>>>> ac9df3641598402b41bfd9320c1517fda865170b
 ?>

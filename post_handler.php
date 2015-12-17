@@ -51,11 +51,29 @@ if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST["post_action"])){
 			if($project_id > 0){
 				if( $db->add_project_editor($_SESSION['vhdl_user']['username'], $project_id, 1) >0 ){
 					array_push($_SESSION['vhdl_msg'], 'success_project_creation');
+					header("Location:".$BASE_URL."/project/".$_SESSION['vhdl_user']['username']."/".$short_code);
+					exit();
 				}else{
 					array_push($_SESSION['vhdl_msg'], 'fail_project_creation');
 				}
 			}else{
 				array_push($_SESSION['vhdl_msg'], 'fail_project_creation');
+			}
+		break;
+			
+		// Edit Project
+		case "edit_project":
+			$short_code = create_short_code($_POST['project_name']);
+			if( $db->edit_project($_POST['project_name'], $_POST['project_description'], $short_code, $_POST['project_id']) ){
+				//if( $db->add_project_editor($_SESSION['vhdl_user']['username'], $project_id, 1) >0 ){
+					array_push($_SESSION['vhdl_msg'], 'success_project_edit');
+					header("Location:".$BASE_URL."/edit-project/".$short_code);
+					exit();
+				//}else{
+					//array_push($_SESSION['vhdl_msg'], 'fail_project_edit');
+				//}
+			}else{
+				array_push($_SESSION['vhdl_msg'], 'fail_project_edit');
 			}
 		break;
 	}

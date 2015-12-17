@@ -1,3 +1,6 @@
+<?php
+if($user->id > 0){
+?>
 <tr>
 	<td>
 		Step1
@@ -15,3 +18,19 @@
 		</div>
 	</td>
 </tr>
+<?php
+}else{
+?>
+<tr>
+	<td>
+		Step1
+	</td>
+	<td>
+		<div class="topic1" id="pid">
+			You need to log in to access this feature.
+		</div>
+	</td>
+</tr>
+<?php	
+}
+?>

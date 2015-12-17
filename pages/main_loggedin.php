@@ -16,7 +16,7 @@
 */
 ?>
 <?php 
-	$projects = $db->get_user_projects($user['id']);
+	$projects = $db->get_user_projects($user->id);
 ?>
 
 <tr>
@@ -60,7 +60,6 @@ echo '</div></td></tr>';
 ?>
 	
 <tr>
-<<<<<<< HEAD
 	<td>
 		User
 	</td>
@@ -70,7 +69,9 @@ echo '</div></td></tr>';
 			<?php 
 				foreach ($projects as $project) {
 
-					echo "<a href='project/".$project['short_code']."'>".$project['name']."</a> (<a href='/edit-project/".$project['short_code']."'>EDIT</a>) <br />".$project['description']."<br /><br />";
+					echo "<a href='project/".$user->username."/".$project['short_code']."'>".$project['name']."</a> 
+					(<a href='/edit-project/".$project['short_code']."'>EDIT</a>) <br />".$project['description'].
+					"<br /><br />";
 
 				}
 			?>
@@ -78,22 +79,5 @@ echo '</div></td></tr>';
 			<a href="/create-project">Create New Project</a>
 		</div>
 	</td>
-=======
-<td>
-User
-</td>
-
-<td>
-<div class="topic1" id="user">
-<?php 
-	foreach ($projects as $project) {
-		
-		echo "<a href='project/".$project['short-code']."'>".$project['name']."</a><br />".$project['description']."<br /><br />";
-		
-	}
-?>
-</div>
-</td>
->>>>>>> ac9df3641598402b41bfd9320c1517fda865170b
 </tr>
 

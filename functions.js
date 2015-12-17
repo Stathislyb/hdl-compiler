@@ -17,5 +17,5 @@
 var auto_refresh = setInterval(
 function ()
 {
-$('#statusDIV').load('status.php').fadeIn("slow");
+//$('#statusDIV').load('status.php').fadeIn("slow");
 }, 5000); // refresh every 5000 milliseconds
