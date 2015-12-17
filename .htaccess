@@ -6,9 +6,15 @@ RewriteEngine On
 
 RewriteRule ^()$ index.php [NC,L]
 RewriteRule ^(edit-project|libraries)/([^/]+)[\/]?$ index.php?action=$1&id=$2 [NC,L]
+<<<<<<< HEAD
 RewriteRule ^project/([^/]+)/([^/]+)/(dir|file)/([^/]+)[\/]?$ index.php?action=project&type=3&user=$1&project=$2&filetype=$3&file=$4 [NC,L]
 RewriteRule ^project/([^/]+)/([^/]+)[\/]?$ index.php?action=project&type=2&user=$1&project=$2 [NC,L]
 RewriteRule ^project/([^/]+)[\/]?$ index.php?action=project&type=1&user=$1 [NC,L]
+=======
+RewriteRule ^project/([^/]+)/([^/]+)/(dir|file)/([^/]+)[\/]?$ index.php?action=project3&user=$1&project=$2&filetype=$3&file=$4 [NC,L]
+RewriteRule ^project/([^/]+)/([^/]+)[\/]?$ index.php?action=project2&user=$1&project=$2 [NC,L]
+RewriteRule ^project/([^/]+)[\/]?$ index.php?action=project1&user=$1 [NC,L]
+>>>>>>> ac9df3641598402b41bfd9320c1517fda865170b
 RewriteRule ^(profile|create-project|libraries|edit-project|project) index.php?action=$1 [NC,L]
 
 # Handle common HTTP status codes

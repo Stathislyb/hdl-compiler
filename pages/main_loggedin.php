@@ -60,6 +60,7 @@ echo '</div></td></tr>';
 ?>
 	
 <tr>
+<<<<<<< HEAD
 	<td>
 		User
 	</td>
@@ -77,5 +78,22 @@ echo '</div></td></tr>';
 			<a href="/create-project">Create New Project</a>
 		</div>
 	</td>
+=======
+<td>
+User
+</td>
+
+<td>
+<div class="topic1" id="user">
+<?php 
+	foreach ($projects as $project) {
+		
+		echo "<a href='project/".$project['short-code']."'>".$project['name']."</a><br />".$project['description']."<br /><br />";
+		
+	}
+?>
+</div>
+</td>
+>>>>>>> ac9df3641598402b41bfd9320c1517fda865170b
 </tr>
 

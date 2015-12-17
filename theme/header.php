@@ -19,7 +19,11 @@ libs/jquery/1.3.0/jquery.min.js"></script>
 <h1>HDL Everywhere</h1>
 <h2>Welcome to the web based VHDL Compiler &amp; Simulator!</h2>
 <form action='' method='post'>
+<<<<<<< HEAD
 <button type="submit" name="post_action" value='logout'>Logout</button>
+=======
+<button type="submit" name="logout" value='1'>Logout</button>
+>>>>>>> ac9df3641598402b41bfd9320c1517fda865170b
 </form>
 
 <table style="width: 100%;" cellpadding="0" cellspacing="10">

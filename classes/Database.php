@@ -40,13 +40,22 @@ class Database {
 		return 0;
 	}
 	
+<<<<<<< HEAD
 	// Register user in database, returns id on success and 0 on failure
+=======
+<<<<<<< HEAD
+	// Register user in database, returns id on success and false on failure
+>>>>>>> ac9df3641598402b41bfd9320c1517fda865170b
 	public function register_user($username, $password, $email) {
 		$password = md5($password);
 		$query = "INSERT INTO users (username, password, email) Values('".$username."','".$password."','".$email."')"; 
 		$statement = $this->conn->prepare($query); 
+<<<<<<< HEAD
 		$statement->execute();
 		return $this->conn->lastInsertId();
+=======
+		return $statement->execute();
+>>>>>>> ac9df3641598402b41bfd9320c1517fda865170b
 	}
 	
 	// Select the user's projects, returns a list of the projects on success and false on failure
@@ -56,6 +65,7 @@ class Database {
 		$statement->execute();
 		return $statement->fetchAll();
 	}
+<<<<<<< HEAD
 	
 	// Create new project, returns id on success and 0 on failure
 	public function create_project($name, $description, $short_code) {
@@ -76,6 +86,17 @@ class Database {
 		$statement->execute();
 		return $this->conn->lastInsertId();
 	}
+=======
+=======
+	// Register user in database
+	public function register_user($username, $password) {
+		$password = md5($password);
+		$query = "INSERT INTO users (username, password) Values('".$username."','".$password."')"; 
+		$statement = $this->conn->prepare($query); 
+		return $statement->execute();
+	}
+>>>>>>> 00fa1210890c7e9040427907264ca63341466945
+>>>>>>> ac9df3641598402b41bfd9320c1517fda865170b
 }
 
 

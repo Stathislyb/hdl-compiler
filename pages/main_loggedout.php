@@ -39,7 +39,11 @@ Step1
 				Username:<input type="text" name="username" size='25' /><br />
 				Password:<input type="password" name="password" size='25' />
 				<br />
+<<<<<<< HEAD
 				<button type="submit" name="post_action" value='login'>Login</button>
+=======
+				<button type="submit" name="login" value='1'>Login</button>
+>>>>>>> ac9df3641598402b41bfd9320c1517fda865170b
 			</form>
 		</div>
 	</td>
@@ -58,7 +62,11 @@ Step1
 				Password:<input type="password" name="password" size='25' /><br />
 				Confirm Password:<input type="password" name="password_confirm" size='25' />
 				<br />
+<<<<<<< HEAD
 				<button type="submit" name="post_action" value='register'>Register</button>
+=======
+				<button type="submit" name="register" value='1'>Register</button>
+>>>>>>> ac9df3641598402b41bfd9320c1517fda865170b
 			</form>
 		</div>
 	</td>
