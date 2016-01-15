@@ -69,14 +69,14 @@ echo '</div></td></tr>';
 			<?php 
 				foreach ($projects as $project) {
 
-					echo "<a href='project/".$user->username."/".$project['short_code']."'>".$project['name']."</a> 
-					(<a href='/edit-project/".$project['short_code']."'>EDIT</a>) <br />".$project['description'].
+					echo "<a href='".$BASE_URL."/project/".$user->username."/".$project['short_code']."'>".$project['name']."</a> 
+					(<a href='".$BASE_URL."/edit-project/".$project['short_code']."'>EDIT</a>) <br />".$project['description'].
 					"<br /><br />";
 
 				}
 			?>
 			<br/>
-			<a href="/create-project">Create New Project</a>
+			<a href="<?php echo $BASE_URL; ?>/create-project">Create New Project</a>
 		</div>
 	</td>
 </tr>

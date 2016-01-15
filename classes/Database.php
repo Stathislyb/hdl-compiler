@@ -57,6 +57,14 @@ class Database {
 		return $statement->fetchAll();
 	}
 	
+	// Select the user's information by search parameter
+	public function get_user_information($user, $search_type) {
+		$query = "SELECT * FROM users WHERE  ".$search_type."= '".$user."'"; 
+		$statement = $this->conn->prepare($query); 
+		$statement->execute();
+		return $statement->fetch();
+	}
+	
 	// Select project by short-code, returns the project on success and false on failure
 	public function get_project($project_code) {
 		$query = "SELECT * FROM projects WHERE projects.short_code = '".$project_code."'"; 
@@ -98,6 +106,14 @@ class Database {
 		$query = "UPDATE projects SET name='".$name."', description='".$description."', short_code='".$short_code."' WHERE projects.id='".$project_id."'"; 
 		$statement = $this->conn->prepare($query); 
 		return $statement->execute();
+	}
+	
+	// Select the user's projects, returns a list of the projects on success and false on failure
+	public function get_project_files($user_id, $project_shortcode) {
+		$query = "SELECT project_files.* FROM projects JOIN projects_editors ON projects_editors.project_id = projects.id JOIN project_files ON project_files.project_id = projects.id WHERE projects_editors.user_id = '".$user_id."' AND projects_editors.user_type = '1' AND projects.short_code = '".$project_shortcode."' ORDER BY project_files.type"; 
+		$statement = $this->conn->prepare($query); 
+		$statement->execute();
+		return $statement->fetchAll();
 	}
 }
 
