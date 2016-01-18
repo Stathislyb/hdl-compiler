@@ -1,7 +1,8 @@
 <?php 
 	$search_user = $db->get_user_information($_GET['user'],"username");
 	if($search_user['id'] == $user->id){
-		$files = $db->get_project_files($search_user['id'],$_GET['project'], "/");
+		$dir= "/".$_GET['dir'];
+		$files = $db->get_project_files($search_user['id'],$_GET['project'], $dir);
 ?>
 <tr>
 	<td>
@@ -19,7 +20,7 @@
 				
 				foreach ($files as $file) {
 
-					echo "<a href='".$BASE_URL."/project/".$search_user['username']."/".$_GET['project']."/".$file['type'].$file['relative_path'].$file['name']."'>".$file['name']."</a>"
+					echo "<a href='".$BASE_URL."/project/".$search_user['username']."/".$_GET['project']."/".$file['type'].$file['relative_path']."/".$file['name']."'>".$file['name']."</a>"
 					."<br /><br />";
 
 				}

@@ -109,8 +109,8 @@ class Database {
 	}
 	
 	// Select the user's projects, returns a list of the projects on success and false on failure
-	public function get_project_files($user_id, $project_shortcode) {
-		$query = "SELECT project_files.* FROM projects JOIN projects_editors ON projects_editors.project_id = projects.id JOIN project_files ON project_files.project_id = projects.id WHERE projects_editors.user_id = '".$user_id."' AND projects_editors.user_type = '1' AND projects.short_code = '".$project_shortcode."' ORDER BY project_files.type"; 
+	public function get_project_files($user_id, $project_shortcode, $dir) {
+		$query = "SELECT project_files.* FROM projects JOIN projects_editors ON projects_editors.project_id = projects.id JOIN project_files ON project_files.project_id = projects.id WHERE projects_editors.user_id = '".$user_id."' AND projects_editors.user_type = '1' AND projects.short_code = '".$project_shortcode."' AND relative_path='".$dir."' ORDER BY project_files.type"; 
 		$statement = $this->conn->prepare($query); 
 		$statement->execute();
 		return $statement->fetchAll();

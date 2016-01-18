@@ -1,7 +1,8 @@
 <?php 
 	$search_user = $db->get_user_information($_GET['user'],"username");
 	if($search_user['id'] == $user->id){
-		$files = $db->get_project_files($search_user['id'],$_GET['project'], "/");
+		$dir= "/".$_GET['file'];
+		$files = $db->get_project_files($search_user['id'],$_GET['project'], $dir);
 ?>
 <tr>
 	<td>
