@@ -3,16 +3,18 @@
 class Messages {
 	// Database class variables
 	public $messages=array(
-	"fail_login" => "The Username or Password were wrong.",
-	"success_login" => "Logged in successfully.",
-	"success_register" => "Registered user successfully. An e-mail will be sent to the adress you provided with details about activating your account.",
-	"fail_register" => "The user could not be registered. Make sure the values you gave were correct and try a different username.",
-	"fail_register_confirm" => "The confirmation password did not match.",
-	"invalid_mail" => "The e-mail address you provided was invalid.",
-	"success_project_creation" => "The project was created successfully.",
-	"fail_project_creation" => "The project could not be created.",
-	"success_project_edit" => "The project was edited successfully.",
-	"fail_project_edit" => "The project changes could not be saved."
+		"fail_login" => "The Username or Password were wrong.",
+		"success_login" => "Logged in successfully.",
+		"success_register" => "Registered user successfully. An e-mail will be sent to the adress you provided with details about activating your account.",
+		"fail_register" => "The user could not be registered. Make sure the values you gave were correct and try a different username.",
+		"fail_register_confirm" => "The confirmation password did not match.",
+		"invalid_mail" => "The e-mail address you provided was invalid.",
+		"success_project_creation" => "The project was created successfully.",
+		"fail_project_creation" => "The project could not be created.",
+		"success_project_edit" => "The project was edited successfully.",
+		"fail_project_edit" => "The project changes could not be saved.",
+		"success_create_dir" => "The directory was created successfully.",
+		"fail_create_dir" => "The directory could not be created."
 	);
 	
 	// Class constractor function

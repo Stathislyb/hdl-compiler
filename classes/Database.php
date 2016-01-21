@@ -65,9 +65,17 @@ class Database {
 		return $statement->fetch();
 	}
 	
+	// Select project by id, returns the project on success and false on failure
+	public function get_project($project_id) {
+		$query = "SELECT * FROM projects WHERE id='".$project_id."' "; 
+		$statement = $this->conn->prepare($query); 
+		$statement->execute();
+		return $statement->fetch();
+	}
+	
 	// Select project by short-code, returns the project on success and false on failure
-	public function get_project($project_code) {
-		$query = "SELECT * FROM projects WHERE projects.short_code = '".$project_code."'"; 
+	public function get_project_shortcode($project_code, $user_id) {
+		$query = "SELECT projects.* FROM projects JOIN projects_editors ON projects_editors.project_id = projects.id WHERE projects_editors.user_id='".$user_id."' AND projects.short_code = '".$project_code."'"; 
 		$statement = $this->conn->prepare($query); 
 		$statement->execute();
 		return $statement->fetch();
@@ -101,6 +109,35 @@ class Database {
 		return $this->conn->lastInsertId();
 	}
 	
+	// Add multiple editors to the project, returns true on success and flase on failure
+	public function add_project_multi_editors($users, $project_id) {
+		$users_array = explode(",", $users);
+		
+		$query_remove_old = "DELETE FROM projects_editors WHERE user_type = '0' AND project_id = '".$project_id."' "; 
+		$statement = $this->conn->prepare($query_remove_old); 
+		$statement->execute();
+		
+		$query_verify = "SELECT user_id FROM projects_editors WHERE user_type = '1' AND project_id = '".$project_id."' "; 
+		$statement = $this->conn->prepare($query_verify); 
+		$statement->execute();
+		$result = $statement->fetch();
+		
+		foreach($users_array as $user){
+			$query = "SELECT id FROM users WHERE username = '".$user."'"; 
+			$statement = $this->conn->prepare($query); 
+			$statement->execute();
+			$user_res = $statement->fetch();
+			
+			if($result['user_id'] != $user_res['id']){
+				$query_insert = "INSERT INTO projects_editors (user_id, project_id, user_type) Values('".$user_res['id']."','".$project_id."','0')"; 
+				$statement = $this->conn->prepare($query_insert); 
+				$statement->execute();
+			}
+		}
+				
+		return;
+	}
+	
 	// Create new project, returns true on success and false on failure
 	public function edit_project($name, $description, $short_code, $project_id) {
 		$query = "UPDATE projects SET name='".$name."', description='".$description."', short_code='".$short_code."' WHERE projects.id='".$project_id."'"; 
@@ -114,6 +151,14 @@ class Database {
 		$statement = $this->conn->prepare($query); 
 		$statement->execute();
 		return $statement->fetchAll();
+	}
+	
+	// Add directory in database
+	public function add_directory($dir_name, $project_id, $current_dir) {
+		$query = "INSERT INTO project_files (name, project_id, type, relative_path) Values('".$dir_name."','".$project_id."' ,'directory' ,'".$current_dir."')"; 
+		$statement = $this->conn->prepare($query); 
+		$statement->execute();
+		return $this->conn->lastInsertId();
 	}
 }
 

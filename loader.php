@@ -1,5 +1,6 @@
 <?php
 $BASE_URL = "http://".$_SERVER['SERVER_NAME']."";
+$BASE_DIR = "/home/stathis/hdl-compiler/";
 
 require_once('classes/Database.php');
 require_once('classes/Messages.php');

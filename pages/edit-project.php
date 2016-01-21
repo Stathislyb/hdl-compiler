@@ -1,5 +1,5 @@
 <?php 
-	$project = $db->get_project($_GET['short_code']);
+	$project = $db->get_project_shortcode($_GET['short_code'], $_SESSION['vhdl_user']['id']);
 	$editors = $db->get_project_editors($project['id']);
 	
 	function list_editors($editors){
