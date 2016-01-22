@@ -22,9 +22,10 @@ if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST["post_action"])){
 
 		// log user out (if requested)
 		case "logout":
+			$pid="0";
+			setcookie("PID", 0, time()-3600);
 			unset($_SESSION['vhdl_user']);
 			unset($_SESSION['PID']);
-			setcookie("PID", 0, time()-3600);
 		break;
 
 		// register user

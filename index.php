@@ -5,11 +5,13 @@
 include('loader.php');
 
 // login pseudo user with session id
+/*
 if(isset($_SESSION['PID']) && $_SESSION['PID']>0){
 	$_SESSION['vhdl_user']['username'] = "Guest";
 	$_SESSION['vhdl_user']['id'] = "0";
 	$_SESSION['vhdl_user']['loged_in'] = 1;
 }
+*/
 
 if( isset($_SESSION['vhdl_user']) ){
 	$user = new User($_SESSION['vhdl_user']);
@@ -27,6 +29,7 @@ if(isset($_SESSION['vhdl_user']['loged_in']) && $_SESSION['vhdl_user']['loged_in
 }
 
 include('theme/header.php');
+unset($_SESSION['PID']);
 include('pages/'.$included_file);
 include('theme/footer.php');
 

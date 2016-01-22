@@ -16,7 +16,6 @@
 */
 ?>
 <?php
-session_dasygenis();
 require_once('uploadclass.php');
 
 
