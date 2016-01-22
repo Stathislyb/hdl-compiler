@@ -14,7 +14,9 @@ class Messages {
 		"success_project_edit" => "The project was edited successfully.",
 		"fail_project_edit" => "The project changes could not be saved.",
 		"success_create_dir" => "The directory was created successfully.",
-		"fail_create_dir" => "The directory could not be created."
+		"fail_create_dir" => "The directory could not be created.",
+		"success_create_file" => "The file was created successfully.",
+		"fail_create_file" => "The file could not be created."
 	);
 	
 	// Class constractor function

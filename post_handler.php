@@ -69,7 +69,7 @@ if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST["post_action"])){
 			$project = $db->get_project($_POST['project_id']);
 			$db->add_project_multi_editors($_POST['projet_authors'], $project['id']);
 			
-			if($db->edit_project($_POST['project_name'], $_POST['project_description'], $short_code, $_POST['project_id']) ){
+			if($db->edit_project($_POST['project_name'], $_POST['project_description'], $short_code, $_POST['project_id'], $_POST['project_share']) ){
 				array_push($_SESSION['vhdl_msg'], 'success_project_edit');
 				$old_name = $BASE_DIR.$_SESSION['vhdl_user']['username']."/".$project['short_code'];
 				$new_name = $BASE_DIR.$_SESSION['vhdl_user']['username']."/".$short_code;
@@ -83,22 +83,40 @@ if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST["post_action"])){
 			
 		// Create Directory
 		case "Create_dir":
-			$path = $BASE_DIR.$_SESSION['vhdl_user']['username']."/".$_POST['project_shortcode'].$_POST['current_dir']."/".$_POST['dirfile_name'];
-			echo $path;
-			if(mkdir($path,0700)){
-				$project = $db->get_project_shortcode($_POST['project_shortcode'], $_SESSION['vhdl_user']['id']);
-				
-				if($db->add_directory($_POST['dirfile_name'], $project['id'], $_POST['current_dir']) > 0){
-					array_push($_SESSION['vhdl_msg'], 'success_create_dir');
-					header("Location:".$BASE_URL."/project/".$_SESSION['vhdl_user']['username']."/".$_POST['project_shortcode']."/directory/".$_POST['current_dir']);
-					exit();
-				}else{
-					rmdir($path);
-					array_push($_SESSION['vhdl_msg'], 'fail_create_dir');
+			$name = create_short_code($_POST['dirfile_name']);
+			$path = $BASE_DIR.$_POST['owner']."/".$_POST['project_shortcode'].$_POST['current_dir']."/".$name;
+			$project = $db->get_project_shortcode($_POST['project_shortcode'], $_SESSION['vhdl_user']['id']);
+			$file_exists = $db->check_file_dir_exist($name, $project['id'],  $_POST['current_dir']);
+			if(!$file_exists){
+				if( mkdir($path,0700)){
+					if($db->add_dir_file($name, $project['id'], "directory", $_POST['current_dir']) > 0){
+						array_push($_SESSION['vhdl_msg'], 'success_create_dir');
+						header("Location:".$BASE_URL."/project/".$_POST['owner']."/".$_POST['project_shortcode']."/directory/".$_POST['current_dir']);
+						exit();
+					}
 				}
-			}else{
-				array_push($_SESSION['vhdl_msg'], 'fail_create_dir');
+				rmdir($path);
 			}
+			array_push($_SESSION['vhdl_msg'], 'fail_create_dir');
+		break;
+				
+		// Create File
+		case "Create_file":
+			$name = create_short_code($_POST['dirfile_name']);
+			$path = $BASE_DIR.$_POST['owner']."/".$_POST['project_shortcode'].$_POST['current_dir']."/".$name;
+			$project = $db->get_project_shortcode($_POST['project_shortcode'], $_SESSION['vhdl_user']['id']);
+			$file_exists = $db->check_file_dir_exist($name, $project['id'],  $_POST['current_dir']);
+			if(!$file_exists){
+				if( fopen($path,"w+") && !$file_exists){				
+					if($db->add_dir_file($name, $project['id'], "file", $_POST['current_dir']) > 0){
+						array_push($_SESSION['vhdl_msg'], 'success_create_file');
+						header("Location:".$BASE_URL."/project/".$_POST['owner']."/".$_POST['project_shortcode']."/directory/".$_POST['current_dir']);
+						exit();
+					}
+				}
+				rmdir($path);
+			}
+			array_push($_SESSION['vhdl_msg'], 'fail_create_file');
 		break;
 	}
 	

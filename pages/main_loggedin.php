@@ -17,6 +17,7 @@
 ?>
 <?php 
 	$projects = $db->get_user_projects($user->id);
+	$shared_projects = $db->get_shared_projects($user->id);
 ?>
 
 <tr>
@@ -80,4 +81,25 @@ echo '</div></td></tr>';
 		</div>
 	</td>
 </tr>
+<?php 
+	if( !empty($shared_projects) ){
+?>
+<tr>
+	<td>
+		Shared <br/>with User
+	</td>
+
+	<td>
+		<div class="topic1" id="Shared">
+			<?php 
+				foreach ($shared_projects as $shared_project) {
+					echo "<a href='".$BASE_URL."/project/".$shared_project['owner']."/".$shared_project['short_code']."'>".$shared_project['name']."</a> 
+					(<a href='/project/".$shared_project['owner']."'>".$shared_project['owner']."</a>) <br />".$shared_project['description'].
+					"<br /><br />";
+				}
+			?>
+		</div>
+	</td>
+</tr>
+<?php } ?>
 

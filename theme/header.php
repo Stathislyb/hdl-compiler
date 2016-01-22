@@ -8,8 +8,7 @@
 <meta http-equiv="Content-Script-Type" content="text/javascript" /> 
 <link rel="stylesheet" type="text/css" href="<?php echo $BASE_URL ?>/index.css" media="screen" /> 
 
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/
-libs/jquery/1.3.0/jquery.min.js"></script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.0/jquery.min.js"></script>
 
 <script type="text/javascript" src="<?php echo $BASE_URL ?>/functions.js"></script>
 

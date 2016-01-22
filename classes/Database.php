@@ -51,10 +51,26 @@ class Database {
 	
 	// Select the user's projects, returns a list of the projects on success and false on failure
 	public function get_user_projects($user_id) {
-		$query = "SELECT projects.* FROM projects_editors INNER JOIN projects ON projects_editors.project_id = projects.id WHERE projects_editors.user_id = '".$user_id."'"; 
+		$query = "SELECT projects.* FROM projects_editors INNER JOIN projects ON projects_editors.project_id = projects.id WHERE projects_editors.user_id = '".$user_id."' AND user_type='1'"; 
 		$statement = $this->conn->prepare($query); 
 		$statement->execute();
 		return $statement->fetchAll();
+	}
+	
+	// Select the projects in which the user is an editor but not the owner, returns a list of the projects on success and false on failure
+	public function get_shared_projects($user_id) {
+		$query = "SELECT projects.* FROM projects_editors INNER JOIN projects ON projects_editors.project_id = projects.id WHERE projects_editors.user_id = '".$user_id."' AND user_type='0'"; 
+		$statement = $this->conn->prepare($query); 
+		$statement->execute();
+		$projects = $statement->fetchAll();
+		foreach ($projects as $key=>$project) {
+			$query = "SELECT users.username FROM projects_editors INNER JOIN users ON projects_editors.user_id = users.id WHERE projects_editors.project_id = '".$project['id']."' AND user_type='1'"; 
+			$statement = $this->conn->prepare($query); 
+			$statement->execute();
+			$owner = $statement->fetch();
+			$projects[$key]['owner'] = $owner['username'] ;
+		}
+		return $projects;
 	}
 	
 	// Select the user's information by search parameter
@@ -139,26 +155,52 @@ class Database {
 	}
 	
 	// Create new project, returns true on success and false on failure
-	public function edit_project($name, $description, $short_code, $project_id) {
-		$query = "UPDATE projects SET name='".$name."', description='".$description."', short_code='".$short_code."' WHERE projects.id='".$project_id."'"; 
+	public function edit_project($name, $description, $short_code, $project_id, $share_project) {
+		$query = "UPDATE projects SET name='".$name."', description='".$description."', short_code='".$short_code."', public='".$share_project."' WHERE projects.id='".$project_id."'"; 
 		$statement = $this->conn->prepare($query); 
 		return $statement->execute();
 	}
 	
 	// Select the user's projects, returns a list of the projects on success and false on failure
-	public function get_project_files($user_id, $project_shortcode, $dir) {
-		$query = "SELECT project_files.* FROM projects JOIN projects_editors ON projects_editors.project_id = projects.id JOIN project_files ON project_files.project_id = projects.id WHERE projects_editors.user_id = '".$user_id."' AND projects_editors.user_type = '1' AND projects.short_code = '".$project_shortcode."' AND relative_path='".$dir."' ORDER BY project_files.type"; 
+	public function get_project_files($project_id, $dir) {
+		$query = "SELECT * FROM project_files WHERE project_id = '".$project_id."' AND relative_path='".$dir."' ORDER BY type"; 
 		$statement = $this->conn->prepare($query); 
 		$statement->execute();
 		return $statement->fetchAll();
 	}
 	
-	// Add directory in database
-	public function add_directory($dir_name, $project_id, $current_dir) {
-		$query = "INSERT INTO project_files (name, project_id, type, relative_path) Values('".$dir_name."','".$project_id."' ,'directory' ,'".$current_dir."')"; 
+	// Verify that user is an editor to this project, return true or false
+	public function verify_editor($project_id, $user_id) {
+		$query = "SELECT COUNT(*) FROM projects_editors WHERE project_id = '".$project_id."' AND user_id='".$user_id."' "; 
+		$statement = $this->conn->prepare($query); 
+		$statement->execute();
+		$result = $statement->fetch();
+		if($result['COUNT(*)'] > 0){
+			return true;
+		}else{
+			return false;
+		}
+	}
+	
+	// Add directory or file in database
+	public function add_dir_file($dir_name, $project_id, $file_type,  $current_dir) {
+		$query = "INSERT INTO project_files (name, project_id, type, relative_path) Values('".$dir_name."','".$project_id."' ,'".$file_type."' ,'".$current_dir."')"; 
 		$statement = $this->conn->prepare($query); 
 		$statement->execute();
 		return $this->conn->lastInsertId();
+	}
+	
+	// Check if a file/dir exists already, return true or false
+	public function check_file_dir_exist($dir_name, $project_id,  $current_dir) {
+		$query = "SELECT COUNT(*) FROM project_files WHERE project_id = '".$project_id."' AND name='".$dir_name."' AND relative_path='".$current_dir."' "; 
+		$statement = $this->conn->prepare($query); 
+		$statement->execute();
+		$result = $statement->fetch();
+		if($result['COUNT(*)'] > 0){
+			return true;
+		}else{
+			return false;
+		}
 	}
 }
 

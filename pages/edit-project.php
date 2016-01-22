@@ -21,6 +21,11 @@
 			<form action='' method='post' id='edit-project'>
 				Project name :<br /><input type="text" name="project_name" size='25' value='<?php echo $project['name']; ?>' /><br />
 				Add other People to the Project :<br /><input type="text" name="projet_authors" size='25' value='<?php list_editors($editors); ?>' /><br />
+				Allow other people to view this project : <br />
+				<select name="project_share">
+					<option value="1" <?php echo ($project['public']==1)? 'selected':''; ?>>Public</option>
+					<option value="0" <?php echo ($project['public']==0)? 'selected':''; ?>>Private</option>
+				</select><br />
 				Project description:<br />
 				<textarea form='edit-project' name='project_description'><?php echo $project['description']; ?></textarea>
 				<br />

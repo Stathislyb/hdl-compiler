@@ -723,7 +723,7 @@ function print_ace_javascript_code()
 {
 $string= <<< ACEJS
 
-<script src="src/ace.js" type="text/javascript" charset="utf-8"></script>
+<script src="/src/ace.js" type="text/javascript" charset="utf-8"></script>
 <script>
     var editor = ace.edit("editor");
     editor.setTheme("ace/theme/monokai");
@@ -852,6 +852,7 @@ function create_short_code($string){
 		"Ύ" => "u",
 		"Ώ" => "o"
 	);
+	$string = trim($string," ");
     $string = strtr($string, $replace_pairs);
 	$string = strtolower($string);
 	$string = preg_replace("/[^a-z0-9\-]/","",$string);

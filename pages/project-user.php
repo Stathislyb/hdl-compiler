@@ -11,11 +11,17 @@
 	<td>
 		<div class="topic1" id="user">
 			<?php 
+				$i=0;
 				foreach ($projects as $project) {
-
-					echo "<a href='".$BASE_URL."/project/".$user->username."/".$project['short_code']."'>".$project['name']."</a> 
+					if($project['public']==1){
+						$i++;
+						echo "<a href='".$BASE_URL."/project/".$search_user['username']."/".$project['short_code']."'>".$project['name']."</a> 
 						<br />".$project['description']."<br /><br />";
+					}
 
+				}
+				if($i==0){
+					echo "The user has no public projects.";
 				}
 			?>
 			<br/>

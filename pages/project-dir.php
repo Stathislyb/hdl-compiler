@@ -1,13 +1,15 @@
 <?php 
 	$search_user = $db->get_user_information($_GET['user'],"username");
-	if($search_user['id'] == $user->id){
+	$project = $db->get_project_shortcode($_GET['project'], $search_user['id']);
+	$is_editor = $db->verify_editor($project['id'], $user->id);
+	if($is_editor || $project['public']==1){
 		if(empty($_GET['dir'])){
 			$_GET['dir']="/";
 		}
 		if($_GET['dir']!="/"){
 			$_GET['dir'] = "/".$_GET['dir'];
 		}
-		$files = $db->get_project_files($search_user['id'],$_GET['project'], $_GET['dir']);
+		$files = $db->get_project_files($project['id'], $_GET['dir']);
 ?>
 <tr>
 	<td>User</td>
@@ -39,6 +41,7 @@
 				<br />
 				<input type="hidden" value="<?php echo $_GET['project']; ?>" name="project_shortcode">
 				<input type="hidden" value="<?php echo $_GET['dir']; ?>" name="current_dir">
+				<input type="hidden" value="<?php echo $search_user['username']; ?>" name="owner">
 				<button type="submit" name="post_action" value='Create_dir'>Create Directory</button>
 				<button type="submit" name="post_action" value='Create_file'>Create File</button>
 			</form>
