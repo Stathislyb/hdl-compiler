@@ -202,6 +202,14 @@ class Database {
 			return false;
 		}
 	}
+	
+	// Select the latest projects, returns a list of the projects on success and false on failure
+	public function get_latest_projects($num) {
+		$query = "SELECT projects.*, users.username as owner FROM projects JOIN projects_editors ON projects.id = projects_editors.project_id JOIN users ON users.id = projects_editors.user_id WHERE projects_editors.user_type = '1' AND projects.public = '1' ORDER BY projects.id DESC LIMIT ".$num; 
+		$statement = $this->conn->prepare($query); 
+		$statement->execute();
+		return $statement->fetchAll();
+	}
 }
 
 

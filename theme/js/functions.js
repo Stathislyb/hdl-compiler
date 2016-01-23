@@ -19,3 +19,16 @@ function ()
 {
 //$('#statusDIV').load('status.php').fadeIn("slow");
 }, 5000); // refresh every 5000 milliseconds
+
+//Add Event listeners when the document is fully loaded
+$( document ).ready(function() {
+	
+	// Handle Navbar Search type change
+	$("#search-nav-dropdown-ul li a").click(function(){
+		var Choice = $(this).text();
+		$("#search-nav-dropdown").html(Choice+'<span class="caret"></span>');
+		$("#nav-search-type").val(Choice);
+		$("#nav-search").val('');
+	});
+	
+});

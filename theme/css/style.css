@@ -12,7 +12,7 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+
 body
 {
   font-size: 12px;
@@ -269,4 +269,11 @@ overflow: hidden;}
 background: #66CCFF;
 text-align: center;
 font-family:Tahoma, Geneva, sans-serif;
+}
+*/
+#register-nav{
+    min-width: 250px;
+    padding: 14px 14px 0;
+    overflow: hidden;
+    background-color: rgba(255,255,255,.8);
 }

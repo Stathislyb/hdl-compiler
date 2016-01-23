@@ -16,78 +16,53 @@
 */
 ?>
 
-<tr>
-<td>
-Step1
-</td>
-
-<td>
-<div class="topic1" id="pid">
-<?php require('sid.php');?>
+<div class="jumbotron">
+	<h1>HDL Everywhere</h1>
+	<h2>Welcome to the web based VHDL Compiler &amp; Simulator!</h2>
 </div>
-</td>
-</tr>
-	
-<tr>
-	<td>
-		Step 1 - Login
-	</td>
 
-	<td>
-		<div class="topic1" id="login">
-			<form action='' method='post'>
-				Username:<input type="text" name="username" size='25' /><br />
-				Password:<input type="password" name="password" size='25' />
-				<br />
-				<button type="submit" name="post_action" value='login'>Login</button>
-			</form>
-		</div>
-	</td>
-</tr>
-	
-<tr>
-	<td>
-		Step 2 - Register
-	</td>
+<div class="row">
+	<div class="col-sm-6">
+		<?php require('pages/extra/list-new-projects.php'); ?>
+	</div>
+	<div class="col-sm-6">
+		list 2
+	</div>
+</div>
 
-	<td>
-		<div class="topic1" id="register">
-			<form action='' method='post'>
-				E-mail:<input type="text" name="email" size='25' /><br />
-				Username:<input type="text" name="username" size='25' /><br />
-				Password:<input type="password" name="password" size='25' /><br />
-				Confirm Password:<input type="password" name="password_confirm" size='25' />
-				<br />
-				<button type="submit" name="post_action" value='register'>Register</button>
-			</form>
-		</div>
-	</td>
-</tr>
+
+<div class="row">
+	Status:
+	<?php require('status.php'); ?>
+</div>
+
+<div class="row">
+	Step1
+	<div class="topic1" id="pid">
+	<?php require('sid.php');?>
+	</div>
+</div>
+
 
 <?php 
 //Only show the rest of the forms if PID is set
-	if (empty($_SESSION['PID'])) 
-	{
+if (empty($_SESSION['PID'])){
 	$_SESSION['PID']=0; 
 	print '<tr><td colspan="2"><div class="red">No session set. Please Set or Create a SessionID!</div></td></tr>';
-	}
-else
-{
-
-echo '<tr><td>Step2</td><td>';
-echo '<div class="topic2" id="files">';
-require('files.php');
-echo '</div></td></tr>';
+}else{
+	echo 'Step2';
+	echo '<div class="topic2" id="files">';
+	require('files.php');
+	echo '</div>';
 
 
-echo '<tr><td>Step3</td><td><div class="topic1" id="listfiles">';
-require('listfiles.php');
-echo '</div></td></tt>';
+	echo 'Step3<div class="topic1" id="listfiles">';
+	require('listfiles.php');
+	echo '</div>';
 
-echo '<tr><td>Step4</td><td><div class="topic2" id="link">';
-require('link.php');
-echo '</div></td></tr>';
-	
+	echo '<div class="topic2" id="link">';
+	require('link.php');
+	echo '</div>';
 }
 
 ?>

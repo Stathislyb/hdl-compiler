@@ -17,12 +17,9 @@
 ?>
 <?php
 require_once('functions.php');
-session_dasygenis();
 
 echo "<div id='statusDIV'>";
 get_status();
 echo "</div>";
-
-
 ?>
 

@@ -1,0 +1,15 @@
+# Pass the default character set
+AddDefaultCharset utf-8
+
+
+# Protect the htaccess file
+<files .htaccess>
+    order allow,deny
+    deny from all
+</files>
+
+# Protect the php files
+<files *.php>
+    order allow,deny
+    deny from all
+</files>
