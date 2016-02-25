@@ -20,17 +20,7 @@
 	$shared_projects = $db->get_shared_projects($user->id);
 ?>
 
-<tr>
-<td>
-Step1
-</td>
 
-<td>
-<div class="topic1" id="pid">
-<?php require('sid.php');?>
-</div>
-</td>
-</tr>
 
 <?php 
 //Only show the rest of the forms if PID is set
@@ -102,4 +92,16 @@ echo '</div></td></tr>';
 	</td>
 </tr>
 <?php } ?>
+
+<div class="row">
+	Status:
+	<?php require('status.php'); ?>
+</div>
+
+<div class="row">
+	Step1
+	<div class="topic1" id="pid">
+	<?php require('sid.php');?>
+	</div>
+</div>
 

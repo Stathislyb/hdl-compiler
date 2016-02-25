@@ -119,6 +119,24 @@ if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST["post_action"])){
 			}
 			array_push($_SESSION['vhdl_msg'], 'fail_create_file');
 		break;
+		
+		case "set_sid":
+			echo "new SID";
+			$_SESSION['PID']=intval($_POST['pid']);
+			setcookie("PID", $_SESSION['PID'], time()+3600);
+		break;
+			
+		case "new_sid":
+			srand();
+			$number=rand()%100000;
+			while(!mkdir($BASE.$number,0700)){
+				$number=rand()%100000;
+			}
+			// Ok we found a new random file
+			$_SESSION['PID']=$number;
+			setcookie("PID", $_SESSION['PID'], time()+3600);
+		break;
+			
 	}
 	
 }
