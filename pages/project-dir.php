@@ -1,27 +1,19 @@
 <?php 
 	$search_user = $db->get_user_information($_GET['user'],"username");
 	$project = $db->get_project_shortcode($_GET['project'], $search_user['id']);
-	$is_editor = $db->verify_editor($project['id'], $user->id);
-	if($is_editor || $project['public']==1){
-		if(empty($_GET['dir'])){
-			$_GET['dir']="/";
-		}
-		if($_GET['dir']!="/"){
-			$_GET['dir'] = "/".$_GET['dir'];
-		}
+	$editors = $db->get_project_editors($project['id']);
+	if( $user->validate_edit_rights($editors) || $project['public']==1){
+		$_GET['dir'] = $gen->clear_dir($_GET['dir']);
 		$files = $db->get_project_files($project['id'], $_GET['dir']);
+		
+		echo $gen->path_to_links($_GET['dir'], $search_user['username'], $_GET['project'], $BASE_URL);
+		
 ?>
-<tr>
-	<td>User</td>
-	<td>
-		<div class="topic2" id="files">
-			<?php require('files.php'); ?>
-		</div>
-	</td>
-</tr>
-<tr>
-	<td>Step3</td>
-	<td>
+
+<br/>
+Created by <?php echo $search_user['username']; ?>
+
+<h2>Files</h2>
 		<div class="topic1" id="listfiles">
 			<?php
 			foreach ($files as $file) {
@@ -46,16 +38,14 @@
 				<button type="submit" name="post_action" value='Create_file'>Create File</button>
 			</form>
 		</div>
-	</td>
-</tr>
-<tr>
-	<td>Step4</td>
-	<td>
+
+<br/><br/><br/>
+		<div class="topic2" id="files">
+			<?php require('files.php'); ?>
+		</div>
 		<div class="topic2" id="link">
 			<?php require('link.php'); ?>
 		</div>
-	</td>
-</tr>
 <br/>
 <?php
 	}else{

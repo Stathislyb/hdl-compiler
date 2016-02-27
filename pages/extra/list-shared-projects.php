@@ -23,5 +23,4 @@
 			echo '</div>';
 		}
 	}
-//(<a href='".$BASE_URL."/edit-project/".$project['short_code']."'>EDIT</a>)
-	?>
+?>

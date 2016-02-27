@@ -1,4 +1,6 @@
 <?php 
+	
+	$gen = new General;
 	$search_user = $db->get_user_information($_GET['user'],"username");
 	$project = $db->get_project_shortcode($_GET['project'], $search_user['id']);
 	$is_editor = $db->verify_editor($project['id'], $user->id);
@@ -10,17 +12,13 @@
 			$_GET['dir'] = "/".$_GET['dir'];
 		}
 ?>
-<tr>
-	<td>User</td>
-	<td>
+Made by <?php echo $search_user['username']; ?>
+
 		<div class="topic2" id="files">
 			<?php require('files.php'); ?>
 		</div>
-	</td>
-</tr>
-<tr>
-	<td>Step3</td>
-	<td>
+
+
 		<div class="topic1" id="listfiles">
 			<?php
 			$path = $BASE_DIR.$search_user['username']."/".$_GET['project']."/".$_GET['file'];
@@ -40,16 +38,15 @@
 				<button type="submit" name="post_action" value='Create_file'>Create File</button>
 			</form>
 		</div>
-	</td>
-</tr>
-<tr>
-	<td>Step4</td>
-	<td>
+
+
+		<div class="topic2" id="files">
+			<?php require('files.php'); ?>
+		</div>
 		<div class="topic2" id="link">
 			<?php require('link.php'); ?>
 		</div>
-	</td>
-</tr>
+	
 <br/>
 <?php
 	}else{

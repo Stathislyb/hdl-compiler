@@ -16,10 +16,22 @@ class User {
 		$this->logged_in = null;
 	}
 	
+	// Return true if the the user is the owner of the project
 	public function validate_ownership($editors){
 		$valid = false; 
 		foreach($editors as $editor){
 			if( $editor['username'] == $this->username && $editor['user_type'] == 1){
+				$valid = true;
+			}
+		}
+		return $valid;
+	}
+	
+	// Return true if the the user is an editor to the project
+	public function validate_edit_rights($editors){
+		$valid = false; 
+		foreach($editors as $editor){
+			if( $editor['username'] == $this->username){
 				$valid = true;
 			}
 		}

@@ -36,7 +36,6 @@ class Database {
 				return $result['id'];
 			}
 		}
-		
 		return 0;
 	}
 	
@@ -167,19 +166,6 @@ class Database {
 		$statement = $this->conn->prepare($query); 
 		$statement->execute();
 		return $statement->fetchAll();
-	}
-	
-	// Verify that user is an editor to this project, return true or false
-	public function verify_editor($project_id, $user_id) {
-		$query = "SELECT COUNT(*) FROM projects_editors WHERE project_id = '".$project_id."' AND user_id='".$user_id."' "; 
-		$statement = $this->conn->prepare($query); 
-		$statement->execute();
-		$result = $statement->fetch();
-		if($result['COUNT(*)'] > 0){
-			return true;
-		}else{
-			return false;
-		}
 	}
 	
 	// Add directory or file in database
