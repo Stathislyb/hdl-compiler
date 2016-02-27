@@ -1,4 +1,5 @@
-		<div class="footer">
+			<br /><br /><br />
+			<div class="footer">
 			<div id="copyright">
 				Copyright 2014,<br />
 				Non-disclosed information for blind review

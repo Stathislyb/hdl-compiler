@@ -21,10 +21,14 @@ if(isset($_SESSION['vhdl_user']['loged_in']) && $_SESSION['vhdl_user']['loged_in
 	if( isset($_GET['action']) ){
 		$included_file = $_GET['action'].'.php';
 	}else{
-		$included_file='main_loggedin.php';
+		if($_SESSION['vhdl_user']['id'] == '0'){
+			$included_file='loggedin_sid.php';
+		}else{
+			$included_file='loggedin.php';
+		}
 	}
 }else{
-	$included_file='main_loggedout.php';
+	$included_file='loggedout.php';
 }
 
 include('theme/header.php');

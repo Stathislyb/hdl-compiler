@@ -277,3 +277,16 @@ font-family:Tahoma, Geneva, sans-serif;
     overflow: hidden;
     background-color: rgba(255,255,255,.8);
 }
+
+.square-tiles{
+    background-color: #eee;
+    margin: 2%;
+    height: 150px;
+	cursor:pointer;
+	overflow-y: hidden;
+	min-width: 29%;
+}
+.square-tiles:hover {
+    background-color: #F9FDFF;
+    box-shadow: 4px 4px 10px #A0A4A5;
+}
