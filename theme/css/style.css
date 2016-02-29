@@ -290,3 +290,8 @@ font-family:Tahoma, Geneva, sans-serif;
     background-color: #F9FDFF;
     box-shadow: 4px 4px 10px #A0A4A5;
 }
+
+.divider-vertical-right{
+	border: 0;
+	border-right: 1px solid #eee;
+}

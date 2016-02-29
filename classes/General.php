@@ -22,7 +22,7 @@ class General {
 	
 	// Return path of links to the currect directory
 	public function path_to_links($full_path, $user, $project, $BASE_URL){
-		$output = '';
+		$output = "<b><a href='".$BASE_URL."/project/".$user."'>".$user."> </a></b>";
 		$path = explode('/',$full_path);
 		foreach ($path as $key=>$step) {
 			$link_path = '';

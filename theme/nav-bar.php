@@ -19,6 +19,7 @@
 			
 		<?php if(isset($_SESSION['vhdl_user']['loged_in']) && $_SESSION['vhdl_user']['loged_in']==1){ ?>
 			<form class="navbar-form navbar-right" role="logout" method="post" action="">
+				Logged in as <?php echo $_SESSION['vhdl_user']['username']; ?>
 				<button type="submit" class="btn btn-default" name="post_action" value="logout">Logout</button>
 			</form>
 		<?php } ?>

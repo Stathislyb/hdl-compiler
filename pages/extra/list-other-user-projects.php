@@ -15,15 +15,13 @@
 				echo "<h3>".$project['name']."</h3>";
 				echo "<p>".$project['description']."</p>";
 				echo "</div>";
-
-			
-			}
-			if($i==0){
-				echo "The user has no public projects.";
-			}
-			if($i<=3){
-				echo '</div>';
+							
 			}
 		}
+		if($i<=3){
+			echo '</div>';
+		}
+	}else{
+		echo "The user has no public projects."; 
 	}
 ?>
