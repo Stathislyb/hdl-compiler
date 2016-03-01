@@ -13,11 +13,12 @@
 			}
 			
 			echo "<div class='col-sm-3 square-tiles' onclick='window.location=\"".$BASE_URL."/project/".$user->username."/".$project['short_code']."\";'>";
-			echo "<h3>".$project['name']."</h3>";
+			echo "<div class='header'>".$project['name']."</div>";
 			echo "<p>".$project['description']."</p>";
 			echo "</div>";
 			
 		}
+
 		if($i<=3){
 			echo "<div class='col-sm-3 square-tiles' onclick='window.location=\"/create-project\";'><center>";
 			echo "<h3>Create New Project</h3>";

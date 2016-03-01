@@ -6,6 +6,17 @@
 		$_GET['dir'] = $gen->clear_dir($_GET['dir']);
 		$files = $db->get_project_files($project['id'], $_GET['dir']);
 		
+		if($_SESSION['vhdl_user']['username'] == "Guest"){
+			$upload_dir=$BASE.$_SESSION['PID']."/"; 
+		}else{
+			if($_GET['dir']=='/'){
+				$upload_dir=$BASE_DIR.$search_user['username']."/".$project['short_code']."/"; 
+			}else{
+				$upload_dir=$BASE_DIR.$search_user['username']."/".$project['short_code'].$_GET['dir']."/"; 
+			}
+		}
+
+		
 		echo $gen->path_to_links($_GET['dir'], $search_user['username'], $project['name'], $BASE_URL);
 ?>
 <br/><br/><br/>
@@ -20,21 +31,17 @@
 <hr/>
 <div class="row">
 	<div class="col-xs-3"> 
-<?php if( $user->validate_ownership($editors) ){
-		echo "<a href='".$BASE_URL."/edit-project/".$project['short_code']."'>Edit Project</a><br/>";
-	} ?>
-		Owner
-		<ul class="list-group">
-			<?php
-			foreach ($editors as $editor) {
-				if($editor['user_type'] == "1"){
-					echo "<li class='list-group-item'><a href='".$BASE_URL."/project/".$editor['username']."'>".$editor['username']."</a></li>";
-				}
-			}
-			?>
+		<?php if( $user->validate_ownership($editors) ){
+			echo "<a href='".$BASE_URL."/edit-project/".$project['short_code']."'>".
+				"<button type='button' class='btn btn-primary full-row'>Edit Project</button>".
+				"</a><br/>";
+		} ?>
+		<ul class="list-group text-center">
+			<li class='list-group-item list-header'>Owner</li>
+			<?php echo $search_user['username']; ?>
 		</ul>
-		Editors
-		<ul class="list-group">
+		<ul class="list-group text-center">
+			<li class='list-group-item list-header'>Editors</li>
 			<?php
 			foreach ($editors as $editor) {
 				if($editor['user_type'] == "0"){
@@ -45,42 +52,82 @@
 		</ul>
 	</div>
 	<div class="col-xs-9">
-		<ul class="list-group">
-			<?php
-			foreach ($files as $file) {
-				if($file['relative_path'] == "/"){
-					$path = $BASE_URL."/project/".$search_user['username']."/".$_GET['project']."/".$file['type']."/".$file['name'];
-				}else{
-					$path = $BASE_URL."/project/".$search_user['username']."/".$_GET['project']."/".$file['type'].$file['relative_path']."/".$file['name'];
-				}
-				echo "<li class='list-group-item'><a href='".$path."'>".$file['name']."</a>";
-				echo "<span class='pull-right'><input type='checkbox' value='1' id='file_".$file['id']."'></span></li>";
-			}
-			?>
-		</ul>
-
-		<br />
-		<br />
-		<br />
-		<form action='' method='post'>
-			File / Directory Name: <input type="text" name="dirfile_name" size='15' />
-			<br />
-			<input type="hidden" value="<?php echo $_GET['project']; ?>" name="project_shortcode">
-			<input type="hidden" value="<?php echo $_GET['dir']; ?>" name="current_dir">
-			<input type="hidden" value="<?php echo $search_user['username']; ?>" name="owner">
-			<button type="submit" name="post_action" value='Create_dir'>Create Directory</button>
-			<button type="submit" name="post_action" value='Create_file'>Create File</button>
-		</form>
+		<?php require('pages/extra/list-dirfiles.php'); ?>
 	</div>
 </div>
-<br/><br/><br/>
-		<div class="topic2" id="files">
-			<?php require('files.php'); ?>
-		</div>
-		<div class="topic2" id="link">
-			<?php require('link.php'); ?>
-		</div>
 <br/>
+
+<div class="topic2" id="link">
+	<?php require('link.php'); ?>
+</div>
+
+<!-- Modal -->
+<div id="Create-filedir-Modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+		  <!-- Modal header menu-->
+        <h3>Add File or Directory</h3>
+      </div>
+      <div class="modal-body tab-content">
+		  <!-- Modal Body Directory-->
+		<form action='' method='post'>
+			<h4>Create Directory</h4>
+			<span class="row">
+				<span class="col-sm-6">
+					<input type="text" name="dir_name" size='15' placeholder="Directory Name"/>
+					<input type="hidden" value="<?php echo $_GET['project']; ?>" name="project_shortcode">
+					<input type="hidden" value="<?php echo $_GET['dir']; ?>" name="current_dir">
+					<input type="hidden" value="<?php echo $search_user['username']; ?>" name="owner">
+				</span>
+				<span class="col-sm-6">
+					<button type="submit" name="post_action" value='Create_dir' class="btn btn-default">Create Directory</button>
+				</span>
+			</span>
+		</form>
+		<br/>
+	   	<!-- Modal Body Create File-->
+		<form action='' method='post'>
+			<h4>Create File</h4>
+			<span class="row">
+				<span class="col-sm-6">
+					<input type="text" name="file_name" size='15' placeholder="File Name"/>
+					<input type="hidden" value="<?php echo $_GET['project']; ?>" name="project_shortcode">
+					<input type="hidden" value="<?php echo $_GET['dir']; ?>" name="current_dir">
+					<input type="hidden" value="<?php echo $search_user['username']; ?>" name="owner">
+				</span>
+				<span class="col-sm-6">
+					<button type="submit" name="post_action" value='Create_file' class="btn btn-default">Create File</button>
+				</span>
+			</span>
+		</form>
+		<br/>
+		<!-- Modal Body Upload File-->
+		<form enctype="multipart/form-data" action="" method="post">
+			<h4>Upload File</h4>
+			<span class="row">
+				<span class="col-sm-6">
+					<input name="userfile" type="file" />
+					<input type="hidden" name="MAX_FILE_SIZE" value="32000000" />
+					<input type="hidden" name="upload_dir" value="<?php echo $upload_dir; ?>" />
+					<input type="hidden" value="<?php echo $_GET['project']; ?>" name="project_shortcode">
+					<input type="hidden" value="<?php echo $_GET['dir']; ?>" name="current_dir">
+					<input type="hidden" value="<?php echo $search_user['username']; ?>" name="owner">
+				</span>
+				<span class="col-sm-6">
+					<button type="submit" name="post_action" value='Upload_File' class="btn btn-default">Upload File</button>
+				</span>
+			</span>
+		</form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
 <?php
 	}else{
 		header('location:'.$BASE_URL);

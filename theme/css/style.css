@@ -290,8 +290,45 @@ font-family:Tahoma, Geneva, sans-serif;
     background-color: #F9FDFF;
     box-shadow: 4px 4px 10px #A0A4A5;
 }
+.square-tiles .header {
+    font-size: 1.4em;
+    font-weight: bold;
+	margin: 10px 0 10px 0;
+	border-bottom: 1px solid #505050;
+}
 
 .divider-vertical-right{
 	border: 0;
 	border-right: 1px solid #eee;
+}
+
+.pointer{
+	cursor:pointer;
+}
+
+.strong{
+	font-weight: bold;
+    font-size: x-large;
+}
+
+.vertical-center{
+	min-height: 100%;
+	display: flex;
+	align-items: center;
+}
+
+.list-header{
+    font-weight: bold;
+    font-size: larger;
+    background-color: #F0F2F3;
+    color: #55575A;
+}
+
+.list-files li:hover{
+    background-color: #F7FEFF;
+}
+
+.full-row{
+	display: block; 
+	width: 100%;
 }

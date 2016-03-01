@@ -12,7 +12,7 @@
 				}
 
 				echo "<div class='col-sm-3 square-tiles' onclick='window.location=\"".$BASE_URL."/project/".$search_user['username']."/".$project['short_code']."\";'>";
-				echo "<h3>".$project['name']."</h3>";
+				echo "<div class='header'>".$project['name']."</div>";
 				echo "<p>".$project['description']."</p>";
 				echo "</div>";
 							

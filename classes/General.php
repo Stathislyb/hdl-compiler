@@ -22,6 +22,7 @@ class General {
 	
 	// Return path of links to the currect directory
 	public function path_to_links($full_path, $user, $project, $BASE_URL){
+		$project_shortcode = $this->create_short_code($project);
 		$output = "<b><a href='".$BASE_URL."/project/".$user."'>".$user."> </a></b>";
 		$path = explode('/',$full_path);
 		foreach ($path as $key=>$step) {
@@ -33,9 +34,9 @@ class General {
 					$link_path .= $path[$i];
 				}
 			}
-			$link = $BASE_URL."/project/".$user."/".$project."/directory/".$link_path;
+			$link = $BASE_URL."/project/".$user."/".$project_shortcode."/directory/".$link_path;
 			if($key == 0){
-				$output .= "<a href='".$link."'>".$_GET['project']."/ </a>";
+				$output .= "<a href='".$link."'>".$project."/ </a>";
 			}else{
 				if(!empty($step)){
 					$output .= "<a href='".$link."'>".$step."/ </a>";
@@ -43,6 +44,81 @@ class General {
 			}
 		}
 		return $output;
+	}
+	
+	// Return the shortcode of a string
+	public function create_short_code($string){
+		$replace_pairs = array(
+			" " => "-",
+			"α" => "a",
+			"β" => "b",
+			"γ" => "g",
+			"δ" => "d",
+			"ε" => "e",
+			"ζ" => "z",
+			"η" => "i",
+			"θ" => "th",
+			"ι" => "i",
+			"κ" => "k",
+			"λ" => "l",
+			"μ" => "m",
+			"ν" => "n",
+			"ξ" => "ks",
+			"ο" => "o",
+			"π" => "p",
+			"ρ" => "r",
+			"σ" => "s",
+			"τ" => "t",
+			"υ" => "u",
+			"φ" => "f",
+			"χ" => "x",
+			"ψ" => "ps",
+			"ω" => "w",
+			"Α" => "a",
+			"Β" => "b",
+			"Γ" => "g",
+			"Δ" => "d",
+			"Ε" => "e",
+			"Ζ" => "z",
+			"Η" => "i",
+			"Θ" => "th",
+			"Η" => "i",
+			"Κ" => "k",
+			"Λ" => "l",
+			"Μ" => "m",
+			"Ν" => "n",
+			"Ξ" => "ks",
+			"Ο" => "o",
+			"Π" => "p",
+			"Ρ" => "r",
+			"Σ" => "s",
+			"Τ" => "t",
+			"Υ" => "u",
+			"Φ" => "f",
+			"Χ" => "x",
+			"Ψ" => "ps",
+			"Ω" => "o",
+			"ά" => "a",
+			"έ" => "e",
+			"ή" => "i",
+			"ί" => "i",
+			"ό" => "o",
+			"ύ" => "u",
+			"ώ" => "o",
+			"Ά" => "a",
+			"Έ" => "e",
+			"Ή" => "i",
+			"Ί" => "i",
+			"Ό" => "o",
+			"Ύ" => "u",
+			"Ώ" => "o"
+		);
+		$string = trim($string," ");
+		$string = strtr($string, $replace_pairs);
+		$string = strtolower($string);
+		$string = preg_replace("/[^a-z0-9\-\.]/","",$string);
+		$string = preg_replace("/-+/","-",$string);
+		return $string;
 	}
 	
 }
