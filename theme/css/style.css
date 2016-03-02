@@ -296,6 +296,12 @@ font-family:Tahoma, Geneva, sans-serif;
 	margin: 10px 0 10px 0;
 	border-bottom: 1px solid #505050;
 }
+.center-tile-5{
+	margin-left:4%;
+}
+.center-tile-11{
+	margin-left:3%;
+}
 
 .divider-vertical-right{
 	border: 0;
@@ -309,6 +315,11 @@ font-family:Tahoma, Geneva, sans-serif;
 .strong{
 	font-weight: bold;
     font-size: x-large;
+}
+.very-strong{
+	font-weight: bold;
+    font-size: 45px;
+    margin-top: 5px;
 }
 
 .vertical-center{
@@ -331,4 +342,12 @@ font-family:Tahoma, Geneva, sans-serif;
 .full-row{
 	display: block; 
 	width: 100%;
+}
+
+.nav-home{
+    font-size: x-large;
+    border-right: 1px solid #ABB5B9;
+}
+.nav-home a{
+    color:#585858;
 }

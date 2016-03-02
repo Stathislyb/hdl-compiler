@@ -56,6 +56,14 @@ class Database {
 		return $statement->fetchAll();
 	}
 	
+	// Select the user's public projects, returns a list of the projects on success and false on failure
+	public function get_user_projects_public($user_id) {
+		$query = "SELECT projects.* FROM projects_editors INNER JOIN projects ON projects_editors.project_id = projects.id WHERE projects_editors.user_id = '".$user_id."' AND user_type='1' AND public='1'"; 
+		$statement = $this->conn->prepare($query); 
+		$statement->execute();
+		return $statement->fetchAll();
+	}
+	
 	// Select the projects in which the user is an editor but not the owner, returns a list of the projects on success and false on failure
 	public function get_shared_projects($user_id) {
 		$query = "SELECT projects.* FROM projects_editors INNER JOIN projects ON projects_editors.project_id = projects.id WHERE projects_editors.user_id = '".$user_id."' AND user_type='0'"; 

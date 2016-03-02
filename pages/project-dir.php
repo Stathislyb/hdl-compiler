@@ -38,7 +38,7 @@
 		} ?>
 		<ul class="list-group text-center">
 			<li class='list-group-item list-header'>Owner</li>
-			<?php echo $search_user['username']; ?>
+			<li class='list-group-item'><?php echo "<a href='".$BASE_URL."/project/".$search_user['username']."'>".$search_user['username']."</a>"; ?></li>
 		</ul>
 		<ul class="list-group text-center">
 			<li class='list-group-item list-header'>Editors</li>
@@ -61,6 +61,7 @@
 	<?php require('link.php'); ?>
 </div>
 
+<?php if($user->validate_edit_rights($editors)){ ?>
 <!-- Modal -->
 <div id="Create-filedir-Modal" class="modal fade" role="dialog">
   <div class="modal-dialog">
@@ -127,6 +128,7 @@
 
   </div>
 </div>
+<?php } ?>
 
 <?php
 	}else{
