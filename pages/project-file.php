@@ -3,21 +3,22 @@
 	$gen = new General;
 	$search_user = $db->get_user_information($_GET['user'],"username");
 	$project = $db->get_project_shortcode($_GET['project'], $search_user['id']);
-	$is_editor = $db->verify_editor($project['id'], $user->id);
-	if($is_editor || $project['public']==1){
-		if(empty($_GET['dir'])){
-			$_GET['dir']="/";
+	$editors = $db->get_project_editors($project['id']);
+	if($user->validate_edit_rights($editors) || $project['public']==1){
+		$file_name = substr(strrchr($_GET['file'], '/'), 1 );
+		if(empty($file_name)){
+			$file_name = $_GET['file'];
+			$dir = $gen->clear_dir("/");
+		}else{
+			$dir_length = strlen($_GET['file']) - strlen($file_name)-1;
+			$dir = substr($_GET['file'],0,$dir_length );
+			$dir = $gen->clear_dir($dir);
 		}
-		if($_GET['dir']!="/"){
-			$_GET['dir'] = "/".$_GET['dir'];
-		}
+		//echo $file_name."<br/>";
+		//echo $dir."<br/>";
+		echo $gen->path_to_links($dir, $search_user['username'], $project['name'], $BASE_URL);
 ?>
-Made by <?php echo $search_user['username']; ?>
-
-		<div class="topic2" id="files">
-			<?php require('files.php'); ?>
-		</div>
-
+<br/>Made by <?php echo $search_user['username']; ?>
 
 		<div class="topic1" id="listfiles">
 			<?php
@@ -25,26 +26,9 @@ Made by <?php echo $search_user['username']; ?>
 			if (file_exists($path)){
 				edit_file($path);
 			}
-			
+			echo "<input type='hidden' value='".$path."' id='path' />";
 			?>
 			<br />
-			<form action='' method='post'>
-				File / Directory Name: <input type="text" name="dirfile_name" size='15' />
-				<br />
-				<input type="hidden" value="<?php echo $_GET['project']; ?>" name="project_shortcode">
-				<input type="hidden" value="<?php echo $_GET['dir']; ?>" name="current_dir">
-				<input type="hidden" value="<?php echo $search_user['username']; ?>" name="owner">
-				<button type="submit" name="post_action" value='Create_dir'>Create Directory</button>
-				<button type="submit" name="post_action" value='Create_file'>Create File</button>
-			</form>
-		</div>
-
-
-		<div class="topic2" id="files">
-			<?php require('files.php'); ?>
-		</div>
-		<div class="topic2" id="link">
-			<?php require('link.php'); ?>
 		</div>
 	
 <br/>

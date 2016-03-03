@@ -602,71 +602,21 @@ fclose($file_handle);
 //Function to print save button
 function print_save_button($file)
 {
-$file=dasygenis_filter_letters($file);
-echo "Editing: ".basename($file)."<div id='edit_status'></div>";
-if (file_exists($file)  && is_writable($file) )
-{
+	global $BASE_URL;
+	$file=dasygenis_filter_letters($file);
+	echo "Editing: ".basename($file)."<br/><div id='edit_status'></div>";
+	if (file_exists($file)  && is_writable($file) ){
+		$str="<script type='text/javascript' charset='utf-8' src='".$BASE_URL."/theme/js/ace-editor.js'></script>
+			<!-- Button after the function for visibility -->
+			<input type='button' id='ace_save_button' name='save' value='Save Changes' >";
+		//Print the string
+		echo $str;
 
-$basefilename=basename($file);
-
-$str=<<< FUNCTION
-
-
-<script type="text/javascript" charset="utf-8">
-saveFile = function() {
-var myElem = document.getElementById('editor');
-if (myElem == null) {
-	 alert('Nothing to save yet.');
-	 return;
-	 }
-
-
-//Ok we are good to go
-var editor = ace.edit("editor");
-var contents = editor.getSession().getValue();
-
-
-  $.post("writefile.php",
-            {contents: contents,
-             filename: "{$basefilename}" },
-            function() {
-                    // add error checking
-
-
-		var textContent = document.getElementById('edit_status');
-		textContent.innerHTML="Saved!";
-
-		
-			setTimeout(function() {
-			var textContent = document.getElementById('edit_status');
-			textContent.innerHTML="";
-    			//$('#edit_status').fadeOut('fast');
-			}, 7000); // 7 secs
-
-                });
-
-
-
-
-}<!-- end javascript function -->
-</script>
-
-
-<!-- Button after the function for visibility -->
-
-<input type='button' id="redbutton" 
-name='save' value='Save {$basefilename}' onClick='saveFile()'>
-FUNCTION;
-
-//Print the string
-echo $str;
-
-}//end if exists
-else
-{
-echo "FAIL";
-var_dump(error_get_last());
-}
+	}//end if exists
+	else{
+		echo "FAIL";
+		var_dump(error_get_last());
+	}
 
 }//end function
 

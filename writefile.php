@@ -18,36 +18,20 @@
 <?php
 require_once('functions.php');
 session_dasygenis();
-
-//This file processes input and saves files
-if (isset($_SESSION['PID'])) { $pid=$_SESSION['PID'];} else { $pid ="0";}
-
-if ($pid<1)
-{
-return;
-}
-
-
-if (! $_POST)
-{
-return;
-}
-
-if( isset($_POST['filename']) && isset($_POST['contents'] ) )
-{
-$clean=dasygenis_filter_letters($_POST['filename']);
-$file=$directory.$clean;
-$contents=$_POST['contents'];
-	if (file_exists($file)  && is_writable($file) )
-	{
-	$ret=file_put_contents($file,$contents);
-	if(!$ret) { error_get_last();fail_500();}
-
+if (! $_POST){
 	return;
-	}//end if file exists
-	else
-	{
-	fail_500();
+}
+
+if( isset($_POST['directory']) && isset($_POST['data'] ) ){
+	$directory=dasygenis_filter_letters($_POST['directory']);
+	$contents=$_POST['data'];
+	if (file_exists($directory)  && is_writable($directory) ){
+		$ret=file_put_contents($directory,$contents);
+		if(!$ret) { error_get_last();fail_500();}
+		echo "Changes saved.";
+		return;
+	}else{ //end if file exists
+		echo "File does not exist.";
 	}
 	
 

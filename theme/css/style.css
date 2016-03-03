@@ -351,3 +351,8 @@ font-family:Tahoma, Geneva, sans-serif;
 .nav-home a{
     color:#585858;
 }
+
+#editor{
+    width: 100%;
+    min-height: 500px;
+}
