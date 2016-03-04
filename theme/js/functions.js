@@ -14,11 +14,9 @@
    limitations under the License.
 */
 
-var auto_refresh = setInterval(
-function ()
-{
+//var auto_refresh = setInterval(function (){
 //$('#statusDIV').load('status.php').fadeIn("slow");
-}, 5000); // refresh every 5000 milliseconds
+//}, 5000); // refresh every 5000 milliseconds
 
 //Add Event listeners when the document is fully loaded
 $( document ).ready(function() {
@@ -32,4 +30,30 @@ $( document ).ready(function() {
 	});
 	
 	
+    $('#select_all').click(function(event) { 
+        if(this.checked) { 
+            $('.select_file').each(function() {
+                this.checked = true;                
+            });
+        }else{
+            $('.select_file').each(function() { 
+                this.checked = false;                      
+            });         
+        }
+    });
+    
+	$('#Selected_Action').submit(function(event) {
+		var selected_ids='';
+       	$('.select_file:checked').each(function() {
+            selected_ids = selected_ids+"-"+$(this).val();                
+        });
+		if(selected_ids){
+			selected_ids = selected_ids.substr(1);
+			$('#selected_ids').val(selected_ids);
+		}else{
+			alert("Nothing selected");
+			event.preventDefault();
+			return false;
+		}
+    });
 });

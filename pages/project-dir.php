@@ -30,7 +30,7 @@
 </div>
 <hr/>
 <div class="row">
-	<div class="col-xs-3"> 
+	<div class="col-sm-3"> 
 		<?php if( $user->validate_ownership($editors) ){
 			echo "<a href='".$BASE_URL."/edit-project/".$project['short_code']."'>".
 				"<button type='button' class='btn btn-primary full-row'>Edit Project</button>".
@@ -51,8 +51,25 @@
 			?>
 		</ul>
 	</div>
-	<div class="col-xs-9">
+	<div class="col-sm-9">
+		<ul class="list-group no-shadow">
+			<li class='list-group-item no-border'>
+				<span class='pull-right'><input type="checkbox" id="select_all"></span>
+			</li>
+		</ul>
 		<?php require('pages/extra/list-dirfiles.php'); ?>
+		<div class="row">
+			<div class="col-sm-3">
+				<button type="submit" name="post_action" value='Simulate_Project' class="btn btn-info full-row" id="Simulate_Project">Simulate Project</button>
+			</div>
+			<div><center>
+				<form action='' method='post' id='Selected_Action'>
+					<input type="hidden" value="" name="selected_ids" id="selected_ids" />
+					<button type="submit" name="post_action" value='Compile_Selected' class="btn btn-success" >Compile Selected</button>
+					<button type="submit" name="post_action" value='Remove_Selected' class="btn btn-danger" >Remove Selected</button>
+				</form>
+			</center></div>
+		</div>
 	</div>
 </div>
 <br/>
@@ -62,72 +79,72 @@
 </div>
 
 <?php if($user->validate_edit_rights($editors)){ ?>
-<!-- Modal -->
-<div id="Create-filedir-Modal" class="modal fade" role="dialog">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-		  <!-- Modal header menu-->
-        <h3>Add File or Directory</h3>
-      </div>
-      <div class="modal-body tab-content">
-		  <!-- Modal Body Directory-->
-		<form action='' method='post'>
-			<h4>Create Directory</h4>
-			<span class="row">
-				<span class="col-sm-6">
-					<input type="text" name="dir_name" size='15' placeholder="Directory Name"/>
-					<input type="hidden" value="<?php echo $_GET['project']; ?>" name="project_shortcode">
-					<input type="hidden" value="<?php echo $_GET['dir']; ?>" name="current_dir">
-					<input type="hidden" value="<?php echo $search_user['username']; ?>" name="owner">
+	<!-- Modal -->
+	<div id="Create-filedir-Modal" class="modal fade" role="dialog">
+	  <div class="modal-dialog">
+		<div class="modal-content">
+		  <div class="modal-header">
+			  <!-- Modal header menu-->
+			<h3>Add File or Directory</h3>
+		  </div>
+		  <div class="modal-body tab-content">
+			  <!-- Modal Body Directory-->
+			<form action='' method='post'>
+				<h4>Create Directory</h4>
+				<span class="row">
+					<span class="col-sm-6">
+						<input type="text" name="dir_name" size='15' placeholder="Directory Name"/>
+						<input type="hidden" value="<?php echo $_GET['project']; ?>" name="project_shortcode">
+						<input type="hidden" value="<?php echo $_GET['dir']; ?>" name="current_dir">
+						<input type="hidden" value="<?php echo $search_user['username']; ?>" name="owner">
+					</span>
+					<span class="col-sm-6">
+						<button type="submit" name="post_action" value='Create_dir' class="btn btn-default">Create Directory</button>
+					</span>
 				</span>
-				<span class="col-sm-6">
-					<button type="submit" name="post_action" value='Create_dir' class="btn btn-default">Create Directory</button>
+			</form>
+			<br/>
+			<!-- Modal Body Create File-->
+			<form action='' method='post'>
+				<h4>Create File</h4>
+				<span class="row">
+					<span class="col-sm-6">
+						<input type="text" name="file_name" size='15' placeholder="File Name"/>
+						<input type="hidden" value="<?php echo $_GET['project']; ?>" name="project_shortcode">
+						<input type="hidden" value="<?php echo $_GET['dir']; ?>" name="current_dir">
+						<input type="hidden" value="<?php echo $search_user['username']; ?>" name="owner">
+					</span>
+					<span class="col-sm-6">
+						<button type="submit" name="post_action" value='Create_file' class="btn btn-default">Create File</button>
+					</span>
 				</span>
-			</span>
-		</form>
-		<br/>
-	   	<!-- Modal Body Create File-->
-		<form action='' method='post'>
-			<h4>Create File</h4>
-			<span class="row">
-				<span class="col-sm-6">
-					<input type="text" name="file_name" size='15' placeholder="File Name"/>
-					<input type="hidden" value="<?php echo $_GET['project']; ?>" name="project_shortcode">
-					<input type="hidden" value="<?php echo $_GET['dir']; ?>" name="current_dir">
-					<input type="hidden" value="<?php echo $search_user['username']; ?>" name="owner">
+			</form>
+			<br/>
+			<!-- Modal Body Upload File-->
+			<form enctype="multipart/form-data" action="" method="post">
+				<h4>Upload File</h4>
+				<span class="row">
+					<span class="col-sm-6">
+						<input name="userfile" type="file" />
+						<input type="hidden" name="MAX_FILE_SIZE" value="32000000" />
+						<input type="hidden" name="upload_dir" value="<?php echo $upload_dir; ?>" />
+						<input type="hidden" value="<?php echo $_GET['project']; ?>" name="project_shortcode">
+						<input type="hidden" value="<?php echo $_GET['dir']; ?>" name="current_dir">
+						<input type="hidden" value="<?php echo $search_user['username']; ?>" name="owner">
+					</span>
+					<span class="col-sm-6">
+						<button type="submit" name="post_action" value='Upload_File' class="btn btn-default">Upload File</button>
+					</span>
 				</span>
-				<span class="col-sm-6">
-					<button type="submit" name="post_action" value='Create_file' class="btn btn-default">Create File</button>
-				</span>
-			</span>
-		</form>
-		<br/>
-		<!-- Modal Body Upload File-->
-		<form enctype="multipart/form-data" action="" method="post">
-			<h4>Upload File</h4>
-			<span class="row">
-				<span class="col-sm-6">
-					<input name="userfile" type="file" />
-					<input type="hidden" name="MAX_FILE_SIZE" value="32000000" />
-					<input type="hidden" name="upload_dir" value="<?php echo $upload_dir; ?>" />
-					<input type="hidden" value="<?php echo $_GET['project']; ?>" name="project_shortcode">
-					<input type="hidden" value="<?php echo $_GET['dir']; ?>" name="current_dir">
-					<input type="hidden" value="<?php echo $search_user['username']; ?>" name="owner">
-				</span>
-				<span class="col-sm-6">
-					<button type="submit" name="post_action" value='Upload_File' class="btn btn-default">Upload File</button>
-				</span>
-			</span>
-		</form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-      </div>
-    </div>
+			</form>
+		  </div>
+		  <div class="modal-footer">
+			<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+		  </div>
+		</div>
 
-  </div>
-</div>
+	  </div>
+	</div>
 <?php } ?>
 
 <?php

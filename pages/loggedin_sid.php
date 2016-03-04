@@ -16,10 +16,7 @@
 */
 ?>
 
-<h2>Upload Files</h2>
-<div class="topic2" id="files">
-	<?php require('files.php'); ?>
-</div>
+
 
 <h2>Project</h2>
 <div class="topic1" id="listfiles">

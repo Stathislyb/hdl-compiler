@@ -356,3 +356,12 @@ font-family:Tahoma, Geneva, sans-serif;
     width: 100%;
     min-height: 500px;
 }
+
+.no-shadow{
+	-webkit-box-shadow: none;
+    box-shadow: none;
+}
+
+.no-border{
+	border: none;
+}
