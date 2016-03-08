@@ -59,12 +59,14 @@
 		</ul>
 		<?php require('pages/extra/list-dirfiles.php'); ?>
 		<div class="row">
-			<div class="col-sm-3">
+			<div class="col-sm-4">
 				<button type="submit" name="post_action" value='Simulate_Project' class="btn btn-info full-row" id="Simulate_Project">Simulate Project</button>
 			</div>
 			<div><center>
 				<form action='' method='post' id='Selected_Action'>
 					<input type="hidden" value="" name="selected_ids" id="selected_ids" />
+					<input type="hidden" value="<?php echo $search_user['username']; ?>" name="owner">
+					<input type="hidden" value="<?php echo $project['id']; ?>" name="project_id">
 					<button type="submit" name="post_action" value='Compile_Selected' class="btn btn-success" >Compile Selected</button>
 					<button type="submit" name="post_action" value='Remove_Selected' class="btn btn-danger" >Remove Selected</button>
 				</form>

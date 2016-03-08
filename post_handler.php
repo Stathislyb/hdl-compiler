@@ -52,8 +52,9 @@ if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST["post_action"])){
 			$project_id = $db->create_project($_POST['project_name'], $_POST['project_description'], $short_code);
 			if($project_id > 0){
 				if( $db->add_project_editor($_SESSION['vhdl_user']['username'], $project_id, 1) >0 ){
+					$db->add_project_multi_editors($_POST['projet_authors'], $project_id);
 					array_push($_SESSION['vhdl_msg'], 'success_project_creation');
-					mkdir($BASE_DIR.$_SESSION['vhdl_user']['username']."/".$short_code,0700);
+					mkdir($BASE_DIR.$_SESSION['vhdl_user']['username']."/".$short_code,0777);
 					header("Location:".$BASE_URL."/project/".$_SESSION['vhdl_user']['username']."/".$short_code);
 					exit();
 				}else{
@@ -186,6 +187,59 @@ if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST["post_action"])){
 				}
 			}else{
 				array_push($_SESSION['vhdl_msg'], 'fail_upload_file');
+			}
+		break;
+			
+		case "Compile_Selected":
+			$selected = explode('-',$_POST['selected_ids']);
+			$project = $db->get_project($_POST['project_id']);
+			foreach ($selected as $file_id) {
+				$file = $db->get_file($file_id);
+				if($file['relative_path']=='/'){
+					$full_path = $BASE_DIR.$_POST['owner'].'/'.$project['short_code'].'/'.$file['name'];
+					$directory = $BASE_DIR.$_POST['owner'].'/'.$project['short_code'].'/';
+				}else{
+					$full_path = $BASE_DIR.$_POST['owner'].'/'.$project['short_code'].$file['relative_path'].'/'.$file['name'];
+					$directory = $BASE_DIR.$_POST['owner'].'/'.$project['short_code'].$file['relative_path'].'/';
+				}
+				
+				if (file_exists($full_path)){
+					check_and_create_job_directory();
+					$extra=process_pre_options($_POST);
+					//$prefile="-a ".$extra;
+					$prefile="-a ";
+					$postfile="";
+					$executable='/usr/lib/ghdl/bin/ghdl';
+					$timeout=6;
+					create_job_file($directory,$file['name'],$prefile,$postfile,$executable,$timeout);
+
+					echo "job created";
+				}else{
+					echo "file not found at ".$full_path;
+				}
+			}
+		break;
+			
+		case "Remove_Selected":
+			$selected = explode('-',$_POST['selected_ids']);
+			$project = $db->get_project($_POST['project_id']);
+			foreach ($selected as $file_id) {
+				$file = $db->get_file($file_id);
+				if($file['relative_path']=='/'){
+					$full_path = $BASE_DIR.$_POST['owner'].'/'.$project['short_code'].'/'.$file['name'];
+				}else{
+					$full_path = $BASE_DIR.$_POST['owner'].'/'.$project['short_code'].$file['relative_path'].'/'.$file['name'];
+				}
+				
+				if(is_dir($full_path)){
+					$db->remove_inner_files($file_id);
+				}
+				if( $db->remove_file($file_id)){
+					echo "file removed ";
+				}
+				if (file_exists($full_path)){
+					system("rm -rf ".escapeshellarg($full_path));
+				}
 			}
 		break;
 			

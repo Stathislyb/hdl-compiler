@@ -176,6 +176,14 @@ class Database {
 		return $statement->fetchAll();
 	}
 	
+	// Select the file by id, returns the file's row on success and false on failure
+	public function get_file($file_id) {
+		$query = "SELECT * FROM project_files WHERE id = '".$file_id."'"; 
+		$statement = $this->conn->prepare($query); 
+		$statement->execute();
+		return $statement->fetch();
+	}
+	
 	// Add directory or file in database
 	public function add_dir_file($dir_name, $project_id, $file_type,  $current_dir) {
 		$query = "INSERT INTO project_files (name, project_id, type, relative_path) Values('".$dir_name."','".$project_id."' ,'".$file_type."' ,'".$current_dir."')"; 
@@ -195,6 +203,26 @@ class Database {
 		}else{
 			return false;
 		}
+	}
+	
+	// Removes file from database, return true or false
+	public function remove_file($file_id) {
+		$query = "DELETE FROM project_files WHERE id = '".$file_id."'"; 
+		$statement = $this->conn->prepare($query); 
+		return $statement->execute();
+	}
+	
+	// Removes files in the given directory from database, return true or false
+	public function remove_inner_files($file_id) {
+		$file = $this->get_file($file_id);
+		if($file['relative_path']=='/'){
+			$relative_dir = '/'.$file['name'];
+		}else{
+			$relative_dir = $file['relative_path'].'/'.$file['name'];
+		}
+		$query = "DELETE FROM project_files WHERE project_id = '".$file['project_id']."' AND relative_path LIKE '".$relative_dir."%'"; 
+		$statement = $this->conn->prepare($query); 
+		return $statement->execute();
 	}
 	
 	// Select the latest projects, returns a list of the projects on success and false on failure
