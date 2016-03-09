@@ -49,7 +49,8 @@ if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST["post_action"])){
 		// Create Project
 		case "create_project":
 			$short_code = $gen->create_short_code($_POST['project_name']);
-			$project_id = $db->create_project($_POST['project_name'], $_POST['project_description'], $short_code);
+			$project_id = $db->create_project($_POST['project_name'], $_POST['project_description'], $short_code, $_POST['project_share']);
+			
 			if($project_id > 0){
 				if( $db->add_project_editor($_SESSION['vhdl_user']['username'], $project_id, 1) >0 ){
 					$db->add_project_multi_editors($_POST['projet_authors'], $project_id);
@@ -63,6 +64,7 @@ if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST["post_action"])){
 			}else{
 				array_push($_SESSION['vhdl_msg'], 'fail_project_creation');
 			}
+			
 		break;
 			
 		// Edit Project
@@ -81,6 +83,22 @@ if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST["post_action"])){
 			}else{
 				array_push($_SESSION['vhdl_msg'], 'fail_project_edit');
 			}
+		break;
+			
+		// Remove Project
+		case "Remove_Project":
+			$_POST['project_id'];
+			$project = $db->get_project($_POST['project_id']);
+			$full_path = $BASE_DIR.$_POST['owner'].'/'.$project['short_code'];
+			
+			$db->clear_project($project['id']);
+			$db->remove_project($project['id']);
+			if (file_exists($full_path)){
+				system("rm -rf ".escapeshellarg($full_path));
+			}
+			
+			header("Location:".$BASE_URL);
+			exit();
 		break;
 			
 		// Create Directory
@@ -235,7 +253,7 @@ if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST["post_action"])){
 					$db->remove_inner_files($file_id);
 				}
 				if( $db->remove_file($file_id)){
-					echo "file removed ";
+					//echo "file removed ";
 				}
 				if (file_exists($full_path)){
 					system("rm -rf ".escapeshellarg($full_path));

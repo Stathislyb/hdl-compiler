@@ -31,11 +31,16 @@
 <hr/>
 <div class="row">
 	<div class="col-sm-3"> 
-		<?php if( $user->validate_ownership($editors) ){
-			echo "<a href='".$BASE_URL."/edit-project/".$project['short_code']."'>".
-				"<button type='button' class='btn btn-primary full-row'>Edit Project</button>".
-				"</a><br/>";
-		} ?>
+		<?php  if( $user->validate_ownership($editors) ){ ?>
+			<a href='<?php echo $BASE_URL; ?>/edit-project/<?php echo $project['short_code']; ?>'>
+				<button type='button' class='btn btn-primary full-row'>Edit Project</button>
+			</a><br/>
+			<form action='' method='post' >
+				<input type="hidden" value="<?php echo $search_user['username']; ?>" name="owner">
+				<input type="hidden" value="<?php echo $project['id']; ?>" name="project_id">
+				<button type="submit" name="post_action" value='Remove_Project' class="btn btn-danger full-row" >Remove Project</button>
+			</form><br/>
+		<?php } ?>
 		<ul class="list-group text-center">
 			<li class='list-group-item list-header'>Owner</li>
 			<li class='list-group-item'><?php echo "<a href='".$BASE_URL."/project/".$search_user['username']."'>".$search_user['username']."</a>"; ?></li>

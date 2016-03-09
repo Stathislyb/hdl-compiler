@@ -17,6 +17,7 @@
 		echo '<div class="row">';
 		foreach ($projects as $project) {
 			$thresshold = $last_row+$j;
+			$description = $gen->fix_string_length($project['description']);
 			if( $thresshold <= $proj_num){
 				$size='col-sm-3';
 			}else{
@@ -30,7 +31,7 @@
 			
 			echo "<div class='".$size." square-tiles' onclick='window.location=\"".$BASE_URL."/project/".$user->username."/".$project['short_code']."\";'>";
 			echo "<div class='header'>".$project['name']."</div>";
-			echo "<p>".$project['description']."</p>";
+			echo "<p>".$description."</p>";
 			echo "</div>";
 			$j++;
 		}

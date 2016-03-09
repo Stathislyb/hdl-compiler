@@ -287,7 +287,7 @@ font-family:Tahoma, Geneva, sans-serif;
 	min-width: 29%;
 }
 .square-tiles:hover {
-    background-color: #F9FDFF;
+    background-color: #F7F7F7;
     box-shadow: 4px 4px 10px #A0A4A5;
 }
 .square-tiles .header {
@@ -365,3 +365,5 @@ font-family:Tahoma, Geneva, sans-serif;
 .no-border{
 	border: none;
 }
+
+.typeahead { z-index: 1051; }

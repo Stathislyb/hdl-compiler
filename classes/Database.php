@@ -113,11 +113,28 @@ class Database {
 	}
 	
 	// Create new project, returns id on success and 0 on failure
-	public function create_project($name, $description, $short_code) {
-		$query = "INSERT INTO projects (name, description, short_code) Values('".$name."','".$description."','".$short_code."')"; 
+	public function create_project($name, $description, $short_code, $public) {
+		$query = "INSERT INTO projects (name, description, short_code, public) Values('".$name."','".$description."','".$short_code."','".$public."')"; 
 		$statement = $this->conn->prepare($query); 
 		$statement->execute();
 		return $this->conn->lastInsertId();
+	}
+	
+	// Create new project, returns id on success and 0 on failure
+	public function remove_project($project_id) {
+		$query = "DELETE FROM projects WHERE id='".$project_id."'"; 
+		$statement = $this->conn->prepare($query); 
+		$statement->execute();
+		$query = "DELETE FROM projects_editors WHERE project_id='".$project_id."'"; 
+		$statement = $this->conn->prepare($query); 
+		return $statement->execute();
+	}
+	
+	// Create new project, returns id on success and 0 on failure
+	public function clear_project($project_id) {
+		$query = "DELETE FROM project_files WHERE project_id='".$project_id."'"; 
+		$statement = $this->conn->prepare($query); 
+		return $statement->execute();
 	}
 	
 	// Add editor/owner to project, returns id on success and 0 on failure
@@ -228,6 +245,14 @@ class Database {
 	// Select the latest projects, returns a list of the projects on success and false on failure
 	public function get_latest_projects($num) {
 		$query = "SELECT projects.*, users.username as owner FROM projects JOIN projects_editors ON projects.id = projects_editors.project_id JOIN users ON users.id = projects_editors.user_id WHERE projects_editors.user_type = '1' AND projects.public = '1' ORDER BY projects.id DESC LIMIT ".$num; 
+		$statement = $this->conn->prepare($query); 
+		$statement->execute();
+		return $statement->fetchAll();
+	}
+	
+	// Select the latest projects, returns a list of the projects on success and false on failure
+	public function find_users_like($username) {
+		$query = "SELECT username FROM users WHERE username LIKE '".$username."%'"; 
 		$statement = $this->conn->prepare($query); 
 		$statement->execute();
 		return $statement->fetchAll();

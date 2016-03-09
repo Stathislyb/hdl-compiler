@@ -56,4 +56,43 @@ $( document ).ready(function() {
 			return false;
 		}
     });
+	
+	$('#typeahead-input').on('keyup', function () {
+		var query = $('#typeahead-input').val();
+		var formData = {ajax_action:"select_users_like",username:query};
+		return $.ajax({
+			url : "ajax_handler.php",
+			type: "POST",
+			data : formData,
+			dataType:"json",
+			success: function(data){
+				$('.typeahead').typeahead('destroy');
+				$(".typeahead").typeahead({source:data, autoSelect: true, delay:200});
+			}
+		});
+    });
+	
+	
 });
+
+function typeahead_update_value(e) {
+	var user = $(e).html();
+	$('#editor-users').append("<li class='list-group-item'><span class='editor-item'>"+user+"</span><span onclick='typeahead_remove_item(this)' class='glyphicon glyphicon-remove pull-right btn btn-danger btn-xs' aria-hidden='true'></span></li>");
+	update_editors_field();
+};
+
+function typeahead_remove_item(e) {
+	var user = $(e).html();
+	$(e).parent().remove();
+	update_editors_field();
+};
+
+function update_editors_field() {
+	$("#projet_authors").val('');
+	$( ".editor-item" ).each(function() {
+		var user = $(this).html();
+		$("#projet_authors").get(0).value += user+',';
+	});
+	var value = $("#projet_authors").val().slice(0, -1);
+	$("#projet_authors").val(value) ;
+};

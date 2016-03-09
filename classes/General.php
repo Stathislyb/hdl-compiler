@@ -121,5 +121,17 @@ class General {
 		return $string;
 	}
 	
+	// Return part of string with about 160 characters.
+	//   it's not exact because it considers cutting words in half and avoids it.
+	public function fix_string_length($string){
+		if( strlen($string) >105 ){
+			$output = substr($string,0,105);
+			$output = substr($output,0, strrpos($output,' ') )."...";
+		}else{
+			$output = $string;
+		}
+		return $output;
+	}
+	
 }
 ?>
