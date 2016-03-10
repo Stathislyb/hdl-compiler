@@ -104,6 +104,22 @@ class Database {
 		return $statement->fetch();
 	}
 	
+	// Select project by name
+	public function get_project_name($project_name) {
+		$query = "SELECT * FROM projects WHERE name='".$project_name."'"; 
+		$statement = $this->conn->prepare($query); 
+		$statement->execute();
+		return $statement->fetch();
+	}
+	
+	// Select project's owner and return his username
+	public function get_project_owner($project_id) {
+		$query = "SELECT users.username FROM projects JOIN projects_editors ON projects_editors.project_id = projects.id JOIN users ON users.id = projects_editors.user_id WHERE projects.id='".$project_id."' AND projects_editors.user_type = '1'"; 
+		$statement = $this->conn->prepare($query); 
+		$statement->execute();
+		return $statement->fetch();
+	}
+	
 	// Select project editors by project id, returns the project's editors on success and false on failure
 	public function get_project_editors($project_id) {
 		$query = "SELECT users.username,projects_editors.user_type FROM users JOIN projects_editors ON projects_editors.user_id = users.id WHERE projects_editors.project_id = '".$project_id."'"; 
@@ -250,12 +266,27 @@ class Database {
 		return $statement->fetchAll();
 	}
 	
-	// Select the latest projects, returns a list of the projects on success and false on failure
+	// Select the users starting with given username
 	public function find_users_like($username) {
-		$query = "SELECT username FROM users WHERE username LIKE '".$username."%'"; 
+		$query = "SELECT username FROM users WHERE username LIKE '".$username."%' LIMIT 10"; 
 		$statement = $this->conn->prepare($query); 
 		$statement->execute();
 		return $statement->fetchAll();
+	}
+	
+	// Select the projects starting with given project name
+	public function find_projects_like($name) {
+		$query = "SELECT name FROM projects WHERE name LIKE '".$name."%' AND public='1' LIMIT 10"; 
+		$statement = $this->conn->prepare($query); 
+		$statement->execute();
+		return $statement->fetchAll();
+	}
+	
+	// Select the project and return data for link
+	public function find_project_for_link($name) {
+		$project = $this->get_project_name($name); 
+		$owner = $this->get_project_owner($project['id']);
+		return array('project'=>$project['short_code'],'owner'=>$owner['username']);
 	}
 }
 

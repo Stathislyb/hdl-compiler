@@ -78,7 +78,7 @@ if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST["post_action"])){
 				$old_name = $BASE_DIR.$_SESSION['vhdl_user']['username']."/".$project['short_code'];
 				$new_name = $BASE_DIR.$_SESSION['vhdl_user']['username']."/".$short_code;
 				rename($old_name, $new_name);
-				header("Location:".$BASE_URL."/edit-project/".$short_code);
+				header("Location:".$BASE_URL."/project/".$_SESSION['vhdl_user']['username']."/".$short_code);
 				exit();
 			}else{
 				array_push($_SESSION['vhdl_msg'], 'fail_project_edit');

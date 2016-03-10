@@ -2,25 +2,26 @@
 
 class Messages {
 	// Database class variables
+	//success, info, warning, danger
 	public $messages=array(
-		"fail_login" => "The Username or Password were wrong.",
-		"success_login" => "Logged in successfully.",
-		"success_register" => "Registered user successfully. An e-mail will be sent to the adress you provided with details about activating your account.",
-		"fail_register" => "The user could not be registered. Make sure the values you gave were correct and try a different username.",
-		"fail_register_confirm" => "The confirmation password did not match.",
-		"invalid_mail" => "The e-mail address you provided was invalid.",
-		"success_project_creation" => "The project was created successfully.",
-		"fail_project_creation" => "The project could not be created.",
-		"success_project_edit" => "The project was edited successfully.",
-		"fail_project_edit" => "The project changes could not be saved.",
-		"success_create_dir" => "The directory was created successfully.",
-		"fail_create_dir" => "The directory could not be created.",
-		"success_create_file" => "The file was created successfully.",
-		"fail_create_file" => "The file could not be created.",
-		"success_upload_file" => "The was successfully uploaded.",
-		"fail_upload_file" => "The could not be uploaded.",
-		"fail_upload_file_unzip" => "Error occured while unzipping the file.",
-		"file_exists"=>"A file with the same name already exists in this directory"
+		"fail_login" => array("The Username or Password were wrong.","danger"),
+		"success_login" => array("Logged in successfully.","success"),
+		"success_register" => array("Registered user successfully. An e-mail will be sent to the adress you provided with details about activating your account.","success"),
+		"fail_register" => array("The user could not be registered. Make sure the values you gave were correct and try a different username.","danger"),
+		"fail_register_confirm" => array("The confirmation password did not match.","danger"),
+		"invalid_mail" => array("The e-mail address you provided was invalid.","danger"),
+		"success_project_creation" => array("The project was created successfully.","success"),
+		"fail_project_creation" => array("The project could not be created.","danger"),
+		"success_project_edit" => array("The project was edited successfully.","success"),
+		"fail_project_edit" => array("The project changes could not be saved.","danger"),
+		"success_create_dir" => array("The directory was created successfully.","success"),
+		"fail_create_dir" => array("The directory could not be created.","danger"),
+		"success_create_file" => array("The file was created successfully.","success"),
+		"fail_create_file" => array("The file could not be created.","danger"),
+		"success_upload_file" => array("The was successfully uploaded.","success"),
+		"fail_upload_file" => array("The could not be uploaded.","danger"),
+		"fail_upload_file_unzip" => array("Error occured while unzipping the file.","danger"),
+		"file_exists"=>array("A file with the same name already exists in this directory","danger")
 	);
 	
 	// Class constractor function
@@ -34,7 +35,11 @@ class Messages {
 	// Display messages
 	public function display_msg($msg_codes_array) {
 		foreach($msg_codes_array as $msg_id){
-			echo $this->messages[$msg_id]."<br />";
+			
+			echo '<div class="alert alert-'.$this->messages[$msg_id][1].'">'
+   					.'<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>'
+    				.$this->messages[$msg_id][0]
+				.'</div>';
 		}
 		$_SESSION['vhdl_msg']=array();
 	}

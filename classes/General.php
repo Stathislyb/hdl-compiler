@@ -121,6 +121,24 @@ class General {
 		return $string;
 	}
 	
+	// Return a list of editors comma seperated.
+	public function list_editors_comma($editors){
+		$list="";
+		foreach($editors as $editor){
+			$list.= $editor['username'].",";
+		}
+		return rtrim($list, ",");
+	}
+	
+	// Return a list of editors with li format.
+	public function list_editors_li($editors){
+			$list="";
+		foreach($editors as $editor){
+			$list.= '<li class="list-group-item"><span class="editor-item">'.$editor['username'].'</span><span onclick="typeahead_remove_item(this)" class="glyphicon glyphicon-remove pull-right btn btn-danger btn-xs" aria-hidden="true"></span></li>';
+		}
+		return $list;
+	}
+	
 	// Return part of string with about 160 characters.
 	//   it's not exact because it considers cutting words in half and avoids it.
 	public function fix_string_length($string){
@@ -133,5 +151,15 @@ class General {
 		return $output;
 	}
 	
+	// Return the contents of a file.
+	public function open_and_read_file($file){
+		$output='';
+		$file_handle = fopen($file, "r");
+		while (!feof($file_handle)) {
+		   $output .= fgets($file_handle);
+		}
+		fclose($file_handle);
+		return $output;
+	}
 }
 ?>

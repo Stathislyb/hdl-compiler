@@ -31,8 +31,13 @@ if(isset($_SESSION['vhdl_user']['loged_in']) && $_SESSION['vhdl_user']['loged_in
 	$included_file='loggedout.php';
 }
 
+//bring header and navbar
 include('theme/header.php');
+// display messages from the user's last interaction
+$messages->display_msg($_SESSION['vhdl_msg']);
+//bring the requested file
 include('pages/'.$included_file);
+//bring the footer
 include('theme/footer.php');
 
 
@@ -43,8 +48,6 @@ include('theme/footer.php');
 ***********************************
 */
 
-// display messages from the user's last interaction
-$messages->display_msg($_SESSION['vhdl_msg']);
 if(isset($_GET)){
 	echo "<br/>GET :<br/>";
 	var_dump($_GET);

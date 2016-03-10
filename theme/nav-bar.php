@@ -13,7 +13,7 @@
 			</li>
 			<li class="navbar-form">
 				<input type="hidden" id="nav-search-type" value="Projects">
-				<input type="text" class="form-control" placeholder="Search" id="nav-search">
+				<input type="text" class="form-control nav-search-typeahead" autocomplete="off" placeholder="Search" id="nav-search">
 			</li>
 		</ul>
 			

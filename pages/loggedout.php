@@ -22,7 +22,7 @@
 </div>
 
 <div class="row">
-	<div class="col-sm-4 col-md-offset-4">
+	<div class="col-sm-4 col-sm-offset-4">
 		<ul class="nav nav-tabs">
 			<li class="active"><a data-toggle="tab" href="#login-from">Log In</a></li>
 			<li><a data-toggle="tab" href="#sid-from">SID</a></li>

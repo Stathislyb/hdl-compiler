@@ -57,11 +57,33 @@ $( document ).ready(function() {
 		}
     });
 	
+	$('#nav-search').on('keyup', function () {
+		var query = $('#nav-search').val();
+		var type = $('#nav-search-type').val();
+		var formData = {ajax_action:"search_navbar",query:query,type:type};
+		$.ajax({
+			url : "/ajax_handler.php",
+			type: "POST",
+			data : formData,
+			dataType:"json",
+			success: function(data){
+				var item;
+				$('.nav-search-typeahead').typeahead('destroy');
+				if(type == 'Projects'){
+					item = '<li><a class="dropdown-item" href="#" onclick="navbar_search_project(this)" role="option"></a></li>';
+				}else{
+					item = '<li><a class="dropdown-item" onclick="navbar_search_user(this)" href="#" role="option"></a></li>';
+				}
+				$(".nav-search-typeahead").typeahead({source:data, autoSelect: true, delay:200, item:item});
+			}
+		});
+    });
+	
 	$('#typeahead-input').on('keyup', function () {
 		var query = $('#typeahead-input').val();
 		var formData = {ajax_action:"select_users_like",username:query};
-		return $.ajax({
-			url : "ajax_handler.php",
+		$.ajax({
+			url : "/ajax_handler.php",
 			type: "POST",
 			data : formData,
 			dataType:"json",
@@ -74,6 +96,27 @@ $( document ).ready(function() {
 	
 	
 });
+
+function navbar_search_project(e) {
+	var query = $(e).html();
+	var formData = {ajax_action:"select_project_by_name",name:query};
+	$.ajax({
+		url : "/ajax_handler.php",
+		type: "POST",
+		data : formData,
+		dataType:"json",
+		success: function(data){
+			var link = window.location.protocol + "//" + window.location.host + "/project/"+data['owner']+"/"+data['project'];
+			window.location.replace(link);
+		}
+	});
+};
+
+function navbar_search_user(e) {
+	var user = $(e).html();
+	var link = window.location.protocol + "//" + window.location.host + "/project/"+user;
+	window.location.replace(link);
+};
 
 function typeahead_update_value(e) {
 	var user = $(e).html();

@@ -104,14 +104,6 @@ return $extra;
 
 
 
-
-
-
-
-
-
-
-
 function check_and_delete_file($filenamedelete)
 {
 
@@ -173,16 +165,10 @@ if ( $last =="")
 	echo "<div class='orangediv'>Created Job ID: $jobid. Queued Jobs $nrfiles.</div>";
 	fclose($ourhandle);
 
-
-
                 //$line=system("$cmd 2>&1",$retval);
                 //echo $cmd;
                 //var_export(my_exec("$cmd"));
                 //echo "C $file $line $retval";
-
-
-
-
 
 }
 
@@ -208,7 +194,6 @@ while (false !== ($entry = $d->read())) {
 
 return array($latest_filename,$number_of_files);
 }
-
 
 
 
@@ -252,40 +237,18 @@ function isAvailable($func) {
 
 function session_dasygenis()
 {
-if (session_status() == PHP_SESSION_NONE) {
-    session_start();
-}
+	if (session_status() == PHP_SESSION_NONE) {
+		session_start();
+	}
 
-if ( isset($_COOKIE['PID']) && $_COOKIE['PID'] > 0 ) 
-	{ 
-	   // echo "READ_COOKIE";
- 	   $cleancookiepid = dasygenis_filter_letters($_COOKIE['PID']);
-	   $_SESSION['PID'] = $cleancookiepid;
-	}
-else
-   {
-//cookie is not set, but session is set
-	if ( isset($_SESSION['PID']) && $_SESSION['PID'] > 0 )
-	{ $_COOKIE['PID'] = $_SESSION['PID'] ;
-	  setcookie("PID", $_SESSION['PID'], time()+36000);
-	  //echo "WRITE_COOKIE";
-	}
-	
-   }
-	
-	if( !( isset($_SESSION['vhdl_msg']) && is_array($_SESSION['vhdl_msg']) ) ){
-		$_SESSION['vhdl_msg'] = array();
-	}
+
 
 } //end function session dasygenis
 
 
 
-
-
-
-  function tempdir($dir, $prefix='', $mode=0700)
-  {
+function tempdir($dir, $prefix='', $mode=0700)
+{
     if (substr($dir, -1) != '/') $dir .= '/';
 
     do
@@ -294,47 +257,45 @@ else
     } while (!mkdir($path, $mode));
 
     return $path;
-  }
+}
 
 
 
 
 function get_status()
 {
-global $STATUSDIR;
+	global $STATUSDIR;
 
-$it = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($STATUSDIR),
-RecursiveIteratorIterator::SELF_FIRST);
-$it->rewind();
-echo "<pre>";
-while($it->valid()) {
+	$it = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($STATUSDIR),
+	RecursiveIteratorIterator::SELF_FIRST);
+	$it->rewind();
+	echo "<pre>";
+	while($it->valid()) {
 		if (!$it->isDot() && !$it->isDir()) {
-		$file=$it->getSubPathName();
-		$statusfile=$STATUSDIR.$file;
-		//Note: $file holds the filename, which is also the pid of the worker
-		echo "Worker Status [pid ".$file."]: <br />";
-                $filecontents = file_get_contents($statusfile);
-                print $filecontents;
+			$file=$it->getSubPathName();
+			$statusfile=$STATUSDIR.$file;
+			//Note: $file holds the filename, which is also the pid of the worker
+			echo "Worker Status [pid ".$file."]: <br />";
+			$filecontents = file_get_contents($statusfile);
+			print $filecontents;
 		}
 		//outside the if loop, to increase the counter
 		$it->next();
-}
-echo "</pre>";
-
-
+	}
+	echo "</pre>";
 }
 
 
 //print some hdl options
 function extra_ghdl_options()
 {
-echo "<br />";
-echo "<input type='checkbox' name='extralib[]' value='synopsys' />Include synopsis library for more primary units.<br />";
+	echo "<br />";
+	echo "<input type='checkbox' name='extralib[]' value='synopsys' />Include synopsis library for more primary units.<br />";
 }
 
 function extra_simulation_options()
 {
-echo "<input type='checkbox' name='extrasim[]' value='vcd' />Create a value changed dump VCD wave trace file.<br />";
+	echo "<input type='checkbox' name='extrasim[]' value='vcd' />Create a value changed dump VCD wave trace file.<br />";
 }
 
 
@@ -345,32 +306,30 @@ echo "<input type='checkbox' name='extrasim[]' value='vcd' />Create a value chan
 
 function compile_all_files_in_directory($directory,$extraparameters,$timeout)
 {
+	$it = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($directory),
+	RecursiveIteratorIterator::SELF_FIRST);
+	$it->rewind();
 
 
-$it = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($directory),
-RecursiveIteratorIterator::SELF_FIRST);
-$it->rewind();
-
-
-while($it->valid()) {
-$ourfilename=$it->getSubPathName();
-$ourfilenamewoextension=pathinfo($ourfilename)['filename'];
-$name = pathinfo( $ourfilename )[ 'filename' ];
-$ourextension=$it->getExtension();
-$ourpath=$it->getSubPath();
-$ourfullfilenamewoextension=$directory."/".$ourfilenamewoextension;
-if (!$it->isDot() && !$it->isDir()) 
+	while($it->valid()) {
+	$ourfilename=$it->getSubPathName();
+	$ourfilenamewoextension=pathinfo($ourfilename)['filename'];
+	$name = pathinfo( $ourfilename )[ 'filename' ];
+	$ourextension=$it->getExtension();
+	$ourpath=$it->getSubPath();
+	$ourfullfilenamewoextension=$directory."/".$ourfilenamewoextension;
+	if (!$it->isDot() && !$it->isDir()) 
 		{
 		if( $ourextension=="vhd" || $ourextension=="VHD") {
 
-		$file=$directory.$ourfilename;
-                $prefile="-a ".$extraparameters;
-                $postfile="";
-		$executable="/usr/bin/ghdl";
-                create_job_file($directory,$file,$prefile,$postfile,$executable,$timeout);
-		//sleep for 0.25 sec
-		time_nanosleep(0,150000000);
-								}
+			$file=$directory.$ourfilename;
+            $prefile="-a ".$extraparameters;
+            $postfile="";
+			$executable="/usr/bin/ghdl";
+            create_job_file($directory,$file,$prefile,$postfile,$executable,$timeout);
+			//sleep for 0.25 sec
+			time_nanosleep(0,150000000);
+		}
 
 
 		}
@@ -387,51 +346,45 @@ if (!$it->isDot() && !$it->isDir())
 
 /* creates a compressed zip file */
 function create_zip($files = array(),$destination = '',$overwrite = false) {
-        //if the zip file already exists and overwrite is false, return false
-        if(file_exists($destination) && !$overwrite) { return false; }
-        //vars
-        $valid_files = array();
-        //if files were passed in...
-        if(is_array($files)) {
-                //cycle through each file
-                foreach($files as $file) {
-                        //make sure the file exists
-                        if(file_exists($file)) {
-                                $valid_files[] = $file;
-                        }
-                }
-        }
-        //if we have good files...
-        if(count($valid_files)) {
-                //create the archive
-                $zip = new ZipArchive();
-                if($zip->open($destination,$overwrite ? ZIPARCHIVE::OVERWRITE : ZIPARCHIVE::CREATE) !== true) {
-                        return false;
-                }
-                //add the files
-                foreach($valid_files as $file) {
-                        $zip->addFile($file,$file);
-                }
-                //debug
-                //echo 'The zip archive contains ',$zip->numFiles,' files with a status of ',$zip->status;
+	//if the zip file already exists and overwrite is false, return false
+	if(file_exists($destination) && !$overwrite) { return false; }
+	//vars
+	$valid_files = array();
+	//if files were passed in...
+	if(is_array($files)) {
+		//cycle through each file
+		foreach($files as $file) {
+			//make sure the file exists
+			if(file_exists($file)) {
+				$valid_files[] = $file;
+			}
+		}
+	}
+	//if we have good files...
+	if(count($valid_files)) {
+		//create the archive
+		$zip = new ZipArchive();
+		if($zip->open($destination,$overwrite ? ZIPARCHIVE::OVERWRITE : ZIPARCHIVE::CREATE) !== true) {
+				return false;
+		}
+		//add the files
+		foreach($valid_files as $file) {
+				$zip->addFile($file,$file);
+		}
+		//debug
+		//echo 'The zip archive contains ',$zip->numFiles,' files with a status of ',$zip->status;
 
-                //close the zip -- done!
-                $zip->close();
+		//close the zip -- done!
+		$zip->close();
 
-                //check to make sure the file exists
-                return file_exists($destination);
-        }
-        else
-        {
-                return false;
-        }
+		//check to make sure the file exists
+		return file_exists($destination);
+	}
+	else
+	{
+		return false;
+	}
 }
-
-
-
-
-
-
 
 
 
@@ -439,58 +392,47 @@ function create_zip($files = array(),$destination = '',$overwrite = false) {
 function zipsend_all_files_in_directory($directory)
 {
 
-//we enter the directory, because we want a flat structure
-chdir($directory);
+	//we enter the directory, because we want a flat structure
+	chdir($directory);
 
 
-$it = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($directory),
-RecursiveIteratorIterator::SELF_FIRST);
-$it->rewind();
+	$it = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($directory),
+	RecursiveIteratorIterator::SELF_FIRST);
+	$it->rewind();
 
-$filelist=array();
+	$filelist=array();
 
-//zip file will be created to basedir
-$temp_file_to_send=tempnam($GLOBALS['BASE'],$_SESSION['PID'] );
-
-
-while($it->valid()) {
-$ourfilename=$it->getSubPathName();
-$ourfilenamewoextension=pathinfo($ourfilename)['filename'];
-$name = pathinfo( $ourfilename )[ 'filename' ];
-$ourextension=$it->getExtension();
-$ourpath=$it->getSubPath();
-$ourfullfilenamewoextension=$directory."/".$ourfilenamewoextension;
-if (!$it->isDot() && !$it->isDir()  && $it->getSize() >0 )
-                {
-
-	
-	$filelist[]=$ourfilename;
-	
+	//zip file will be created to basedir
+	$temp_file_to_send=tempnam($GLOBALS['BASE'],$_SESSION['PID'] );
 
 
+	while($it->valid()) {
+		$ourfilename=$it->getSubPathName();
+		$ourfilenamewoextension=pathinfo($ourfilename)['filename'];
+		$name = pathinfo( $ourfilename )[ 'filename' ];
+		$ourextension=$it->getExtension();
+		$ourpath=$it->getSubPath();
+		$ourfullfilenamewoextension=$directory."/".$ourfilenamewoextension;
+		if (!$it->isDot() && !$it->isDir()  && $it->getSize() >0 )
+		{
+			$filelist[]=$ourfilename;
+		}//end if file
+		//Next element
+		$it->next();
+	}//end while files
 
 
-	}//end if file
-//Next element
-$it->next();
-}//end while files
-
-
-//OK, filelist is ready lets send it
-
-
-$result=create_zip($filelist,$temp_file_to_send.".zip");
-if ( $result )
-{ echo "Zip file created.<br /> Download it at:
-[<a href=files/".basename($temp_file_to_send).".zip>Custom CPU Core</a>]";
-}
-else
-{
-echo "Strange error. Zip file could not be created. Please retry";
-}
-
-
-
+	//OK, filelist is ready lets send it
+	$result=create_zip($filelist,$temp_file_to_send.".zip");
+	if ( $result )
+	{ 
+		echo "Zip file created.<br /> Download it at:
+		[<a href=files/".basename($temp_file_to_send).".zip>Custom CPU Core</a>]";
+	}
+	else
+	{
+		echo "Strange error. Zip file could not be created. Please retry";
+	}
 
 }//end function
 
@@ -498,240 +440,92 @@ echo "Strange error. Zip file could not be created. Please retry";
 //Create a clean function that accepts only letters
 function dasygenis_filter_letters($string)
 {
-$var=filter_var($string,FILTER_SANITIZE_STRING);
-$var2=preg_replace("/\.\./",".",$var);
-$var3=preg_replace("/[^a-zA-Z0-9.,+_-]+/i", "-", $var2);
-return $var2;
+	$var=filter_var($string,FILTER_SANITIZE_STRING);
+	$var2=preg_replace("/\.\./",".",$var);
+	$var3=preg_replace("/[^a-zA-Z0-9.,+_-]+/i", "-", $var2);
+	return $var2;
 }
-
-
-
 
 
 //Create a new button
 function create_new_button()
 {
-echo "<button type='submit' name='new' value='1'>New VHDL file</button>";
+	echo "<button type='submit' name='new' value='1'>New VHDL file</button>";
 }
-
-
 
 //Create an edit button
 function create_edit_button($filename)
 {
-echo "<button type='submit' name='edit' value='".$filename."'>Edit</button>";
-//echo "<button type='submit' name='edit' value='../../../etc/passwd'>Edit</button>";
+	echo "<button type='submit' name='edit' value='".$filename."'>Edit</button>";
+	//echo "<button type='submit' name='edit' value='../../../etc/passwd'>Edit</button>";
 }
-
 
 //Create a remove button
 function create_remove_button($filename)
 {
-echo "<button type='submit' name='remove' value='".$filename."'>Remove</button>";
+	echo "<button type='submit' name='remove' value='".$filename."'>Remove</button>";
 }
-
-
 
 //Create a compile button
 function create_compile_button($filename)
 {
-echo "<button type='submit' name='compile' value='".$filename."'>Compile</button>";
+	echo "<button type='submit' name='compile' value='".$filename."'>Compile</button>";
 }
-
-
-
 
 //Create a refresh button
 function create_refresh_button()
 {
-echo "<button type='submit' name='refresh' value='0'>Refresh/Update Page.</button>";
+	echo "<button type='submit' name='refresh' value='0'>Refresh/Update Page.</button>";
 }
-
-
-
 
 
 //Create an href for download for this specific file
 function create_href_for_download($relativedir,$filename)
 {
-echo "<td><a href=".$relativedir.$filename.">".$filename."</a></td>";
+	echo "<td><a href=".$relativedir.$filename.">".$filename."</a></td>";
 }
-
-
-
-
-
-//Function to open a new page for edit
-function edit_file($filename)
-{
-
-$file=dasygenis_filter_letters($filename);
-if (file_exists($file)  && is_readable ($file) )
-{
-echo '<div id="editor">';
-open_and_print_a_file($file);
-echo '</div>';
-//also the save button
-echo '<div id="editor_buttons">';
-print_save_button($file);
-print_close_editor_window_button($file);
-echo "</div><!-- end of buttons -->";
-print_ace_javascript_code();
-}
-
-
-
-}
-
-
-
-//Function to print file
-function open_and_print_a_file($file)
-{
-$file_handle = fopen($file, "r");
-while (!feof($file_handle)) {
-   $line = fgets($file_handle);
-   printf("%s",$line);
-}
-fclose($file_handle);
-
-}
-
-
-
-//Function to print save button
-function print_save_button($file)
-{
-	global $BASE_URL;
-	$file=dasygenis_filter_letters($file);
-	echo "Editing: ".basename($file)."<br/><div id='edit_status'></div>";
-	if (file_exists($file)  && is_writable($file) ){
-		$str="<script type='text/javascript' charset='utf-8' src='".$BASE_URL."/theme/js/ace-editor.js'></script>
-			<!-- Button after the function for visibility -->
-			<input type='button' id='ace_save_button' name='save' value='Save Changes' >";
-		//Print the string
-		echo $str;
-
-	}//end if exists
-	else{
-		echo "FAIL";
-		var_dump(error_get_last());
-	}
-
-}//end function
-
-
-
-
-
-
-
-
-
-
-//Function to close the window
-function print_close_editor_window_button()
-{
-
-$str=<<< BUTTON
-<script type="text/javascript" charset="utf-8">
-close_editor_div = function() {
-document.getElementById('editor').style.display = 'none';
-document.getElementById('editor_buttons').style.display = 'none';
-}
-
-enable_editor_div = function() {
-document.getElementById('editor').style.display = 'block';
-document.getElementById('editor_buttons').style.display = 'block';
-}
-
-</script>
-
-<input type='button' id="greenbutton" name='close' value='Close Editor' onClick='close_editor_div()'>
-
-<!-- We do not use this button any more
-<input type='button' id="greenbutton" name='open' value='Open Editor' onClick='enable_editor_div()'>
--->
-
-BUTTON;
-
-echo $str;
-
-
-}
-
-
-
-
-
-
-
-
-//Function to print ACE javascript
-function print_ace_javascript_code()
-{
-$string= <<< ACEJS
-
-<script src="/src/ace.js" type="text/javascript" charset="utf-8"></script>
-<script>
-    var editor = ace.edit("editor");
-    editor.setTheme("ace/theme/monokai");
-    editor.getSession().setMode("ace/mode/vhdl");
-</script>
-
-ACEJS;
-
-echo $string;
-
-}
-
-
-
-
 
 
 //Function to create a new file at current dir
 function create_new_file_at_workdir()
 {
-global $directory;
-$filename=tempnam($directory,"VHDL_");
+	global $directory;
+	$filename=tempnam($directory,"VHDL_");
 
-$contents="-- Dasygenis VHDL Compiler";
-file_put_contents($filename,$contents);
+	$contents="-- Dasygenis VHDL Compiler";
+	file_put_contents($filename,$contents);
 
-$newfile=$filename.".vhd";
+	$newfile=$filename.".vhd";
 
-echo "Created file: $newfile";
-rename($filename,$newfile);
-reload_page();
-
+	echo "Created file: $newfile";
+	rename($filename,$newfile);
+	reload_page();
 
 }
-
 
 
 //Fail with error message 500, used at ajax calls
 function fail_500()
 {
-header('HTTP/1.1 500 Internal Server Error', true, 500);
+	header('HTTP/1.1 500 Internal Server Error', true, 500);
 }
 
 
 function reload_page()
 {
-//The reload should happen only once
-if(! isset($_SESSION['reload']) )
-{ 
-echo "<script async='async' type='text/javascript'>window.location.reload(true); </script>";
-$_SESSION['reload']=1;
-}
-else
-{
-//echo "NO RELOAD";
-//We already in the reload section so just unset it
-//so next time we will be ok
-unset($_SESSION['reload']);
-}
+	//The reload should happen only once
+	if(! isset($_SESSION['reload']) )
+	{ 
+		echo "<script async='async' type='text/javascript'>window.location.reload(true); </script>";
+		$_SESSION['reload']=1;
+	}
+	else
+	{
+		//echo "NO RELOAD";
+		//We already in the reload section so just unset it
+		//so next time we will be ok
+		unset($_SESSION['reload']);
+	}
 
 }
 
