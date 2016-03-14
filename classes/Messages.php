@@ -21,7 +21,13 @@ class Messages {
 		"success_upload_file" => array("The was successfully uploaded.","success"),
 		"fail_upload_file" => array("The could not be uploaded.","danger"),
 		"fail_upload_file_unzip" => array("Error occured while unzipping the file.","danger"),
-		"file_exists"=>array("A file with the same name already exists in this directory","danger")
+		"file_exists"=>array("A file with the same name already exists in this directory","danger"),
+		"file_removed_success"=>array("The file was successfully removed","success"),
+		"file_removed_fail"=>array("Failed to remove the file","danger"),
+		"add_library_success"=>array("The library was successfully published","success"),
+		"add_library_fail"=>array("Failed to publish the library","danger"),
+		"import_library_success"=>array("The library was imported in your project successfully","success"),
+		"import_library_fail"=>array("Failed to import the library in your project","danger")
 	);
 	
 	// Class constractor function

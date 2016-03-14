@@ -6,6 +6,7 @@ RewriteEngine On
 
 RewriteRule ^()$ index.php [NC,L]
 RewriteRule ^(edit-project|libraries)/([^/]+)[\/]?$ index.php?action=$1&short_code=$2 [NC,L]
+RewriteRule ^libraries/page/([^/]+)[\/]?$ index.php?action=libraries&page=$1 [NC,L]
 RewriteRule ^project/([^/]+)/([^/]+)/(file)/(.*) index.php?action=project-file&user=$1&project=$2&file=$4 [NC,L]
 RewriteRule ^project/([^/]+)/([^/]+)/(directory)/(.*) index.php?action=project-dir&user=$1&project=$2&dir=$4 [NC,L]
 RewriteRule ^project/([^/]+)/([^/]+)[\/]?$ index.php?action=project-dir&user=$1&project=$2&dir=/ [NC,L]

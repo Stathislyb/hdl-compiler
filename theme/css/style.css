@@ -366,4 +366,11 @@ font-family:Tahoma, Geneva, sans-serif;
 	border: none;
 }
 
-.typeahead { z-index: 1051; }
+.typeahead { 
+	z-index: 1051; 
+}
+
+.input-width-fix{
+	width:auto !important;
+    display: inline-block;
+}

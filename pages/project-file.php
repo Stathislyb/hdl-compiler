@@ -1,6 +1,5 @@
 <?php 
 	
-	$gen = new General;
 	$search_user = $db->get_user_information($_GET['user'],"username");
 	$project = $db->get_project_shortcode($_GET['project'], $search_user['id']);
 	$editors = $db->get_project_editors($project['id']);

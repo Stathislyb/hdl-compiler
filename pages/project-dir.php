@@ -72,6 +72,7 @@
 					<input type="hidden" value="" name="selected_ids" id="selected_ids" />
 					<input type="hidden" value="<?php echo $search_user['username']; ?>" name="owner">
 					<input type="hidden" value="<?php echo $project['id']; ?>" name="project_id">
+					<button type="submit" name="post_action" value='Post_Library_Selected' class="btn btn-info" >Post Selected as Library</button>
 					<button type="submit" name="post_action" value='Compile_Selected' class="btn btn-success" >Compile Selected</button>
 					<button type="submit" name="post_action" value='Remove_Selected' class="btn btn-danger" >Remove Selected</button>
 				</form>

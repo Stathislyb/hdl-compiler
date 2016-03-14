@@ -26,7 +26,7 @@
 		<?php require('pages/extra/list-new-projects.php'); ?>
 	</div>
 	<div class="col-sm-6">
-		list 2
+		<?php require('pages/extra/list-new-libraries.php'); ?>
 	</div>
 </div>
 

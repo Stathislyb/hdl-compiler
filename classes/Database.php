@@ -288,6 +288,53 @@ class Database {
 		$owner = $this->get_project_owner($project['id']);
 		return array('project'=>$project['short_code'],'owner'=>$owner['username']);
 	}
+	
+	// Check if an entry with the filename exists, return true or false
+	public function check_lib_exist($filename) {
+		$query = "SELECT COUNT(*) FROM libraries WHERE name = '".$filename."'";
+		$statement = $this->conn->prepare($query); 
+		$statement->execute();
+		$result = $statement->fetch();
+		if($result['COUNT(*)'] > 0){
+			return true;
+		}else{
+			return false;
+		}
+	}
+	
+	// Add library into the database
+	public function add_library($filename, $owner) {
+		$user = $this->get_user_information($owner, 'username');
+		$query = "INSERT INTO libraries (name, owner_id) Values('".$filename."','".$user['id']."')"; 
+		$statement = $this->conn->prepare($query); 
+		$statement->execute();
+		return $this->conn->lastInsertId();
+	}
+	
+	// Select the requested number of latest libraries
+	public function get_latest_libraries($num,$begin) {
+		$query = "SELECT libraries.*, users.username as owner FROM libraries JOIN users ON libraries.owner_id = users.id ORDER BY libraries.id DESC LIMIT ".$num.",".$begin; 
+		$statement = $this->conn->prepare($query); 
+		$statement->execute();
+		return $statement->fetchAll();
+	}
+	
+	// Select the library by name
+	public function get_library($library_name) {
+		$query = "SELECT * FROM libraries WHERE name='".$library_name."'"; 
+		$statement = $this->conn->prepare($query); 
+		$statement->execute();
+		return $statement->fetch();
+	}
+	
+	// Return number of libraries
+	public function count_libraries() {
+		$query = "SELECT COUNT(*) FROM libraries"; 
+		$statement = $this->conn->prepare($query); 
+		$statement->execute();
+		$result = $statement->fetch();
+		return $result['COUNT(*)'];
+	}
 }
 
 

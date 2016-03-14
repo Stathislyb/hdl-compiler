@@ -249,14 +249,102 @@ if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST["post_action"])){
 					$full_path = $BASE_DIR.$_POST['owner'].'/'.$project['short_code'].$file['relative_path'].'/'.$file['name'];
 				}
 				
+				$result = true;
+				
 				if(is_dir($full_path)){
 					$db->remove_inner_files($file_id);
+				}else{
+					$result=false;
 				}
 				if( $db->remove_file($file_id)){
-					//echo "file removed ";
+				}else{
+					$result=false;
 				}
 				if (file_exists($full_path)){
 					system("rm -rf ".escapeshellarg($full_path));
+				}else{
+					$result=false;
+				}
+				
+				if($result){
+					array_push($_SESSION['vhdl_msg'], 'file_removed_success');
+				}else{
+					array_push($_SESSION['vhdl_msg'], 'file_removed_fail');
+				}
+			}
+		break;
+			
+		case "Post_Library_Selected":
+			$selected = explode('-',$_POST['selected_ids']);
+			$project = $db->get_project($_POST['project_id']);
+			foreach ($selected as $file_id) {
+				$file = $db->get_file($file_id);
+				if($file['relative_path']=='/'){
+					$full_path = $BASE_DIR.$_POST['owner'].'/'.$project['short_code'].'/'.$file['name'];
+				}else{
+					$full_path = $BASE_DIR.$_POST['owner'].'/'.$project['short_code'].$file['relative_path'].'/'.$file['name'];
+				}
+				
+				if(!is_dir($full_path) && !$db->check_lib_exist($file['name']) ){
+					$result=true;
+					if( !($db->add_library($file['name'],$_POST['owner']) > 0) ){
+						$result=false;
+					}		
+					
+					if (file_exists($full_path)){
+						if( !copy($full_path,$BASE_DIR."libraries/".$file['name']) ){
+							$result=false;
+						}
+					}else{
+						$result=false;
+					}
+					
+					if($result){
+						array_push($_SESSION['vhdl_msg'], 'add_library_success');
+					}else{
+						array_push($_SESSION['vhdl_msg'], 'add_library_fail');
+					}
+					
+				}else{
+					array_push($_SESSION['vhdl_msg'], 'add_library_fail');
+				}
+			}
+		break;
+			
+		case "Import_Library":
+			$project = $db->get_project($_POST['project_id']);
+			$library = $_POST['library'];
+			$owner = $db->get_project_owner($project['id']);
+			
+			$full_path = $BASE_DIR.$owner['username'].'/'.$project['short_code'].'/libraries/'.$library;
+			$libs_path = $BASE_DIR.'libraries/'.$library;
+			$directory = $BASE_DIR.$owner['username'].'/'.$project['short_code'].'/libraries';
+			
+			$result=true;
+			if(!is_dir($directory)){
+				mkdir($directory,0777);
+				$db->add_dir_file("libraries", $project['id'], "directory", "/");
+			}
+			
+			if($db->check_file_dir_exist($library, $project['id'],  "/libraries")){
+				array_push($_SESSION['vhdl_msg'], 'import_library_fail');
+			}else{
+				if( copy($libs_path, $full_path) ){
+					chmod($full_path, fileperms($libs_path));
+				}else{
+					$result=false;
+				}
+
+				if($result){
+					if($db->add_dir_file($library, $project['id'], "file", "/libraries") > 0){
+						array_push($_SESSION['vhdl_msg'], 'import_library_success');
+						header("Location:".$BASE_URL."/project/".$owner['username']."/".$project['short_code']."/directory/libraries");
+						exit();
+					}else{
+						array_push($_SESSION['vhdl_msg'], 'import_library_fail');
+					}
+				}else{
+					array_push($_SESSION['vhdl_msg'], 'import_library_fail');
 				}
 			}
 		break;
