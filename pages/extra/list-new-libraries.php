@@ -1,8 +1,9 @@
 <?php
-	$libraries = $db->get_latest_libraries(5,0);
+	$libraries = $db->get_latest_libraries("",0,5);
 ?>
 
 <div class="list-group">
+	<h3>Recent Libraries</h3>
 	<?php 
 	foreach($libraries as $library){ 
 		$link_library = $BASE_URL."/libraries/".$library['name']; 

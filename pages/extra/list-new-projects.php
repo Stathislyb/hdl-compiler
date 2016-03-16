@@ -3,6 +3,7 @@
 ?>
 
 <div class="list-group">
+	<h3>Recent Projects</h3>
 	<?php 
 	foreach($projects as $project){ 
 		$description = $gen->fix_string_length($project['description']);

@@ -71,8 +71,11 @@ $( document ).ready(function() {
 				$('.nav-search-typeahead').typeahead('destroy');
 				if(type == 'Projects'){
 					item = '<li><a class="dropdown-item" href="#" onclick="navbar_search_project(this)" role="option"></a></li>';
-				}else{
+				}else if(type == 'Users'){
 					item = '<li><a class="dropdown-item" onclick="navbar_search_user(this)" href="#" role="option"></a></li>';
+				}else{
+					console.log('...');
+					item = '<li><a class="dropdown-item" onclick="navbar_search_library(this)" href="#" role="option"></a></li>';
 				}
 				$(".nav-search-typeahead").typeahead({source:data, autoSelect: true, delay:200, item:item});
 			}
@@ -94,6 +97,19 @@ $( document ).ready(function() {
 		});
     });
 	
+	
+	$('#filter_libs_input').on('keyup', function () {
+		var query = $('#filter_libs_input').val();
+		var formData = {ajax_action:"filter_libraries",query:query};
+		$.ajax({
+			url : "/ajax_handler.php",
+			type: "POST",
+			data : formData,
+			success: function(data){
+				$("#libraries_container").html(data);
+			}
+		});
+    });
 	
 });
 
@@ -118,6 +134,12 @@ function navbar_search_user(e) {
 	window.location.replace(link);
 };
 
+function navbar_search_library(e) {
+	var library = $(e).html();
+	var link = window.location.protocol + "//" + window.location.host + "/libraries/"+library;
+	window.location.replace(link);
+};
+
 function typeahead_update_value(e) {
 	var user = $(e).html();
 	$('#editor-users').append("<li class='list-group-item'><span class='editor-item'>"+user+"</span><span onclick='typeahead_remove_item(this)' class='glyphicon glyphicon-remove pull-right btn btn-danger btn-xs' aria-hidden='true'></span></li>");
@@ -138,4 +160,12 @@ function update_editors_field() {
 	});
 	var value = $("#projet_authors").val().slice(0, -1);
 	$("#projet_authors").val(value) ;
+};
+
+function lib_change_page(page) {
+	var form = $("#filter_libraries");
+	var link = window.location.protocol + "//" + window.location.host + "/libraries/page/"+page;
+	form.attr("action", link);
+	form.attr("onsubmit", '');
+	form.submit();
 };

@@ -36,7 +36,11 @@ if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST["ajax_action"])){
 				}
 				
 			}else{
-				$suggestions="Search type is not supported.";
+				$possible_libraries = $db->find_libraries_like($_POST["query"]);
+				$suggestions = array();
+				foreach($possible_libraries as $library){ 
+					array_push($suggestions,$library['name']);
+				}
 			}
 			header('Content-Type: application/json');
 			echo json_encode($suggestions);
@@ -47,6 +51,13 @@ if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST["ajax_action"])){
 			$suggestions = $db->find_project_for_link($_POST["name"]);
 			header('Content-Type: application/json');
 			echo json_encode($suggestions);
+		break;
+			
+		// Show the filtered libraries
+		case "filter_libraries":
+			$name = $_POST["query"];
+			$page = 0;
+			require('pages/extra/list-all-libraries.php');
 		break;
 	}
 }else{

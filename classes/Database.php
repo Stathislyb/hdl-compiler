@@ -274,6 +274,14 @@ class Database {
 		return $statement->fetchAll();
 	}
 	
+	// Select the libraries starting with given library name
+	public function find_libraries_like($name) {
+		$query = "SELECT name FROM libraries WHERE name LIKE '".$name."%' LIMIT 10"; 
+		$statement = $this->conn->prepare($query); 
+		$statement->execute();
+		return $statement->fetchAll();
+	}
+	
 	// Select the projects starting with given project name
 	public function find_projects_like($name) {
 		$query = "SELECT name FROM projects WHERE name LIKE '".$name."%' AND public='1' LIMIT 10"; 
@@ -312,8 +320,8 @@ class Database {
 	}
 	
 	// Select the requested number of latest libraries
-	public function get_latest_libraries($num,$begin) {
-		$query = "SELECT libraries.*, users.username as owner FROM libraries JOIN users ON libraries.owner_id = users.id ORDER BY libraries.id DESC LIMIT ".$num.",".$begin; 
+	public function get_latest_libraries($name,$num,$begin) {
+		$query = "SELECT libraries.*, users.username as owner FROM libraries JOIN users ON libraries.owner_id = users.id WHERE name LIKE '".$name."%' ORDER BY libraries.id DESC LIMIT ".$num.",".$begin; 
 		$statement = $this->conn->prepare($query); 
 		$statement->execute();
 		return $statement->fetchAll();
@@ -328,8 +336,8 @@ class Database {
 	}
 	
 	// Return number of libraries
-	public function count_libraries() {
-		$query = "SELECT COUNT(*) FROM libraries"; 
+	public function count_libraries($name) {
+		$query = "SELECT COUNT(*) FROM libraries WHERE name LIKE '".$name."%'"; 
 		$statement = $this->conn->prepare($query); 
 		$statement->execute();
 		$result = $statement->fetch();
