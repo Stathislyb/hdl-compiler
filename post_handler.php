@@ -251,13 +251,10 @@ if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST["post_action"])){
 				
 				$result = true;
 				
-				if(is_dir($full_path)){
+				if( is_dir($full_path) ){
 					$db->remove_inner_files($file_id);
-				}else{
-					$result=false;
 				}
-				if( $db->remove_file($file_id)){
-				}else{
+				if( !$db->remove_file($file_id) ){
 					$result=false;
 				}
 				if (file_exists($full_path)){

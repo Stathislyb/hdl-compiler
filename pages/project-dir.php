@@ -65,16 +65,16 @@
 		<?php require('pages/extra/list-dirfiles.php'); ?>
 		<div class="row">
 			<div class="col-sm-4">
-				<button type="submit" name="post_action" value='Simulate_Project' class="btn btn-info full-row" id="Simulate_Project">Simulate Project</button>
+				<button type="submit" name="post_action" value='Simulate_Project' class="btn btn-info full-row btn-space-top-10" id="Simulate_Project">Simulate Project</button>
 			</div>
 			<div><center>
 				<form action='' method='post' id='Selected_Action'>
 					<input type="hidden" value="" name="selected_ids" id="selected_ids" />
 					<input type="hidden" value="<?php echo $search_user['username']; ?>" name="owner">
 					<input type="hidden" value="<?php echo $project['id']; ?>" name="project_id">
-					<button type="submit" name="post_action" value='Post_Library_Selected' class="btn btn-info" >Post Selected as Library</button>
-					<button type="submit" name="post_action" value='Compile_Selected' class="btn btn-success" >Compile Selected</button>
-					<button type="submit" name="post_action" value='Remove_Selected' class="btn btn-danger" >Remove Selected</button>
+					<button type="submit" name="post_action" value='Post_Library_Selected' class="btn btn-info btn-space-top-10" >Post Selected as Library</button>
+					<button type="submit" name="post_action" value='Compile_Selected' class="btn btn-success btn-space-top-10" >Compile Selected</button>
+					<button type="submit" name="post_action" value='Remove_Selected' class="btn btn-danger btn-space-top-10" >Remove Selected</button>
 				</form>
 			</center></div>
 		</div>

@@ -346,7 +346,7 @@ font-family:Tahoma, Geneva, sans-serif;
 
 .nav-home{
     font-size: x-large;
-    border-right: 1px solid #ABB5B9;
+    
 }
 .nav-home a{
     color:#585858;
@@ -373,4 +373,14 @@ font-family:Tahoma, Geneva, sans-serif;
 .input-width-fix{
 	width:auto !important;
     display: inline-block;
+}
+
+@media (max-width: 768px) {
+  .nav-home {
+    margin-right: 1px;
+  }
+}
+
+.btn-space-top-10 {
+	margin-top: 10px;
 }
