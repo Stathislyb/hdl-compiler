@@ -36,7 +36,6 @@
 				<button type='button' class='btn btn-primary full-row'>Edit Project</button>
 			</a><br/>
 			<form action='' method='post' >
-				<input type="hidden" value="<?php echo $search_user['username']; ?>" name="owner">
 				<input type="hidden" value="<?php echo $project['id']; ?>" name="project_id">
 				<button type="submit" name="post_action" value='Remove_Project' class="btn btn-danger full-row" >Remove Project</button>
 			</form><br/>

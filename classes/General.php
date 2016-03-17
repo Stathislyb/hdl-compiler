@@ -132,9 +132,13 @@ class General {
 	
 	// Return a list of editors with li format.
 	public function list_editors_li($editors){
-			$list="";
+		$list="";
 		foreach($editors as $editor){
-			$list.= '<li class="list-group-item"><span class="editor-item">'.$editor['username'].'</span><span onclick="typeahead_remove_item(this)" class="glyphicon glyphicon-remove pull-right btn btn-danger btn-xs" aria-hidden="true"></span></li>';
+			if( $editor['user_type']==1 ){
+				$list.= '<li class="list-group-item"><span class="editor-item">'.$editor['username'].'</span></li>';
+			}else{
+				$list.= '<li class="list-group-item"><span class="editor-item">'.$editor['username'].'</span><span onclick="typeahead_remove_item(this)" class="glyphicon glyphicon-remove pull-right btn btn-danger btn-xs" aria-hidden="true"></span></li>';
+			}
 		}
 		return $list;
 	}

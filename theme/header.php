@@ -19,5 +19,6 @@
 	
 <body>
 	<?php require('nav-bar.php'); ?>
+	<div id="general-popup" class="hidden"></div>
 	<div class="container">
 

@@ -1,11 +1,12 @@
 <?php
 // load necessary files
 include('loader.php');
+
 // Session is necessary for this file
 session_dasygenis();
 
 //handles the post requests
-if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST["ajax_action"])){
+if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST["ajax_action"]) && isset($_SESSION['vhdl_user']['loged_in']) && $_SESSION['vhdl_user']['loged_in']==1){
 
 	switch($_POST["ajax_action"]){
 

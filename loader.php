@@ -16,6 +16,17 @@ $db = new Database;
 $messages = new Messages;
 $gen = new General;
 
+// login pseudo user with session id
+if(isset($_SESSION['PID']) && $_SESSION['PID']>0){
+	$_SESSION['vhdl_user']['username'] = "Guest";
+	$_SESSION['vhdl_user']['id'] = "0";
+	$_SESSION['vhdl_user']['loged_in'] = 1;
+}
+
+if( isset($_SESSION['vhdl_user']) ){
+	$user = new User($_SESSION['vhdl_user']);
+}
+
 require_once('post_handler.php');
 
 ?>

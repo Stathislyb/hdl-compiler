@@ -384,3 +384,11 @@ font-family:Tahoma, Geneva, sans-serif;
 .btn-space-top-10 {
 	margin-top: 10px;
 }
+
+.popup{
+	position: fixed;
+    top: 25%;
+    width: 80%;
+    left: 10%;
+    z-index: 999;
+}

@@ -31,16 +31,18 @@
 		<div class="row tab-content" >
 			<div id="login-from" class="tab-pane fade in active">
 				<h2>Log In</h2>
-				<form class="form" role="login" method="post" action="">
+				<form class="form" id="form_login" role="login" method="post" action="" data-toggle="validator">
 					<div class="form-group">
 						<label for="username">Username :</label>
-						<input type="text" name="username" class="form-control" placeholder="Username" />
+						<input type="text" name="username" class="form-control" placeholder="Username" data-error="Minimum of 5 characters" data-minlength="5" required/>
+						<div class="help-block with-errors"></div>
 					</div>
 					<div class="form-group">
 						<label for="password">Password :</label>
-						<input type="password" name="password" class="form-control" placeholder="Password" />
+						<input type="password" name="password" class="form-control" placeholder="Password" data-error="Minimum of 5 characters" data-minlength="5" required/>
+						<div class="help-block with-errors"></div>
 					</div>
-					<button type="submit" class="btn btn-default" name="post_action" value="login">Login</button>
+					<button type="submit" id="login_btn" class="btn btn-primary" name="post_action" value="login">Login</button>
 				</form>
 			</div>
 			<div id="sid-from" class="tab-pane fade">
@@ -56,25 +58,29 @@
 			</div>
 			<div id="register-from" class="tab-pane fade">
 				<h2>Register</h2>
-				<form class="form" role="register" action="" method="post">
+				<form class="form" id="form_register" role="register" action="" method="post" data-toggle="validator" novalidate="false">
 					<div class="form-group">
-						 <label for="email">Email address :</label>
-						 <input type="email" class="form-control" name="email" id="email" placeholder="Email address" required="">
+						<label for="email">Email address :</label>
+						<input type="email" class="form-control" name="email" id="email" placeholder="Email address" data-error="The e-mail address you provided is invalid" required/>
+						<div class="help-block with-errors"></div>
 					</div>
 					<div class="form-group">
-						 <label for="username">Username :</label>
-						 <input type="text" class="form-control" name="username" id="username" placeholder="Username" required="">
+						<label for="username">Username :</label>
+						<input type="text" class="form-control" name="username" id="username_reg" placeholder="Username" data-minlength="5" required/>
+						<div class="help-block">Minimum of 5 characters</div>
 					</div>
 					<div class="form-group">
-						 <label for="password">Password :</label>
-						 <input type="password" class="form-control" name="password" id="password" placeholder="Password" required="">
+						<label for="password">Password :</label>
+						<input type="password" class="form-control" name="password" id="password_reg" placeholder="Password" data-minlength="5" required/>
+						<div class="help-block">Minimum of 5 characters</div>
 					</div>
 					<div class="form-group">
-						 <label for="password_confirm">Confirm Password :</label>
-						 <input type="password" class="form-control" name="password_confirm" id="password_confirm" placeholder="Confirm Password" required="">
+						<label for="password_confirm">Confirm Password :</label>
+						<input type="password" class="form-control" name="password_confirm" id="password_confirm" placeholder="Confirm Password" data-match="#password_reg" data-match-error="The passwords do not match" required/>
+						<div class="help-block with-errors"></div>
 					</div>
 					<div class="form-group">
-						 <button type="submit" class="btn btn-default" name="post_action" value="register">Register</button>
+						<button type="submit" id="register_btn" class="btn btn-primary" name="post_action" value="register">Register</button>
 					</div>
 				</form>
 			</div>

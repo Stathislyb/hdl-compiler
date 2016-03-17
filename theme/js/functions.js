@@ -51,8 +51,13 @@ $( document ).ready(function() {
 			selected_ids = selected_ids.substr(1);
 			$('#selected_ids').val(selected_ids);
 		}else{
-			alert("Nothing selected");
 			event.preventDefault();
+			var popup = $("#general-popup");
+			popup.html("<center><h3>Warning</h3><hr/><br/><h4>No file selected</h4><br/></center>");
+			popup.removeClass();
+			popup.addClass('popup alert alert-danger');
+			popup.show();
+			setTimeout(function() { $("#general-popup").hide(); }, 3000);
 			return false;
 		}
     });

@@ -6,12 +6,13 @@
 ?>
 <div class="row">
 	<div class="col-sm-6 col-sm-offset-3">
-		<form action='' method='post' id='create-project'>
+		<form action='' method='post' id='create-project'  data-toggle="validator">
 			<h4>Edit Project <?php echo $project['name']; ?></h4>
-			<br />
 			<label for="project_name">Project name:</label>
-			<input type="text" name="project_name" size='25' class="form-control" placeholder="Project name" value="<?php echo $project['name']; ?>" required/><br />
-			
+			<div class="form-group">
+				<input type="text" name="project_name" size='25' class="form-control" data-error="Minimum of 5 characters" data-minlength="5" placeholder="Project name" value="<?php echo $project['name']; ?>" required/>
+				<div class="help-block with-errors"></div>
+			</div>
 			<label for="projet_authors_lookup">Add other People to the Project:</label>
 			<input type="text" name="projet_authors_lookup" size='25' class="form-control typeahead" id="typeahead-input" autocomplete="off"/>
 			<ul class="list-group" id="editor-users">

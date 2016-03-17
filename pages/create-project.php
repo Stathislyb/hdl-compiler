@@ -3,12 +3,13 @@ if($user->id > 0){
 ?>
 <div class="row">
 	<div class="col-sm-4 col-sm-offset-4">
-		<form action='' method='post' id='create-project'>
+		<form action='' method='post' id='create-project' data-toggle="validator">
 			<h2>Create New Project</h2>
-			<br />
 			<label for="project_name">Project name:</label>
-			<input type="text" name="project_name" size='25' class="form-control" placeholder="Project name" required/><br />
-			
+			<div class="form-group">
+				<input type="text" name="project_name" size='25' class="form-control" placeholder="Project name" data-minlength="5" required/>
+				<div class="help-block">Minimum of 5 characters</div>
+			</div>
 			<label for="projet_authors_lookup">Add other People to the Project:</label>
 			<input type="text" name="projet_authors_lookup" size='25' class="form-control typeahead" id="typeahead-input" autocomplete="off"/>
 			<ul class="list-group" id="editor-users">
