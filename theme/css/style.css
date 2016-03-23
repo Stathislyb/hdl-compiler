@@ -381,7 +381,7 @@ font-family:Tahoma, Geneva, sans-serif;
   }
 }
 
-.btn-space-top-10 {
+.space-top-10 {
 	margin-top: 10px;
 }
 
@@ -391,4 +391,35 @@ font-family:Tahoma, Geneva, sans-serif;
     width: 80%;
     left: 10%;
     z-index: 999;
+}
+
+.compile-info{
+    display: inline-block;
+    min-width: 10px;
+    padding: 3px 7px;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1;
+    color: #fff;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    border-radius: 10px;
+    margin-left: 20px;
+}
+.compile-success{
+    background-color: #42775B;
+}
+.compile-error{
+    background-color: #A74141;
+}
+.compile-pending{
+    background-color: #6B7075;
+}
+.compile-info a{
+	color: #fff;
+	text-decoration: none;
+}
+.width-auto{
+	width:auto;
 }

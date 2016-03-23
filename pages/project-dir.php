@@ -7,15 +7,20 @@
 		$files = $db->get_project_files($project['id'], $_GET['dir']);
 		
 		if($_SESSION['vhdl_user']['username'] == "Guest"){
-			$upload_dir=$BASE.$_SESSION['PID']."/"; 
+			$current_dir=$BASE.$_SESSION['PID']."/"; 
 		}else{
 			if($_GET['dir']=='/'){
-				$upload_dir=$BASE_DIR.$search_user['username']."/".$project['short_code']."/"; 
+				$current_dir=$BASE_DIR.$search_user['username']."/".$project['short_code']."/"; 
 			}else{
-				$upload_dir=$BASE_DIR.$search_user['username']."/".$project['short_code'].$_GET['dir']."/"; 
+				$current_dir=$BASE_DIR.$search_user['username']."/".$project['short_code'].$_GET['dir']."/"; 
 			}
 		}
-
+		
+		//we want here to display all valid architectures
+		$command="cd ".$current_dir.";/usr/lib/ghdl/bin/ghdl -d | grep architecture | awk ' {print $4,$2} '";
+		$shell_output=shell_exec($command);
+		//Extract the lines
+		$architectures = explode(PHP_EOL, $shell_output);
 		
 		echo $gen->path_to_links($_GET['dir'], $search_user['username'], $project['name'], $BASE_URL);
 ?>
@@ -63,26 +68,59 @@
 		</ul>
 		<?php require('pages/extra/list-dirfiles.php'); ?>
 		<div class="row">
-			<div class="col-sm-4">
-				<button type="submit" name="post_action" value='Simulate_Project' class="btn btn-info full-row btn-space-top-10" id="Simulate_Project">Simulate Project</button>
-			</div>
-			<div><center>
+			<div class="col-sm-12 space-top-10">
 				<form action='' method='post' id='Selected_Action'>
 					<input type="hidden" value="" name="selected_ids" id="selected_ids" />
 					<input type="hidden" value="<?php echo $search_user['username']; ?>" name="owner">
 					<input type="hidden" value="<?php echo $project['id']; ?>" name="project_id">
-					<button type="submit" name="post_action" value='Post_Library_Selected' class="btn btn-info btn-space-top-10" >Post Selected as Library</button>
-					<button type="submit" name="post_action" value='Compile_Selected' class="btn btn-success btn-space-top-10" >Compile Selected</button>
-					<button type="submit" name="post_action" value='Remove_Selected' class="btn btn-danger btn-space-top-10" >Remove Selected</button>
+					<button type="submit" name="post_action" value='Post_Library_Selected' class="btn btn-info" >Post Selected as Library</button>
+					<button type="submit" name="post_action" value='Compile_Selected' class="btn btn-success" >Compile Selected</button>
+					<button type="submit" name="post_action" value='Remove_Selected' class="btn btn-danger" >Remove Selected</button>
 				</form>
-			</center></div>
+			</div>
 		</div>
 	</div>
 </div>
-<br/>
-
-<div class="topic2" id="link">
-	<?php require('link.php'); ?>
+<hr/>
+<div class="row">
+	<div class="col-sm-9 col-sm-offset-3">
+		<h3>Simulate Project</h3>
+		<br/>
+		<form action='' method='post' id='Selected_Action'>
+			<div class="row">
+				<div class="col-sm-4">
+					<label >Select Architecture:</label>
+					<br/>
+					<div class="form-group space-top-10">
+						<select name='architecture' class="form-control width-auto">
+						<?php
+							foreach($architectures as $key => $value) {
+							  if (!empty($value)){
+									echo "<option value='".$value."'>".$value."</option>";
+								}
+							}
+						?>
+						</select>
+					</div>
+				</div>
+				<div class="col-sm-6">
+					<label>Additional Option:</label>
+					<div class="checkbox">
+						<label><input type='checkbox' name='extralib' value='synopsys' />Include synopsis library for more primary units.</label>
+					</div>
+					<div class="checkbox">
+						<label><input type='checkbox' name='extrasim' value='vcd' checked/>Create a value changed dump VCD wave trace file.</label>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="form-group col-sm-4 space-top-10">
+					<input type="hidden" value="<?php echo $project['id']; ?>" name="project_id">
+					<button type="submit" name="post_action" value='Simulate_Project' class="btn btn-info full-row" id="Simulate_Project">Simulate Project</button>
+				</div>
+			</div>
+		</form>
+	</div>
 </div>
 
 <?php if($user->validate_edit_rights($editors)){ ?>
@@ -134,7 +172,7 @@
 					<span class="col-sm-6">
 						<input name="userfile" type="file" />
 						<input type="hidden" name="MAX_FILE_SIZE" value="32000000" />
-						<input type="hidden" name="upload_dir" value="<?php echo $upload_dir; ?>" />
+						<input type="hidden" name="upload_dir" value="<?php echo $current_dir; ?>" />
 						<input type="hidden" value="<?php echo $_GET['project']; ?>" name="project_shortcode">
 						<input type="hidden" value="<?php echo $_GET['dir']; ?>" name="current_dir">
 						<input type="hidden" value="<?php echo $search_user['username']; ?>" name="owner">

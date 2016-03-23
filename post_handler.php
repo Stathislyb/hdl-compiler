@@ -203,29 +203,70 @@ if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST["post_action"]) ){
 				if( $user->validate_edit_rights($editors) ){
 					foreach ($selected as $file_id) {
 						$file = $db->get_file($file_id);
-						if($file['relative_path']=='/'){
-							$full_path = $BASE_DIR.$_POST['owner'].'/'.$project['short_code'].'/'.$file['name'];
-							$directory = $BASE_DIR.$_POST['owner'].'/'.$project['short_code'].'/';
-						}else{
-							$full_path = $BASE_DIR.$_POST['owner'].'/'.$project['short_code'].$file['relative_path'].'/'.$file['name'];
-							$directory = $BASE_DIR.$_POST['owner'].'/'.$project['short_code'].$file['relative_path'].'/';
-						}
+						if($file['type']=='file'){
+							if($file['relative_path']=='/'){
+								$full_path = $BASE_DIR.$_POST['owner'].'/'.$project['short_code'].'/'.$file['name'];
+								$directory = $BASE_DIR.$_POST['owner'].'/'.$project['short_code'].'/';
+							}else{
+								$full_path = $BASE_DIR.$_POST['owner'].'/'.$project['short_code'].$file['relative_path'].'/'.$file['name'];
+								$directory = $BASE_DIR.$_POST['owner'].'/'.$project['short_code'].$file['relative_path'].'/';
+							}
 
-						if (file_exists($full_path)){
-							check_and_create_job_directory();
-							$extra=process_pre_options($_POST);
-							//$prefile="-a ".$extra;
-							$prefile="-a ";
-							$postfile="";
-							$executable='/usr/lib/ghdl/bin/ghdl';
-							$timeout=6;
-							create_job_file($directory,$file['name'],$prefile,$postfile,$executable,$timeout);
-
-							array_push($_SESSION['vhdl_msg'], 'compile_success');
-						}else{
-							array_push($_SESSION['vhdl_msg'], 'compile_fail');
+							if (file_exists($full_path)){
+								check_and_create_job_directory();
+								$extra=process_pre_options($_POST);
+								//$prefile="-a ".$extra;
+								$prefile="-a ";
+								$postfile="";
+								$executable='/usr/lib/ghdl/bin/ghdl';
+								$timeout=6;
+								if( file_exists($full_path.".log") ){
+									unlink($full_path.".log");
+								}
+								create_job_file($directory,$file['name'],$prefile,$postfile,$executable,$timeout);
+								$db->file_compile_pending($file['id']);
+								
+								array_push($_SESSION['vhdl_msg'], 'compile_success');
+							}else{
+								array_push($_SESSION['vhdl_msg'], 'compile_fail');
+							}
 						}
 					}
+				}else{
+					array_push($_SESSION['vhdl_msg'], 'permissions_fail');
+				}
+			break;
+				
+			case "Simulate_Project":
+				$project = $db->get_project($_POST['project_id']);
+				$editors = $db->get_project_editors($project['id']);
+				if( $user->validate_edit_rights($editors) ){
+					$owner = $db->get_project_owner($project['id']);
+					$directory = $BASE_DIR.$owner['username'].'/'.$project['short_code'].'/';
+					$architectureclean=filter_var($_POST['architecture'],FILTER_SANITIZE_STRING);	
+					$explodedarchitecture=explode(" ",$architectureclean);
+					$unit=$explodedarchitecture[0];
+					$architecture=$explodedarchitecture[1];	
+					check_and_create_job_directory();
+					
+					$extra_pre = '';
+					if ( isset($_POST['extralib'] ) ){
+						if ( $_POST['extralib'] == "synopsys"){ 
+							$extra_pre = " --ieee=synopsys ";
+						}
+					}
+					$prefile="--elab-run ".$extra_pre;
+					$extra_post = '';
+					if ( isset($_POST['extrasim'] ) ){
+						if ( $_POST['extrasim'] == "vcd"){ 
+							$extra_post = " --vcd=testbench.vcd ";
+						}
+					}
+					$postfile=$architecture.$extra_post;
+					
+					create_job_file($directory,$unit,$prefile,$postfile);
+					array_push($_SESSION['vhdl_msg'], 'compile_success');
+					
 				}else{
 					array_push($_SESSION['vhdl_msg'], 'permissions_fail');
 				}
@@ -367,6 +408,7 @@ if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST["post_action"]) ){
 				$_SESSION['vhdl_user']['username'] = $_POST["username"];
 				$_SESSION['vhdl_user']['id'] = $id;
 				$_SESSION['vhdl_user']['loged_in'] = 1;
+				$user = new User($_SESSION['vhdl_user']);
 				array_push($_SESSION['vhdl_msg'],"success_login");
 			}else{
 				array_push($_SESSION['vhdl_msg'],"fail_login");

@@ -159,9 +159,10 @@ if ( $last =="")
 	$last=tempnam($JOBDIRECTORY,"VHDL");
 	$jobid=basename($last);
 
-        $cmd="cd '$directory' ;rm '$file'.log ;  ( '$executable' $prefile '$file' $postfile >> '$file'.log  2>&1 ) &  sleep ".$timeout."  ; killall -9 ".$file."-".$postfile."  ";
+    $cmd="cd '$directory' ;rm '$file'.log ;  ( '$executable' $prefile '$file' $postfile >> '$file'.log  2>&1 ) &  sleep ".$timeout."  ; killall -9 ".$file."-".$postfile."  ";
 	$ourhandle=fopen($last,'w') or die ("cannot create job file");
-	fwrite($ourhandle,$cmd); 
+	//fwrite($ourhandle,$cmd); 
+	echo "<div class='row'>".$cmd."</div>";
 	echo "<div class='orangediv'>Created Job ID: $jobid. Queued Jobs $nrfiles.</div>";
 	fclose($ourhandle);
 

@@ -27,6 +27,10 @@ if( isset($_SESSION['vhdl_user']) ){
 	$user = new User($_SESSION['vhdl_user']);
 }
 
+if( !isset($_SESSION['vhdl_msg']) ){
+	$_SESSION['vhdl_msg'] = array();
+}
+
 require_once('post_handler.php');
 
 ?>

@@ -343,6 +343,14 @@ class Database {
 		$result = $statement->fetch();
 		return $result['COUNT(*)'];
 	}
+	
+	// Update file for pending compilation
+	public function file_compile_pending($file_id) {
+		$query = "UPDATE project_files SET compiled='1' WHERE id='".$file_id."%'"; 
+		$statement = $this->conn->prepare($query); 
+		$statement->execute();
+		return;
+	}
 }
 
 
