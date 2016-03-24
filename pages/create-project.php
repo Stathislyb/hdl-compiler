@@ -1,3 +1,9 @@
+<?php 
+if( !isset($db) ){
+	header("location: //".$_SERVER["SERVER_NAME"]); 
+	exit();
+}
+?>
 <?php
 if($user->id > 0){
 ?>

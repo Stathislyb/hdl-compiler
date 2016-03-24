@@ -1,4 +1,10 @@
 <?php 
+if( !isset($db) ){
+	header("location: //".$_SERVER["SERVER_NAME"]); 
+	exit();
+}
+?>
+<?php 
 	$project = $db->get_project_shortcode($_GET['short_code'], $_SESSION['vhdl_user']['id']);
 	$editors = $db->get_project_editors($project['id']);
 

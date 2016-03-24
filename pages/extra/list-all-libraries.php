@@ -1,3 +1,9 @@
+<?php 
+if( !isset($db) ){
+	header("location: //".$_SERVER["SERVER_NAME"]); 
+	exit();
+}
+?>
 <?php
 	$libraries = $db->get_latest_libraries($name,$page,19);
 	$libraries_num = $db->count_libraries($name);

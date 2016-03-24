@@ -1,4 +1,10 @@
 <?php 
+if( !isset($db) ){
+	header("location: //".$_SERVER["SERVER_NAME"]); 
+	exit();
+}
+?>
+<?php 
 	
 	$library = $db->get_library($_GET['short_code']);
 	$search_user = $db->get_user_information($library['owner_id'],"id");

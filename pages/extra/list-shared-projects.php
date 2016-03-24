@@ -1,3 +1,9 @@
+<?php 
+if( !isset($db) ){
+	header("location: //".$_SERVER["SERVER_NAME"]); 
+	exit();
+}
+?>
 <?php
 	$shared_projects = $db->get_shared_projects($user->id);
 	if( !empty($shared_projects) ){

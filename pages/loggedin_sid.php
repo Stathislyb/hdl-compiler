@@ -1,3 +1,9 @@
+<?php 
+if( !isset($db) ){
+	header("location: //".$_SERVER["SERVER_NAME"]); 
+	exit();
+}
+?>
 <?php
 /*
    Copyright 2014, Minas Dasygenis, http://arch.icte.uowm.gr/mdasygenis

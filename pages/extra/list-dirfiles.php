@@ -1,3 +1,9 @@
+<?php 
+if( !isset($db) ){
+	header("location: //".$_SERVER["SERVER_NAME"]); 
+	exit();
+}
+?>
 <ul class="list-group list-files">
 	<?php
 	if( count($files)==0 ){

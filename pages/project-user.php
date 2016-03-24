@@ -1,4 +1,10 @@
 <?php 
+if( !isset($db) ){
+	header("location: //".$_SERVER["SERVER_NAME"]); 
+	exit();
+}
+?>
+<?php 
 	$search_user = $db->get_user_information($_GET['user'],"username");
 	if($search_user['id'] != $user->id){
 ?>

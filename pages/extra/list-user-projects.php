@@ -1,3 +1,10 @@
+<?php 
+if( !isset($db) ){
+	header("location: //".$_SERVER["SERVER_NAME"]); 
+	exit();
+}
+?>
+
 <?php
 	$projects = $db->get_user_projects($user->id);
 	$proj_num = count($projects)+1;

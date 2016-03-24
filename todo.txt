@@ -1,6 +1,0 @@
-
--Disable brute force attac
--Delete Session and destroy files
--Include a demo code [copy demo code]
-
-

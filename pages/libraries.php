@@ -1,4 +1,10 @@
 <?php 
+if( !isset($db) ){
+	header("location: //".$_SERVER["SERVER_NAME"]); 
+	exit();
+}
+?>
+<?php 
 	if( empty($_GET['short_code']) ){
 		if(isset($_GET['page'])){
 			$page=20*($_GET['page']-1);
