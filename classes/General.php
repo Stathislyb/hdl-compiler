@@ -166,6 +166,55 @@ class General {
 		return $output;
 	}
 	
+	// Extract file and update the database
+	public function extract_file($file, $directory, $current_dir, $project_id){
+		$zip = new ZipArchive;
+		$db = new Database;
+		
+		if ($zip->open($file) === true) {
+			for($i = 0; $i < $zip->numFiles; $i++) {
+				$filearray = $zip->getNameIndex($i);
+				$fileinfo = pathinfo($filearray);
+				
+				if( $fileinfo['dirname'] == "." ){
+					$relative_dir = $current_dir;
+					$absolute_dir = $directory;
+				}else{
+					if($current_dir=="/"){
+						$absolute_dir = $directory.$fileinfo['dirname'];
+					}else{
+						$absolute_dir = $directory.$current_dir.$fileinfo['dirname'];
+					}
+					$relative_dir = $current_dir.$fileinfo['dirname'];
+				}
+				
+				echo "<br/>";
+				var_dump($filearray);
+				echo "<br/>";
+				echo "<br/>";
+				var_dump($fileinfo);
+				echo "<br/>";
+				
+				if( isset( $fileinfo['extension'] ) ){
+					if( $db->add_dir_file($fileinfo['basename'], $project_id, "file", $relative_dir) >0 ){
+						copy("zip://".$file."#".$filearray, $absolute_dir."/".$fileinfo['basename']);
+					}else{
+						return false;
+					}
+				}else{
+					if( $db->add_dir_file($fileinfo['basename'], $project_id, "directory", $relative_dir) >0 ){
+						mkdir($absolute_dir."/".$fileinfo['basename'],0777);
+					}else{
+						return false;
+					}
+				}
+			}                   
+			$zip->close();
+			return true;
+		}
+		return false;
+	}
+	
 
 }
 ?>

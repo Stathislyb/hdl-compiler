@@ -5,7 +5,7 @@
 	$editors = $db->get_project_editors($project['id']);
 	$path = $BASE_DIR.$search_user['username']."/".$_GET['project']."/".$_GET['file'];
 
-	if($project['public']==1){
+	if($project['public']==1 && !empty($_GET['file'])){
 		$file_name = substr(strrchr($_GET['file'], '/'), 1 );
 		if(empty($file_name)){
 			$file_name = $_GET['file'];

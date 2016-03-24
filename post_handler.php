@@ -144,6 +144,7 @@ if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST["post_action"]) ){
 				$path = $_POST['upload_dir'];
 				$name = $gen->create_short_code(basename($_FILES['userfile']['name']));
 				$uploadfile = $path . $name;
+				$current_dir = $_POST['current_dir'];
 				$project = $db->get_project_shortcode($_POST['project_shortcode'], $_SESSION['vhdl_user']['id']);
 				$editors = $db->get_project_editors($project['id']);
 				$file_exists = $db->check_file_dir_exist($name, $project['id'],  $_POST['current_dir']);
@@ -162,32 +163,32 @@ if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST["post_action"]) ){
 						array_push($_SESSION['vhdl_msg'], 'fail_upload_file');
 						header("Location:".$BASE_URL."/project/".$_POST['owner']."/".$_POST['project_shortcode']."/directory/".$_POST['current_dir']);
 						exit();
-						//throw new UploadException($_FILES['userfile']['error']); 
 					} 
-
-					if($db->add_dir_file($name, $project['id'], "file", $_POST['current_dir']) > 0){				
+					
+					$file_id = $db->add_dir_file($name, $project['id'], "file", $current_dir);
+					if($file_id > 0){		
+						
 						$ret=move_uploaded_file($_FILES['userfile']['tmp_name'], $uploadfile);
 						if ($ret) {
-							array_push($_SESSION['vhdl_msg'], 'success_upload_file');
+							
+							$checkfile = pathinfo($uploadfile);
+							if ( $checkfile['extension'] == "zip" || $checkfile['extension'] == "ZIP" ){
+
+								if( $gen->extract_file($uploadfile,$path, $current_dir, $project['id']) ){
+									array_push($_SESSION['vhdl_msg'], 'success_upload_file');
+								}else{
+									array_push($_SESSION['vhdl_msg'], 'fail_upload_file_unzip');
+								}
+								unlink($uploadfile);
+								$db->remove_file($file_id);
+							}else{
+								array_push($_SESSION['vhdl_msg'], 'success_upload_file');
+							}
+							
 						} else {
-							//print_r(error_get_last());
-							//echo "Upload failed. ErrorCode:".$ret;
 							array_push($_SESSION['vhdl_msg'], 'fail_upload_file'); 
 						}
-
-						$checkfile = pathinfo($uploadfile);
-						if ( $checkfile['extension'] == "zip" || $checkfile['extension'] == "ZIP" ){
-							//Check to see if this is a zip file. It it is a zipfile then unzip it
-							$ret=unzip_file_to_directory($uploadfile,$uploaddir);
-							if ($ret==0){
-								//file uploaded, just delete it
-								unlink($uploadfile);
-							}elseif ($ret==1){
-								//file could not be uploaded
-								//echo "Error in Unzipping";
-								array_push($_SESSION['vhdl_msg'], 'fail_upload_file_unzip'); 
-							}
-						}
+						
 					}else{
 						array_push($_SESSION['vhdl_msg'], 'fail_upload_file');
 					}

@@ -1,0 +1,3 @@
+ALTER TABLE `users` ADD `public_comment` VARCHAR(256) CHARACTER SET utf8 COLLATE utf8_general_ci NULL , ADD `private_comment` VARCHAR(256) CHARACTER SET utf8 COLLATE utf8_general_ci NULL ;
+
+ALTER TABLE `igrades` DROP `public_comment`, DROP `private_comment`;
