@@ -32,7 +32,8 @@ class Messages {
 		"permissions_fail"=>array("You do not have the rights to perform the requested action.","danger"),
 		"remove_project_success"=>array("The project was successfully removed.","success"),
 		"compile_fail"=>array("Failed to compile the file.","danger"),
-		"compile_success"=>array("The file is successfully queued for compiling.","success")
+		"compile_success"=>array("The file is successfully queued for compiling.","success"),
+		"simulation_success"=>array("The file is successfully queued for simulation.","success")
 	);
 	
 	// Class constractor function

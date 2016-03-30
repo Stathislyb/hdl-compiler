@@ -31,7 +31,6 @@
 	<script type="text/javascript" src="<?php echo $BASE_URL ?>/theme/js/functions.js"></script>
     <script type="text/javascript" src="<?php echo $BASE_URL ?>/theme/bootstrap/bootstrap.min.js"></script>
 	<script type="text/javascript" src="<?php echo $BASE_URL ?>/theme/js/bootstrap3-typeahead.min.js"></script>
-	<script type="text/javascript" src="<?php echo $BASE_URL ?>/theme/js/validator.js"></script>
-
+<script type="text/javascript" src="<?php echo $BASE_URL ?>/theme/js/validator.js"></script>
 </body>
 </html>

@@ -49,11 +49,11 @@ if( !isset($db) ){
 			$size='col-sm-'.$last_row_size." center-tile-".$last_row_size;
 		}
 		if($i<=3){
-			echo "<div class='".$size." square-tiles' onclick='window.location=\"/create-project\";'><center>";
+			echo "<div class='".$size." square-tiles' onclick='window.location=\"".$BASE_URL."/create-project\";'><center>";
 			echo "<h3>Create New Project</h3>";
 			echo '<span class="glyphicon glyphicon-plus-sign pointer very-strong" aria-hidden="true"></span></center></div></div>';
 		}else{
-			echo "<div class='row'><div class='".$size." square-tiles' onclick='window.location=\"/create-project\";'><center>";
+			echo "<div class='row'><div class='".$size." square-tiles' onclick='window.location=\"".$BASE_URL."/create-project\";'><center>";
 			echo "<h3>Create New Project</h3>";
 			echo '<span class="glyphicon glyphicon-plus-sign pointer very-strong" aria-hidden="true"></span></center></div></div></div>';
 		}

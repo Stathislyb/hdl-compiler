@@ -3,7 +3,7 @@ AddDefaultCharset utf-8
 
 RewriteEngine On
 
-RewriteBase /vhdl/
+
 RewriteRule ^()$ index.php [NC,L]
 RewriteRule ^(edit-project|libraries)/([^/]+)[\/]?$ index.php?action=$1&short_code=$2 [NC,L]
 RewriteRule ^libraries/page/([^/]+)[\/]?$ index.php?action=libraries&page=$1 [NC,L]

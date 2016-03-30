@@ -9,7 +9,7 @@ class Database {
 	public function __construct(){
 		$db_host="localhost"; // Host name 
 		$db_username="root"; // Mysql username 
-		$db_password="root"; // Mysql password 
+		$db_password=""; // Mysql password 
 		$db_name="vhdl_compiler"; // Database name 
 
 		try{

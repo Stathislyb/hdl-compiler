@@ -423,3 +423,36 @@ font-family:Tahoma, Geneva, sans-serif;
 .width-auto{
 	width:auto;
 }
+#BufferCanvas{
+	display:none;
+}
+.slider_main{
+	width: 120px;
+	height: 10px;
+	background-color: #EEF3F3;
+	border: 1px solid #A7AAAF;
+	display: inline-block;
+}
+
+.slider_button{
+	width: 20px;
+	height: 20px;
+	background-color: #273B80;
+	top: -6px;
+	left: 100px;
+	position: relative;
+	border-radius: 10px;
+}
+
+.slider_info{
+	display:inline-block;
+	font-size: 12px;
+	margin-left: 5px;
+}
+
+.expand_button{
+	position:absolute;
+	left: 4px;
+	color:black;
+	cursor:pointer;
+}

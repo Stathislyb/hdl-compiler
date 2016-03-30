@@ -12,7 +12,7 @@
    distributed under the License is distributed on an "AS IS" BASIS,
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
-   limitations under the License.
+   limitations under the License..
 */
 ?>
 <?php
@@ -161,9 +161,9 @@ if ( $last =="")
 
     $cmd="cd '$directory' ;rm '$file'.log ;  ( '$executable' $prefile '$file' $postfile >> '$file'.log  2>&1 ) &  sleep ".$timeout."  ; killall -9 ".$file."-".$postfile."  ";
 	$ourhandle=fopen($last,'w') or die ("cannot create job file");
-	//fwrite($ourhandle,$cmd); 
-	echo "<div class='row'>".$cmd."</div>";
-	echo "<div class='orangediv'>Created Job ID: $jobid. Queued Jobs $nrfiles.</div>";
+	fwrite($ourhandle,$cmd); 
+	//echo "<div class='row'>".$cmd."</div>";
+	//echo "<div class='orangediv'>Created Job ID: $jobid. Queued Jobs $nrfiles.</div>";
 	fclose($ourhandle);
 
                 //$line=system("$cmd 2>&1",$retval);

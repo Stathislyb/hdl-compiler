@@ -118,7 +118,11 @@ if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST["post_action"]) ){
 			// Create File
 			case "Create_file":
 				$name = $gen->create_short_code($_POST['file_name']);
-				$path = $BASE_DIR.$_POST['owner']."/".$_POST['project_shortcode'].$_POST['current_dir']."/".$name;
+				if($_POST['current_dir']=="/"){
+					$path = $BASE_DIR.$_POST['owner']."/".$_POST['project_shortcode']."/".$name;
+				}else{
+					$path = $BASE_DIR.$_POST['owner']."/".$_POST['project_shortcode'].$_POST['current_dir']."/".$name;
+				}
 				$project = $db->get_project_shortcode($_POST['project_shortcode'], $_SESSION['vhdl_user']['id']);
 				$editors = $db->get_project_editors($project['id']);
 				$file_exists = $db->check_file_dir_exist($name, $project['id'],  $_POST['current_dir']);
@@ -266,7 +270,7 @@ if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST["post_action"]) ){
 					$postfile=$architecture.$extra_post;
 					
 					create_job_file($directory,$unit,$prefile,$postfile);
-					array_push($_SESSION['vhdl_msg'], 'compile_success');
+					array_push($_SESSION['vhdl_msg'], 'simulation_success');
 					
 				}else{
 					array_push($_SESSION['vhdl_msg'], 'permissions_fail');

@@ -67,7 +67,7 @@ $( document ).ready(function() {
 		var type = $('#nav-search-type').val();
 		var formData = {ajax_action:"search_navbar",query:query,type:type};
 		$.ajax({
-			url : "/ajax_handler.php",
+			url : window.base_url+"/ajax_handler.php",
 			type: "POST",
 			data : formData,
 			dataType:"json",
@@ -91,7 +91,7 @@ $( document ).ready(function() {
 		var query = $('#typeahead-input').val();
 		var formData = {ajax_action:"select_users_like",username:query};
 		$.ajax({
-			url : "/ajax_handler.php",
+			url : window.base_url+"/ajax_handler.php",
 			type: "POST",
 			data : formData,
 			dataType:"json",
@@ -107,7 +107,7 @@ $( document ).ready(function() {
 		var query = $('#filter_libs_input').val();
 		var formData = {ajax_action:"filter_libraries",query:query};
 		$.ajax({
-			url : "/ajax_handler.php",
+			url : window.base_url+"/ajax_handler.php",
 			type: "POST",
 			data : formData,
 			success: function(data){
@@ -130,7 +130,7 @@ function navbar_search_project(e) {
 	var query = $(e).html();
 	var formData = {ajax_action:"select_project_by_name",name:query};
 	$.ajax({
-		url : "/ajax_handler.php",
+		url : window.base_url+"/ajax_handler.php",
 		type: "POST",
 		data : formData,
 		dataType:"json",
