@@ -9,6 +9,21 @@ $(function() {
 	var mouse_down_x;
 	var mouse_down_y;
 	
+	$("#waveforms_close_btn").click(function(event){
+		$("#waveforms_container").addClass("hidden");
+		$("#signals").html('');
+		$("#WaveImage").html('');
+		var canvas=document.getElementById("WavesCanvas");
+		var ctx=canvas.getContext("2d");
+		ctx.clearRect(0, 0, canvas.width, canvas.height);
+		window.selected_signals = [];
+		window.low_limit=0;
+		window.max_limit=30;
+		$("#slider_button").css('left', '100px');
+		$("#simulation_zoom").val('100');
+		$("#slider_info").html('100%');
+	});
+	
 	$("#Display_Waveform").click(function(event){
 		var vcd_name = $("#vcd_file").val();
 		var project_id = $("#project_id").val();
@@ -30,7 +45,7 @@ $(function() {
 				wave_intervals = data['time_info']['intervals'];
 				wave_data = data;
 				
-				$("#signals").append("<div id='module_none'></div>");
+				$("#signals").append("<ul id='module_none' class='list-group'></ul>");
 				$.each(data, function( index, signal ) {
 					if(signal['name'] && index != "time_info"){
 
@@ -40,26 +55,27 @@ $(function() {
 						}else{
 							module="none";
 						}
-						$("#module_"+module).append(signal['name']);
-						$("#module_"+module).append("<span id='signal_"+counter+"' class='pointer'> (+)</span>");
+						var signal_html = "<li id='signal_"+counter+"' class='list-group-item pointer'>"+signal['name'];
+						signal_html += "<span id='signal_"+counter+"_glyph' class='glyphicon right'></span>";
 						if(index=="'"){
-							$("#module_"+module).append("<input type='hidden' id='signal_"+counter+"_val' value=\"'\" /><br/>");
+							signal_html += "<input type='hidden' id='signal_"+counter+"_val' value=\"'\" /></li>";
 						}else{
-							$("#module_"+module).append("<input type='hidden' id='signal_"+counter+"_val' value='"+index+"' /><br/>");
+							signal_html += "<input type='hidden' id='signal_"+counter+"_val' value='"+index+"' /></li>";
 						}
+						$("#module_"+module).append(signal_html);
 						$("#signal_"+counter).click(function(event) {
 							var signal_symbol = $("#"+event.target.id+"_val").val();
 							var signal_index=selected_signals.indexOf(signal_symbol);
+							$("#"+event.target.id).toggleClass('selected_sig');
+							$("#"+event.target.id+"_glyph").toggleClass('glyphicon-ok');
 							if(signal_index == -1){
 								selected_signals[selected_signals.length] = signal_symbol;
 								draw_wave(data);
-								$("#"+event.target.id).html(' (-)');
 							}else{
 								selected_signals.splice(signal_index, 1);
 								window.wave_data[index]["expand"]=0;
 								$( "#expand_"+signal_index ).remove();
 								draw_wave(data);
-								$("#"+event.target.id).html(' (+)');
 							}
 						});
 						counter++;
@@ -81,10 +97,11 @@ $(function() {
 		case 1: 
 			draw_wave(wave_data);
 			x=event.pageX - $('#WavesCanvas').offset().left;
-			if(x > 110 && x < 760){
+			canvas_width = $('#WavesCanvas').width();
+			if(x > 110 && x < (canvas_width-20)){
 				var second_divisions = ["ds", "cs", "ms", "µs", "ns", "ps", "fs", "as", "zs", "yz"];
 				var second_div_index=second_divisions.indexOf(wave_data['time_info']['timescale']);
-				x_interval =650 / (max_limit - low_limit) ;
+				x_interval =(canvas_width-130) / (max_limit - low_limit) ;
 				time_interval = wave_data['time_info']['duration'] / ( wave_data['time_info']['intervals'] -1);
 				timeframe =( ( Math.floor((x-110) / x_interval) + low_limit ) * time_interval );
 				sub=scale_time_subdivisions(time_interval,0);
@@ -185,12 +202,13 @@ $(function() {
 			
 			draw_wave(wave_data);
 		}
-		
+		canvas_width = $('#WavesCanvas').width();
 		x=event.pageX - $('#WavesCanvas').offset().left ;	
-		if(x > 110 && x < 760){
+		
+		if(x > 110 && x < (canvas_width-20)){
 			var second_divisions = ["ds", "cs", "ms", "µs", "ns", "ps", "fs", "as", "zs", "yz"];
 			var second_div_index=second_divisions.indexOf(wave_data['time_info']['timescale']);
-			x_interval =650 / (max_limit - low_limit) ;
+			x_interval =(canvas_width-130) / (max_limit - low_limit) ;
 			time_interval = wave_data['time_info']['duration'] / ( wave_data['time_info']['intervals'] -1);
 			timeframe =( ( Math.floor((x-110) / x_interval) + low_limit ) * time_interval );
 			sub=scale_time_subdivisions(time_interval,0);
@@ -275,7 +293,6 @@ $(function() {
 				
 				// move the slider and the info box
 				$("#slider_button").css('left', offset+'px');
-				$("#slider_info").css('left', offset+'px');
 				
 				// update the time scale value and redraw the data
 				$("#simulation_zoom").val(offset);
@@ -306,10 +323,12 @@ function create_modules(modules_array){
 			}else{
 				perent_element = $("#module_"+parent_module);
 			}
-			perent_element.append("<br/><span id='span_module_"+module+"' class='bold pointer'>+ "+module+"</span><br/>");
-			perent_element.append("<div id='module_"+module+"' class='hidden'></div>");
+			var module_html = "<ul class='list-group fill_gap-5'><li id='span_module_"+module+"' class='list-group-item list-header bold pointer'><span id='module_"+module+"_glyph' class='glyphicon glyphicon-triangle-bottom'></span> "+module+"</li></ul>";
+			module_html += "<ul id='module_"+module+"' class='list-group hidden'></ul>";
+			perent_element.append(module_html);
 			$( "#span_module_"+module ).click(function() {
 				$( "#module_"+module ).toggleClass( "hidden" );
+				$( "#module_"+module+"_glyph" ).toggleClass( "glyphicon-triangle-top" ).toggleClass("glyphicon-triangle-bottom");
 			});
 		}
 		return module;
@@ -348,7 +367,13 @@ function draw_wave(signal_data){
 	
 	// get the canvas width
 	var x_interval = 95;
-	var w = canvas.width;
+	var w = $("#WaveImage").width();
+	if(w > 800){
+		canvas.width=800;
+		w=800;
+	}else{
+		canvas.width=w;
+	}
 	
 	// fix the canvas height to fit all the waves
 	var y_interval = 40;
@@ -379,7 +404,7 @@ function draw_wave(signal_data){
 		
 		if(signal_data[index]['length']>1){
 			if($('#expand_'+i).length == 0){
-				corrected_y=y+6;
+				corrected_y=y-12;
 				$('#canvas_div').append('<div id="expand_'+i+'" class="expand_button" style="top: '+corrected_y+'px;">+</div>');
 				$("#expand_"+i).click(function(event) {
 					if(window.wave_data[index]["expand"]==1){
@@ -393,7 +418,7 @@ function draw_wave(signal_data){
 					}
 				});
 			}else{
-				corrected_y=y+6;
+				corrected_y=y-12;
 				$('#expand_'+i).css('top', corrected_y + 'px');
 			}
 		}
@@ -405,7 +430,7 @@ function draw_wave(signal_data){
 		// move through x for the waveform
 		x=110;
 		// calculate the length of each pulse
-		x_interval=650 / (max_limit - low_limit) ;
+		x_interval=(w-130) / (max_limit - low_limit) ;
 		
 		// draw the wave form
 		draw_signal(x,y,signal_data[index],signal_data['time_info']['duration'],time_frame,low_limit,max_limit,x_interval,ctx,sub,second_unit,time_interval);
@@ -484,12 +509,13 @@ function draw_signal(x,y,signal_data,duration,time_frame,low_limit,max_limit,x_i
 		if(typeof signal_data[current_time] != 'undefined'){
 			old_value = signal_data[current_time];
 			value = signal_data[current_time];
+			
 		}else{
 			value=-1;
 		}
 		if(!isNaN(current_time) && current_time >= low_limit*time_frame && current_time < max_limit*time_frame){
-			ctx.strokeStyle = "#000";
 			
+			ctx.strokeStyle = "#000";
 			if(first_signal==1){
 				if(time_counter==0){
 					if(time_offset_y == 15){
@@ -609,6 +635,7 @@ function draw_signal(x,y,signal_data,duration,time_frame,low_limit,max_limit,x_i
 		
 		old_multivalue_named=old_value;
 	}
+	
 }
 
 function scale_time_subdivisions(input,sub){

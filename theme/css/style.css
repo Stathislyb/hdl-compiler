@@ -456,3 +456,40 @@ font-family:Tahoma, Geneva, sans-serif;
 	color:black;
 	cursor:pointer;
 }
+
+.selected_sig {
+    background-color: #D7FFF9;
+    box-shadow: 2px 2px 5px #E0DFDF;
+    z-index: 999;
+}
+
+.fill_gap-5{
+    margin-bottom: -5px;
+}
+
+.right{
+	float: right;
+}
+
+.col-scroll-400{
+	overflow-y:scroll;
+	max-height:400px;
+}
+
+.waveforms_container{
+	border: 2px solid #C3C8D2;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 4px 4px 5px #E0DFDF;
+}
+
+.btn-close{
+	background-color: #CE2401;
+    border-radius: 10px;
+    padding: 4px;
+    font-size: 16px;
+    float: right;
+    margin-top: -22px;
+    margin-right: -22px;
+    color: #FFF;
+}
