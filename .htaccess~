@@ -11,6 +11,7 @@ RewriteRule ^project/([^/]+)/([^/]+)/(file)/(.*) index.php?action=project-file&u
 RewriteRule ^project/([^/]+)/([^/]+)/(directory)/(.*) index.php?action=project-dir&user=$1&project=$2&dir=$4 [NC,L]
 RewriteRule ^project/([^/]+)/([^/]+)[\/]?$ index.php?action=project-dir&user=$1&project=$2&dir=/ [NC,L]
 RewriteRule ^project/([^/]+)[\/]?$ index.php?action=project-user&ptype=1&user=$1 [NC,L]
+RewriteRule ^(file)/(.*) index.php?action=sid-file&file=$1 [NC,L]
 RewriteRule ^(profile|create-project|libraries|edit-project|project) index.php?action=$1 [NC,L]
 
 # Handle common HTTP status codes

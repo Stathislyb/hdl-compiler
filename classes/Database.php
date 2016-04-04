@@ -201,7 +201,7 @@ class Database {
 		return $statement->execute();
 	}
 	
-	// Select the user's projects, returns a list of the projects on success and false on failure
+	// Select the project's files, returns a list of the project's files
 	public function get_project_files($project_id, $dir) {
 		$query = "SELECT * FROM project_files WHERE project_id = '".$project_id."' AND relative_path='".$dir."' ORDER BY type"; 
 		$statement = $this->conn->prepare($query); 
@@ -350,6 +350,45 @@ class Database {
 		$statement = $this->conn->prepare($query); 
 		$statement->execute();
 		return;
+	}
+	
+	// Select the SID's files, returns a list of the files
+	public function get_sid_files($sid) {
+		$query = "SELECT * FROM sid_files WHERE sid = '".$sid."'"; 
+		$statement = $this->conn->prepare($query); 
+		$statement->execute();
+		return $statement->fetchAll();
+	}
+	
+	// Add sid file in database
+	public function add_sid_file($name, $sid) {
+		$query = "INSERT INTO sid_files (name, sid) Values('".$name."',".$sid." )"; 
+		$statement = $this->conn->prepare($query); 
+		$statement->execute();
+		return $this->conn->lastInsertId();
+	}
+	
+	// Select the SID file by id, returns the file's row on success and false on failure
+	public function get_file_sid($file_id) {
+		$query = "SELECT * FROM sid_files WHERE id = '".$file_id."'"; 
+		$statement = $this->conn->prepare($query); 
+		$statement->execute();
+		return $statement->fetch();
+	}
+	
+	// Update file for pending compilation
+	public function file_compile_pending_sid($file_id) {
+		$query = "UPDATE sid_files SET compiled='1' WHERE id='".$file_id."%'"; 
+		$statement = $this->conn->prepare($query); 
+		$statement->execute();
+		return;
+	}
+	
+	// Removes SID file from database, return true or false
+	public function remove_file_sid($file_id) {
+		$query = "DELETE FROM sid_files WHERE id = '".$file_id."'"; 
+		$statement = $this->conn->prepare($query); 
+		return $statement->execute();
 	}
 }
 

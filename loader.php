@@ -17,7 +17,7 @@ $messages = new Messages;
 $gen = new General;
 
 // login pseudo user with session id
-if(isset($_SESSION['PID']) && $_SESSION['PID']>0){
+if(isset($_SESSION['SID']) && $_SESSION['SID']>0){
 	$_SESSION['vhdl_user']['username'] = "Guest";
 	$_SESSION['vhdl_user']['id'] = "0";
 	$_SESSION['vhdl_user']['loged_in'] = 1;

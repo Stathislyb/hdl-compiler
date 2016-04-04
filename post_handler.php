@@ -12,9 +12,8 @@ if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST["post_action"]) ){
 			// log user out (if requested)
 			case "logout":
 				$pid="0";
-				setcookie("PID", 0, time()-3600);
 				unset($_SESSION['vhdl_user']);
-				unset($_SESSION['PID']);
+				unset($_SESSION['SID']);
 			break;
 
 			// Create Project
@@ -135,7 +134,6 @@ if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST["post_action"]) ){
 								exit();
 							}
 						}
-						rmdir($path);
 					}
 					array_push($_SESSION['vhdl_msg'], 'fail_create_file');
 				}else{
@@ -399,6 +397,151 @@ if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST["post_action"]) ){
 					array_push($_SESSION['vhdl_msg'], 'permissions_fail');
 				}
 			break;
+				
+				// SID Create File
+			case "SID_Create_file":
+				$name = $gen->create_short_code($_POST['file_name']);
+				$path = $BASE.$_SESSION['SID']."/".$name;
+				
+				if(fopen($path,"w+")){	
+					if( $db->add_sid_file($name, $_SESSION['SID']) >0 ){
+						array_push($_SESSION['vhdl_msg'], 'success_create_file');
+						header("Location:".$BASE_URL);
+						exit();
+					}
+				}
+				array_push($_SESSION['vhdl_msg'], 'fail_create_file');
+			break;
+				
+				// SID Upload File
+			case "SID_Upload_File":
+				$path = $BASE.$_SESSION['SID'];
+				$name = $gen->create_short_code(basename($_FILES['userfile']['name']));
+				$uploadfile = $path . $name;
+				
+					if(file_exists($path.$name)){
+						array_push($_SESSION['vhdl_msg'], 'file_exists');
+						header("Location:".$BASE_URL);
+						exit();			
+					}
+
+					//Check for errors
+					if ($_FILES['userfile']['error'] === UPLOAD_ERR_OK) { 
+					//uploading successfully done 
+					} else { 
+						array_push($_SESSION['vhdl_msg'], 'fail_upload_file');
+						header("Location:".$BASE_URL);
+						exit();
+					} 
+					
+					$file_id = $db->add_sid_file($name, $_SESSION['SID']);
+					if($file_id > 0){		
+						
+						$ret=move_uploaded_file($_FILES['userfile']['tmp_name'], $uploadfile);
+						if ($ret) {
+							
+							$checkfile = pathinfo($uploadfile);
+							if ( $checkfile['extension'] == "zip" || $checkfile['extension'] == "ZIP" ){
+
+								if( $gen->extract_file($uploadfile,$path, $current_dir, $project['id']) ){
+									array_push($_SESSION['vhdl_msg'], 'success_upload_file');
+								}else{
+									array_push($_SESSION['vhdl_msg'], 'fail_upload_file_unzip');
+								}
+								unlink($uploadfile);
+								$db->remove_file($file_id);
+							}else{
+								array_push($_SESSION['vhdl_msg'], 'success_upload_file');
+							}
+							
+						} else {
+							array_push($_SESSION['vhdl_msg'], 'fail_upload_file'); 
+						}
+						
+					}else{
+						array_push($_SESSION['vhdl_msg'], 'fail_upload_file');
+					}
+			break;
+						   
+			case "SID_Compile_Selected":
+				$selected = explode('-',$_POST['selected_ids']);
+				foreach ($selected as $file_id) {
+					$file = $db->get_file_sid($file_id);
+					$full_path = $BASE.$_SESSION['SID'].'/'.$file['name'];
+					$directory = $BASE.$_SESSION['SID'].'/';
+
+					if (file_exists($full_path)){
+						check_and_create_job_directory();
+						$extra=process_pre_options($_POST);
+						//$prefile="-a ".$extra;
+						$prefile="-a ";
+						$postfile="";
+						$executable='/usr/lib/ghdl/bin/ghdl';
+						$timeout=6;
+						if( file_exists($full_path.".log") ){
+							unlink($full_path.".log");
+						}
+						create_job_file($directory,$file['name'],$prefile,$postfile,$executable,$timeout);
+						$db->file_compile_pending_sid($file['id']);
+
+						array_push($_SESSION['vhdl_msg'], 'compile_success');
+					}else{
+						array_push($_SESSION['vhdl_msg'], 'compile_fail');
+					}
+				}
+			break;
+				
+			case "SID_Simulate_Project":
+				$directory = $BASE.$_SESSION['SID'].'/';
+				$architectureclean=filter_var($_POST['architecture'],FILTER_SANITIZE_STRING);	
+				$explodedarchitecture=explode(" ",$architectureclean);
+				$unit=$explodedarchitecture[0];
+				$architecture=$explodedarchitecture[1];	
+				check_and_create_job_directory();
+
+				$extra_pre = '';
+				if ( isset($_POST['extralib'] ) ){
+					if ( $_POST['extralib'] == "synopsys"){ 
+						$extra_pre = " --ieee=synopsys ";
+					}
+				}
+				$prefile="--elab-run ".$extra_pre;
+				$extra_post = '';
+				if ( isset($_POST['extrasim'] ) ){
+					if ( $_POST['extrasim'] == "vcd"){ 
+						$extra_post = " --vcd=testbench.vcd ";
+					}
+				}
+				$postfile=$architecture.$extra_post;
+
+				create_job_file($directory,$unit,$prefile,$postfile);
+				array_push($_SESSION['vhdl_msg'], 'simulation_success');
+				
+			break;
+
+			case "SID_Remove_Selected":
+				$selected = explode('-',$_POST['selected_ids']);
+				foreach ($selected as $file_id) {
+					$file = $db->get_file_sid($file_id);
+					$full_path = $BASE.$_SESSION['SID'].'/'.$file['name'];
+					$result = true;
+
+					if( !$db->remove_file_sid($file_id) ){
+						$result=false;
+					}
+					if (file_exists($full_path)){
+						system("rm -rf ".escapeshellarg($full_path));
+					}else{
+						$result=false;
+					}
+
+					if($result){
+						array_push($_SESSION['vhdl_msg'], 'file_removed_success');
+					}else{
+						array_push($_SESSION['vhdl_msg'], 'file_removed_fail');
+					}
+				}
+			break;
 
 		}
 		
@@ -439,9 +582,11 @@ if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST["post_action"]) ){
 		break;
 		
 		case "set_sid":
-			echo "new SID";
-			$_SESSION['PID']=intval($_POST['pid']);
-			setcookie("PID", $_SESSION['PID'], time()+3600);
+			$_SESSION['SID']=intval($_POST['pid']);
+			$_SESSION['vhdl_user']['username'] = "Guest";
+			$_SESSION['vhdl_user']['id'] = "0";
+			$_SESSION['vhdl_user']['loged_in'] = 1;
+			$user = new User($_SESSION['vhdl_user']);
 		break;
 			
 		case "new_sid":
@@ -451,8 +596,11 @@ if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST["post_action"]) ){
 				$number=rand()%100000;
 			}
 			// Ok we found a new random file
-			$_SESSION['PID']=$number;
-			setcookie("PID", $_SESSION['PID'], time()+3600);
+			$_SESSION['SID']=$number;
+			$_SESSION['vhdl_user']['username'] = "Guest";
+			$_SESSION['vhdl_user']['id'] = "0";
+			$_SESSION['vhdl_user']['loged_in'] = 1;
+			$user = new User($_SESSION['vhdl_user']);
 		break;
 			
 	}
