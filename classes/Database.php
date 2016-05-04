@@ -217,6 +217,14 @@ class Database {
 		return $statement->fetch();
 	}
 	
+	// Select the file by id, returns the file's row on success and false on failure
+	public function get_file_byname($file,$project) {
+		$query = "SELECT * FROM project_files WHERE project_id = '".$project."' AND name='".$file."' "; 
+		$statement = $this->conn->prepare($query); 
+		$statement->execute();
+		return $statement->fetch();
+	}
+	
 	// Add directory or file in database
 	public function add_dir_file($dir_name, $project_id, $file_type,  $current_dir) {
 		$query = "INSERT INTO project_files (name, project_id, type, relative_path) Values('".$dir_name."','".$project_id."' ,'".$file_type."' ,'".$current_dir."')"; 
@@ -352,6 +360,14 @@ class Database {
 		return;
 	}
 	
+	// Update file for pending RE-compilation
+	public function file_recompile_prompt($file_id) {
+		$query = "UPDATE project_files SET compiled='2' WHERE id='".$file_id."%'"; 
+		$statement = $this->conn->prepare($query); 
+		$statement->execute();
+		return;
+	}
+	
 	// Select the SID's files, returns a list of the files
 	public function get_sid_files($sid) {
 		$query = "SELECT * FROM sid_files WHERE sid = '".$sid."'"; 
@@ -359,6 +375,14 @@ class Database {
 		$statement->execute();
 		return $statement->fetchAll();
 	}
+	
+	// Select the file by id, returns the file's row on success and false on failure
+	public function get_file_byname_sid($file,$sid) {
+		$query = "SELECT * FROM sid_files WHERE sid = '".$sid."' AND name='".$file."' "; 
+		$statement = $this->conn->prepare($query); 
+		$statement->execute();
+		return $statement->fetch();
+	}	
 	
 	// Add sid file in database
 	public function add_sid_file($name, $sid) {
@@ -379,6 +403,15 @@ class Database {
 	// Update file for pending compilation
 	public function file_compile_pending_sid($file_id) {
 		$query = "UPDATE sid_files SET compiled='1' WHERE id='".$file_id."%'"; 
+		$statement = $this->conn->prepare($query); 
+		$statement->execute();
+		return;
+	}
+	
+	// Update SID's file for pending RE-compilation
+	public function file_recompile_prompt_sid($file_id) {
+		$query = "UPDATE sid_files SET compiled='2' WHERE id='".$file_id."%'"; 
+		echo $query;
 		$statement = $this->conn->prepare($query); 
 		$statement->execute();
 		return;

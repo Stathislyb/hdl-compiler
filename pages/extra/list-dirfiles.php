@@ -38,6 +38,9 @@ if( !isset($db) ){
 				echo "<span class='compile-info compile-pending'> Pending Compile</span>";
 				echo "<span class='pull-right'><input type='checkbox' class='select_file' value='".$file['id']."' id='file_".$file['id']."'></span></li>";
 			}
+		}elseif($file['compiled']=='2'){
+			echo "<span class='compile-info compile-pending'> File's contents changed since last compile</span>";
+			echo "<span class='pull-right'><input type='checkbox' class='select_file' value='".$file['id']."' id='file_".$file['id']."'></span></li>";
 		}else{
 			echo "<span class='pull-right'><input type='checkbox' class='select_file' value='".$file['id']."' id='file_".$file['id']."'></span></li>";
 		}

@@ -234,6 +234,12 @@ class General {
 		return false;
 	}
 	
+	// Filter string for invalide characters
+	public function filter_letters($string){
+		$var=filter_var($string,FILTER_SANITIZE_STRING);
+		$var2=preg_replace("/\.\./",".",$var);
+		return $var2;
+	}
 
 }
 ?>

@@ -5,13 +5,12 @@ $( document ).ready(function() {
 			var editor = ace.edit("editor");
 			var contents = editor.getSession().getValue();
 			var directory = $('#path').val();
+			var file_id = $('#file_id').val();
+			var formData = {ajax_action:"save_file",directory: directory,data: contents, file_id: file_id};
 			$.ajax({
 				method: "POST",
-				url: window.base_url+"/writefile.php",
-				data:{
-					directory: directory,
-					data: contents
-				}
+				url: window.base_url+"/ajax_handler.php",
+				data:formData
 			}).done(function(returned) {
 				var alert_html = '<div class="alert alert-success">';
 				alert_html = alert_html+'<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>';

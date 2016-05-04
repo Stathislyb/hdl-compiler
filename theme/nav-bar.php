@@ -24,6 +24,10 @@
 					<div class="navbar-form pull-left nav-home">
 						<a href="<?php echo $BASE_URL; ?>" ><?php echo $_SESSION['vhdl_user']['username']; ?></a>
 					</div>
+				<?php }else{ ?>
+					<div class="navbar-form pull-left nav-home">
+						<a href="<?php echo $BASE_URL; ?>" >Home</a>
+					</div>
 				<?php } ?>
 			</div>
 		</div>

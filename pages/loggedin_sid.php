@@ -8,9 +8,7 @@ if( !isset($db) ){
 
 	$files =$db->get_sid_files($_SESSION['SID']);
 	$current_dir=$BASE.$_SESSION['SID']."/";
-	echo $current_dir;
 	$vcd_files = glob($current_dir."*.vcd");
-		var_dump($vcd_files);
 	//we want here to display all valid architectures
 	$command="cd ".$current_dir.";/usr/lib/ghdl/bin/ghdl -d | grep architecture | awk ' {print $4,$2} '";
 	$shell_output=shell_exec($command);
@@ -20,7 +18,7 @@ if( !isset($db) ){
 <br/><br/><br/>
 <div class="row">
 	<div class="col-sm-3 divider-vertical-right"> 
-		Contents of : <?php echo $_SESSION['PID']; ?>/
+		Contents of : <?php echo $_SESSION['SID']; ?>/
 	</div>
 	<div class="col-sm-9"> 
 		SID projects are removed in server maintenance.<br/>

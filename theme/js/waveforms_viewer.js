@@ -11,6 +11,7 @@ $(function() {
 	
 	$("#waveforms_close_btn").click(function(event){
 		$("#waveforms_container").addClass("hidden");
+		$("#waveforms_shadow").addClass("hidden");
 		$("#signals").html('');
 		$("#WaveImage").html('');
 		var canvas=document.getElementById("WavesCanvas");
@@ -84,6 +85,9 @@ $(function() {
 			} // end success
 		}); // end ajax
 		$("#waveforms_container").removeClass("hidden");
+		$("#waveforms_shadow").removeClass("hidden");
+		$('html, body').animate({ scrollTop: 0});
+		$(window).scrollTop();
 	});
 	
 	$("#SID_Display_Waveform").click(function(event){
@@ -145,6 +149,9 @@ $(function() {
 			} // end success
 		}); // end ajax
 		$("#waveforms_container").removeClass("hidden");
+		$("#waveforms_shadow").removeClass("hidden");
+		$('html, body').animate({ scrollTop: 0});
+		$(window).scrollTop();
 	});
 	
 	// prevent default right click behaviour in canvas
@@ -160,7 +167,7 @@ $(function() {
 			x=event.pageX - $('#WavesCanvas').offset().left;
 			canvas_width = $('#WavesCanvas').width();
 			if(x > 110 && x < (canvas_width-20)){
-				var second_divisions = ["ds", "cs", "ms", "µs", "ns", "ps", "fs", "as", "zs", "yz"];
+				var second_divisions = ["ds", "cs", "ms", "Âµs", "ns", "ps", "fs", "as", "zs", "yz"];
 				var second_div_index=second_divisions.indexOf(wave_data['time_info']['timescale']);
 				x_interval =(canvas_width-130) / (max_limit - low_limit) ;
 				time_interval = wave_data['time_info']['duration'] / ( wave_data['time_info']['intervals'] -1);
@@ -267,7 +274,7 @@ $(function() {
 		x=event.pageX - $('#WavesCanvas').offset().left ;	
 		
 		if(x > 110 && x < (canvas_width-20)){
-			var second_divisions = ["ds", "cs", "ms", "µs", "ns", "ps", "fs", "as", "zs", "yz"];
+			var second_divisions = ["ds", "cs", "ms", "Âµs", "ns", "ps", "fs", "as", "zs", "yz"];
 			var second_div_index=second_divisions.indexOf(wave_data['time_info']['timescale']);
 			x_interval =(canvas_width-130) / (max_limit - low_limit) ;
 			time_interval = wave_data['time_info']['duration'] / ( wave_data['time_info']['intervals'] -1);
@@ -406,11 +413,10 @@ function draw_wave(signal_data){
 	var x_multi_intervals=0;
 	var first_timeframe=1;
 	var time_frame = signal_data['time_info']['duration'] / (signal_data['time_info']['intervals']-1);
-	var second_divisions = ["ds", "cs", "ms", "µs", "ns", "ps", "fs", "as", "zs", "yz"];
+	var second_divisions = ["ds", "cs", "ms", "Âµs", "ns", "ps", "fs", "as", "zs", "yz"];
 	var second_div_index=second_divisions.indexOf(signal_data['time_info']['timescale']);
 	var sub=scale_time_subdivisions(time_frame,0);
 	var second_unit=second_divisions[second_div_index-sub];
-	
 	max_limit = low_limit + Math.round( signal_data['time_info']['intervals']*($("#simulation_zoom").val()/100) );
 	if(max_limit > signal_data['time_info']['intervals']){
 		low_limit = low_limit - (max_limit - signal_data['time_info']['intervals']);
@@ -467,7 +473,7 @@ function draw_wave(signal_data){
 		
 		if(signal_data[index]['length']>1){
 			if($('#expand_'+i).length == 0){
-				corrected_y=y-12;
+				corrected_y=y+57;
 				$('#canvas_div').append('<div id="expand_'+i+'" class="expand_button" style="top: '+corrected_y+'px;">+</div>');
 				$("#expand_"+i).click(function(event) {
 					if(window.wave_data[index]["expand"]==1){
@@ -481,7 +487,7 @@ function draw_wave(signal_data){
 					}
 				});
 			}else{
-				corrected_y=y-12;
+				corrected_y=y+57;
 				$('#expand_'+i).css('top', corrected_y + 'px');
 			}
 		}

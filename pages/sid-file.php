@@ -7,6 +7,7 @@ if( !isset($db) ){
 <?php 
 	$file_name = $_GET['file'];	
 	$path=$BASE.$_SESSION['SID']."/".$file_name;
+	$file = $db->get_file_byname_sid($file_name,$_SESSION['SID']);
 	echo "<a href='".$BASE_URL."'>".$_SESSION['SID']." ></a> ".$file_name;
 ?>
 <br/><br/><br/>
@@ -36,6 +37,7 @@ if( !isset($db) ){
 					<br/>
 					<script type='text/javascript' charset='utf-8' src='<?php echo $BASE_URL; ?>/theme/js/ace-editor.js'></script>
 					<input type='hidden' value='<?php echo $path; ?>' id='path' />
+					<input type='hidden' value='<?php echo $file['id']; ?>' id='file_id' />
 					<input type='button' id='ace_save_button' name='save' value='Save Changes' class='btn btn-lg btn-info center-block'>
 					<!-- //print_close_editor_window_button($file); -->
 				</div>

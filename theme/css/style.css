@@ -477,10 +477,25 @@ font-family:Tahoma, Geneva, sans-serif;
 }
 
 .waveforms_container{
+	position: absolute;
+    width: 90%;
+    background-color: #fff;
+    top: 10%;
+	left:5%;
+    z-index: 20;
 	border: 2px solid #C3C8D2;
     padding: 20px;
     border-radius: 10px;
-    box-shadow: 4px 4px 5px #E0DFDF;
+    box-shadow: 4px 4px 15px #737373;;
+}
+.waveforms_shadow{
+	position: fixed;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(0,0,0,0.7);
+    top: 0;
+    left: 0;
+    z-index: 10;
 }
 
 .btn-close{
@@ -492,4 +507,8 @@ font-family:Tahoma, Geneva, sans-serif;
     margin-top: -22px;
     margin-right: -22px;
     color: #FFF;
+}
+
+.minh-50{
+	min-height:50px;
 }

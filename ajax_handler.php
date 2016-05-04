@@ -61,6 +61,37 @@ if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST["ajax_action"]) && isset($
 			require('pages/extra/list-all-libraries.php');
 		break;
 		
+		// save changes on file
+		case "save_file":
+			if( isset($_POST['directory']) && isset($_POST['data'] ) ){
+				$directory=$gen->filter_letters($_POST['directory']);
+				$log_file = $directory.".log";
+				$bin_file = str_replace(".vhdl", ".o", $directory);
+				$contents=$_POST['data'];
+				if (file_exists($directory)  && is_writable($directory) ){
+					$ret=file_put_contents($directory,$contents);
+					if(!$ret) { 
+						error_get_last();
+						fail_500();
+					}
+					if( file_exists($log_file) ){
+						unlink($log_file);
+					}
+					if( file_exists($bin_file) ){
+						unlink($bin_file);
+					}
+					if($_SESSION['vhdl_user']['username'] == "Guest"){
+						$db->file_recompile_prompt_sid($_POST['file_id']);
+					}else{
+						$db->file_recompile_prompt($_POST['file_id']);
+					}
+					echo "Changes saved.";
+				}else{ //end if file exists
+					echo "File does not exist.";
+				}
+			}
+		break;
+		
 		// Generate if necessary and get the json information from requested vcd file
 		case "read_vcd":
 			$project_id = $_POST["project_id"];

@@ -17,7 +17,7 @@ if( !isset($db) ){
 		<?php echo $library['name']."<br/> Created by ".$search_user['username']; ?>
 	</div>
 	<div class="col-sm-9"> 
-		<a href='/libraries' class="btn btn-primary btn-outline pull-right" role="button">View All Libraries </a>
+		<a href='<?php echo $BASE_URL; ?>/libraries' class="btn btn-primary btn-outline pull-right" role="button">View All Libraries </a>
 		<form action='' method='post'>
 			<select name="project_id" class="form-control input-width-fix">
 				<?php 
@@ -43,7 +43,7 @@ if( !isset($db) ){
 				<div id="editor">
 					<?php echo $gen->open_and_read_file($path); ?>
 				</div>
-				<script src="/src/ace.js" type="text/javascript" charset="utf-8"></script>
+				<script src="<?php echo $BASE_URL; ?>/src/ace.js" type="text/javascript" charset="utf-8"></script>
 				<script>
 					var editor = ace.edit("editor");
 				</script>

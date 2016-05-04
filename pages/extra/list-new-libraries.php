@@ -9,6 +9,7 @@ if( !isset($db) ){
 ?>
 
 <div class="list-group">
+	<a href='<?php echo $BASE_URL; ?>/libraries' class="btn btn-primary btn-outline pull-right" role="button">View All Libraries </a>
 	<h3>Recent Libraries</h3>
 	<?php 
 	foreach($libraries as $library){ 
