@@ -22,9 +22,15 @@ if( !isset($db) ){
 */
 ?>
 
-<?php require('pages/extra/list-user-projects.php'); ?>
+<?php 
+if($_SESSION['vhdl_user']['activated']==1){
+	require('pages/extra/list-user-projects.php'); 
+	require('pages/extra/list-shared-projects.php'); 
+}else{
+	require('pages/activation.php'); 
+}
 
-<?php require('pages/extra/list-shared-projects.php'); ?>
+?>
 
 
 <div class="row">

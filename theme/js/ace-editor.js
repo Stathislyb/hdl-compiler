@@ -19,4 +19,19 @@ $( document ).ready(function() {
 			});
 		}
 	});
+	
+	$("#ace_theme").change(function(){
+		if( $('#editor').length ) {
+			var theme = $("#ace_theme option:selected").text().replace(/\s+/g, '_').toLowerCase();
+			var theme_id = $("#ace_theme").val();
+			var editor = ace.edit("editor");
+			editor.setTheme("ace/theme/"+theme);
+			var formData = {ajax_action:"save_theme",theme: theme_id};
+			$.ajax({
+				method: "POST",
+				url: window.base_url+"/ajax_handler.php",
+				data:formData
+			});
+		}
+	});
 });

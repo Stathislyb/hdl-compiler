@@ -384,6 +384,9 @@ font-family:Tahoma, Geneva, sans-serif;
 .space-top-10 {
 	margin-top: 10px;
 }
+.space-top-20 {
+	margin-top: 20px;
+}
 
 .popup{
 	position: fixed;

@@ -3,6 +3,10 @@ if( !isset($db) ){
 	header("location: //".$_SERVER["SERVER_NAME"]); 
 	exit();
 }
+if( !isset($_SESSION['SID']) ){
+	header("location: ".$BASE_URL); 
+	exit();
+}
 ?>
 <?php 
 	$file_name = $_GET['file'];	
@@ -13,7 +17,7 @@ if( !isset($db) ){
 <br/><br/><br/>
 <div class="row">
 	<div class="col-sm-3 divider-vertical-right"> 
-		Contents of : <?php echo $_SESSION['PID']; ?>/<?php echo $file_name; ?>
+		Contents of : <?php echo $_SESSION['SID']; ?>/<?php echo $file_name; ?>
 	</div>
 	<div class="col-sm-9"> 
 		SID projects are removed in server maintenance.<br/>

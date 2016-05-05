@@ -86,6 +86,11 @@ if( !isset($db) ){
 						<div class="help-block with-errors"></div>
 					</div>
 					<div class="form-group">
+						<label for="telephone">Mobile number (optional):</label>
+						<input type="telephone" class="form-control" name="telephone" id="telephone" placeholder="Mobile number (optional)" data-error="The mobile number you provided is invalid" data-minlength="10" />
+						<div class="help-block with-errors"></div>
+					</div>
+					<div class="form-group">
 						<button type="submit" id="register_btn" class="btn btn-primary" name="post_action" value="register">Register</button>
 					</div>
 				</form>

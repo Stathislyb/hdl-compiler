@@ -39,10 +39,47 @@ class Database {
 		return 0;
 	}
 	
+	// Select and return user's theme
+	public function get_user_theme($id) {
+		$query = "SELECT * FROM users WHERE id = '".$id."'"; 
+		$statement = $this->conn->prepare($query); 
+		$statement->execute();
+		$result = $statement->fetch();
+		return $result['theme'];
+	}
+	
+	// Update the user's theme
+	public function update_user_theme($id, $theme) {
+		$query = "UPDATE users SET theme='".$theme."' WHERE id = '".$id."'"; 
+		$statement = $this->conn->prepare($query); 
+		return $statement->execute();
+	}
+	
+	// Return 1 if user is activated, 0 otherwise
+	public function is_user_active($id) {
+		$query = "SELECT * FROM users WHERE id = '".$id."'"; 
+		$statement = $this->conn->prepare($query); 
+		$statement->execute();
+		$result = $statement->fetch();
+		return $result['activated'];
+	}
+	
+	// Return true if user is successfully activated, false otherwise
+	public function activate_user($id, $code) {
+		$query = "UPDATE users SET activated='1' WHERE id = '".$id."' AND activ_code='".$code."'"; 
+		$statement = $this->conn->prepare($query); 
+		$statement->execute();
+		if($statement->rowCount()==1){
+			return true;
+		}else{
+			return false;
+		}
+	}
+	
 	// Register user in database, returns id on success and 0 on failure
-	public function register_user($username, $password, $email) {
+	public function register_user($username, $password, $email, $phone, $code) {
 		$password = md5($password);
-		$query = "INSERT INTO users (username, password, email) Values('".$username."','".$password."','".$email."')"; 
+		$query = "INSERT INTO users (username, password, email, telephone, activ_code) Values('".$username."','".$password."','".$email."','".$phone."','".$code."')"; 
 		$statement = $this->conn->prepare($query); 
 		$statement->execute();
 		return $this->conn->lastInsertId();

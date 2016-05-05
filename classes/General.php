@@ -240,6 +240,38 @@ class General {
 		$var2=preg_replace("/\.\./",".",$var);
 		return $var2;
 	}
-
+	
+	// Generate random user activation code
+	public function generate_code(){
+		$char_array="ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+		$code="";
+		for ($i = 1; $i <= 6; $i++) {
+			$code .= $char_array[rand(0, strlen($char_array)-1)];
+		} 
+		return $code;
+	}
+	
+	
+	// Send SMS to mobile
+	public function send_sms($message, $mobile){
+		$url = 'http://vlsi.gr/sms/webservice/process.php';
+		$data = array('authcode' => '2002415', 'mobilenr' => $mobile,'message'=>$message);
+		$options = array(
+			'http' => array(
+				'header'  => "Content-type: application/x-www-form-urlencoded\r\n",
+				'method'  => 'POST',
+				'content' => http_build_query($data),
+			),
+		);
+		$context  = stream_context_create($options);
+		$result = file_get_contents($url, false, $context);
+		return ($result===false) ? false : true;
+	}
+	
+	// Send Email 
+	public function send_email($message, $subject, $mail){
+		$headers = 'From: noreply@spam.vlsi.gr'."\r\n".'Reply-To: noreply@spam.vlsi.gr'."\r\n".'X-Mailer: PHP/'.phpversion();
+		return mail($mail, $subject, $message, $headers);
+	}
 }
 ?>

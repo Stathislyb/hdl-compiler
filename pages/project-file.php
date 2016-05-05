@@ -11,7 +11,17 @@ if( !isset($db) ){
 	$editors = $db->get_project_editors($project['id']);
 	$path = $BASE_DIR.$search_user['username']."/".$_GET['project']."/".$_GET['file'];
 	$file = $db->get_file_byname($_GET['file'],$project['id']);
-
+	$ace_themes = array("Chrome","Clouds","Clouds Midnight","Cobalt","Crimson Editor","Dawn","Eclipse","Idle Fingers",
+				"Kr Theme","Merbivore","Merbivore Soft","Mono Industrial","Monokai","Pastel On Dark","Solarized Dark",
+				"Solarized Light","TextMate","Tomorrow","Tomorrow Night","Tomorrow Night Blue","Tomorrow Night Bright",
+				"Tomorrow Night Eighties","Twilight","Vibrant Ink");
+	if(isset($_SESSION['vhdl_user']) && $_SESSION['vhdl_user']['id']>0){
+		$user_theme_id = $db->get_user_theme($_SESSION['vhdl_user']['id']);
+	}else{
+		$user_theme_id = 0;
+	}
+	$user_theme = strtolower(str_replace(' ', '_',$ace_themes[$user_theme_id]));
+	
 	if($project['public']==1 && !empty($_GET['file'])){
 		$file_name = substr(strrchr($_GET['file'], '/'), 1 );
 		if(empty($file_name)){
@@ -37,7 +47,25 @@ if( !isset($db) ){
 
 <div class="row">
 	<div class="col-sm-12">
-		<h3><?php echo $file_name; ?></h3>
+		<div class="row">
+			<div class="col-sm-10">
+				<h3><?php echo $file_name; ?></h3>
+			</div>
+			<?php if( isset($user) ){ ?>
+			<div class="col-sm-2">
+				<div class="space-top-20">
+					<select id="ace_theme" class="form-control">
+						<?php
+							foreach ($ace_themes as $key => $theme) {
+								$selected = ($key==$user_theme_id)?"selected":"";
+								echo "<option value='".$key."' ".$selected.">".$theme."</option>";
+							}
+						?>
+					</select>
+				</div>
+			</div>
+			<?php } ?>
+		</div>
 		<?php if (file_exists($path)  && is_writable($path)){ ?>
 			<div id='edit_status'></div>
 			<div id="editor">
@@ -58,7 +86,7 @@ if( !isset($db) ){
 						<!-- //print_close_editor_window_button($file); -->
 					</div>
 					<script>
-						editor.setTheme("ace/theme/monokai");
+						editor.setTheme("ace/theme/<?php echo $user_theme; ?>");
 						editor.getSession().setMode("ace/mode/vhdl");
 						editor.setOption("showPrintMargin", false);
 					</script>

@@ -20,6 +20,11 @@ if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST["ajax_action"]) && isset($
 			header('Content-Type: application/json');
 			echo json_encode($users_array);
 		break;
+		
+		// save the selected theme to user preferences
+		case "save_theme":
+			$db->update_user_theme($_SESSION['vhdl_user']['id'],$_POST["theme"]);
+		break;
 			
 		// select users/projects/libraries for navbar search
 		case "search_navbar":

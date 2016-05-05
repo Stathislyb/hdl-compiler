@@ -14,6 +14,18 @@ if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST["post_action"]) ){
 				$pid="0";
 				unset($_SESSION['vhdl_user']);
 				unset($_SESSION['SID']);
+				unset($user);
+			break;
+			
+			// log user out (if requested)
+			case "activate":
+				$result= $db->activate_user($_SESSION['vhdl_user']['id'],$_POST['code']);
+				if($result){
+					$_SESSION['vhdl_user']['activated']=1;
+					array_push($_SESSION['vhdl_msg'], 'activation_success');
+				}else{
+					array_push($_SESSION['vhdl_msg'], 'activation_fail');
+				}
 			break;
 
 			// Create Project
@@ -556,6 +568,7 @@ if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST["post_action"]) ){
 				$_SESSION['vhdl_user']['username'] = $_POST["username"];
 				$_SESSION['vhdl_user']['id'] = $id;
 				$_SESSION['vhdl_user']['loged_in'] = 1;
+				$_SESSION['vhdl_user']['activated'] = $db->is_user_active($id);
 				$user = new User($_SESSION['vhdl_user']);
 				array_push($_SESSION['vhdl_msg'],"success_login");
 			}else{
@@ -567,7 +580,20 @@ if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST["post_action"]) ){
 		case "register":
 			if(filter_var($_POST["email"], FILTER_VALIDATE_EMAIL) && strlen($_POST["email"])<=50 ) {
 				if($_POST["password"] == $_POST["password_confirm"]){
-					if($db->register_user($_POST["username"],$_POST["password"],$_POST["email"])){
+					if(strlen($_POST["telephone"])!=10){
+						$phone=NULL;
+					}else{
+						$phone=$_POST["telephone"];
+					}
+					$code = $gen->generate_code();
+					if($db->register_user($_POST["username"],$_POST["password"],$_POST["email"],$phone,$code)){
+						if($phone!=NULL){
+							$message="Your activation code is : ".$code;
+							$gen->send_sms($message,$phone);
+						}
+						$subject = "HDL Everywhere Registration";
+						$message = "Welcome to our website!\r\rYou, or someone using your email address, has completed registration at HDL Everywhere. You can complete registration by clicking the following link:\r http://snf-703457.vm.okeanos.grnet.gr/vhdl/ \rAnd after logging in, enter the Activation Code : ".$code." \r\r If this is an error, ignore this email and you will be removed from our mailing list.";
+						$gen->send_email($message,$subject,$_POST["email"]);
 						array_push($_SESSION['vhdl_msg'], 'success_register');	
 						mkdir($BASE_DIR.$_POST["username"],0700);
 					}else{
@@ -586,6 +612,7 @@ if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST["post_action"]) ){
 			$_SESSION['vhdl_user']['username'] = "Guest";
 			$_SESSION['vhdl_user']['id'] = "0";
 			$_SESSION['vhdl_user']['loged_in'] = 1;
+			$_SESSION['vhdl_user']['activated'] = 1;
 			$user = new User($_SESSION['vhdl_user']);
 		break;
 			
@@ -600,6 +627,7 @@ if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST["post_action"]) ){
 			$_SESSION['vhdl_user']['username'] = "Guest";
 			$_SESSION['vhdl_user']['id'] = "0";
 			$_SESSION['vhdl_user']['loged_in'] = 1;
+			$_SESSION['vhdl_user']['activated'] = 1;
 			$user = new User($_SESSION['vhdl_user']);
 		break;
 			

@@ -33,7 +33,9 @@ class Messages {
 		"remove_project_success"=>array("The project was successfully removed.","success"),
 		"compile_fail"=>array("Failed to compile the file.","danger"),
 		"compile_success"=>array("The file is successfully queued for compiling.","success"),
-		"simulation_success"=>array("The file is successfully queued for simulation.","success")
+		"simulation_success"=>array("The file is successfully queued for simulation.","success"),
+		"activation_success"=>array("Your account has successfully been activated.","success"),
+		"activation_fail"=>array("The activation code you provided was not correct.","danger")
 	);
 	
 	// Class constractor function
