@@ -8,7 +8,9 @@ if( !isset($db) ){
 	$search_user = $db->get_user_information($_GET['user'],"username");
 	$project = $db->get_project_shortcode($_GET['project'], $search_user['id']);
 	$editors = $db->get_project_editors($project['id']);
-	if( $user->validate_edit_rights($editors) || $project['public']==1){
+	$is_editor = $user->validate_edit_rights($editors);
+	$is_compiled = false;
+	if( $is_editor || $project['public']==1){
 		$_GET['dir'] = $gen->clear_dir($_GET['dir']);
 		$files = $db->get_project_files($project['id'], $_GET['dir']);
 		
@@ -69,70 +71,76 @@ if( !isset($db) ){
 		</ul>
 	</div>
 	<div class="col-sm-9">
-		<ul class="list-group no-shadow">
-			<li class='list-group-item no-border'>
-				<span class='pull-right'><input type="checkbox" id="select_all"></span>
-			</li>
-		</ul>
+		<?php if( $is_editor ){ ?>
+			<ul class="list-group no-shadow">
+				<li class='list-group-item no-border'>
+					<span class='pull-right'><input type="checkbox" id="select_all"></span>
+				</li>
+			</ul>
+		<?php } ?>
 		<?php require('pages/extra/list-dirfiles.php'); ?>
-		<div class="row">
-			<div class="col-sm-12 space-top-10">
-				<form action='' method='post' id='Selected_Action'>
-					<input type="hidden" value="" name="selected_ids" id="selected_ids" />
-					<input type="hidden" value="<?php echo $search_user['username']; ?>" name="owner">
-					<input type="hidden" value="<?php echo $project['id']; ?>" name="project_id">
-					<button type="submit" name="post_action" value='Post_Library_Selected' class="btn btn-info" >Post Selected as Library</button>
-					<button type="submit" name="post_action" value='Compile_Selected' class="btn btn-success" >Compile Selected</button>
-					<button type="submit" name="post_action" value='Remove_Selected' class="btn btn-danger" >Remove Selected</button>
-				</form>
+		<?php if( $is_editor ){ ?>
+			<div class="row">
+				<div class="col-sm-12 space-top-10">
+					<form action='' method='post' id='Selected_Action'>
+						<input type="hidden" value="" name="selected_ids" id="selected_ids" />
+						<input type="hidden" value="<?php echo $search_user['username']; ?>" name="owner">
+						<input type="hidden" value="<?php echo $project['id']; ?>" name="project_id">
+						<button type="submit" name="post_action" value='Post_Library_Selected' class="btn btn-info" >Post Selected as Library</button>
+						<button type="submit" name="post_action" value='Compile_Selected' class="btn btn-success" >Compile Selected</button>
+						<button type="submit" name="post_action" value='Remove_Selected' class="btn btn-danger" >Remove Selected</button>
+					</form>
+				</div>
 			</div>
-		</div>
+		<?php } ?>
 	</div>
 </div>
 <hr/>
-<div class="row">
-	<div class="col-sm-9 col-sm-offset-3">
-		<h3>Simulate Project</h3>
-		<br/>
-		<form action='' method='post' id='Selected_Action'>
-			<div class="row">
-				<div class="col-sm-4">
-					<label >Select Architecture:</label>
-					<br/>
-					<div class="form-group space-top-10">
-						<select name='architecture' class="form-control width-auto">
-						<?php
-							foreach($architectures as $key => $value) {
-							  if (!empty($value)){
-									echo "<option value='".$value."'>".$value."</option>";
+<?php if( $is_editor && $is_compiled ){ ?>
+	<div class="row">
+		<div class="col-sm-9 col-sm-offset-3">
+			<h3>Simulate Project</h3>
+			<br/>
+			<form action='' method='post' id='Selected_Action'>
+				<div class="row">
+					<div class="col-sm-4">
+						<label >Select Architecture:</label>
+						<br/>
+						<div class="form-group space-top-10">
+							<select name='architecture' class="form-control width-auto">
+							<?php
+								foreach($architectures as $key => $value) {
+								  if (!empty($value)){
+										echo "<option value='".$value."'>".$value."</option>";
+									}
 								}
-							}
-						?>
-						</select>
+							?>
+							</select>
+						</div>
+					</div>
+					<div class="col-sm-6">
+						<label>Additional Option:</label>
+						<div class="checkbox">
+							<label><input type='checkbox' name='extralib' value='synopsys' />Include synopsis library for more primary units.</label>
+						</div>
+						<div class="checkbox">
+							<label><input type='checkbox' name='extrasim' value='vcd' checked/>Create a value changed dump VCD wave trace file.</label>
+						</div>
 					</div>
 				</div>
-				<div class="col-sm-6">
-					<label>Additional Option:</label>
-					<div class="checkbox">
-						<label><input type='checkbox' name='extralib' value='synopsys' />Include synopsis library for more primary units.</label>
-					</div>
-					<div class="checkbox">
-						<label><input type='checkbox' name='extrasim' value='vcd' checked/>Create a value changed dump VCD wave trace file.</label>
+				<div class="row">
+					<div class="form-group col-sm-4 space-top-10">
+						<input type="hidden" value="<?php echo $project['id']; ?>" name="project_id">
+						<button type="submit" name="post_action" value='Simulate_Project' class="btn btn-info full-row" id="Simulate_Project">Simulate Project</button>
 					</div>
 				</div>
-			</div>
-			<div class="row">
-				<div class="form-group col-sm-4 space-top-10">
-					<input type="hidden" value="<?php echo $project['id']; ?>" name="project_id">
-					<button type="submit" name="post_action" value='Simulate_Project' class="btn btn-info full-row" id="Simulate_Project">Simulate Project</button>
-				</div>
-			</div>
-		</form>
+			</form>
+		</div>
 	</div>
-</div>
-<?php if( !empty($vcd_files) ){ 
-		include("pages/extra/waverforms_viewer.php");
-	} ?>
+	<?php if( !empty($vcd_files) ){ 
+			include("pages/extra/waverforms_viewer.php");
+		} ?>
+<?php } ?>
 
 <?php if($user->validate_edit_rights($editors)){ ?>
 	<!-- Modal -->

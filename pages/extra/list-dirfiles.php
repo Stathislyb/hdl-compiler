@@ -24,25 +24,27 @@ if( !isset($db) ){
 				if( file_exists($log_file) ){
 					if( filesize($log_file) == 0 ){
 						echo "<span class='compile-info compile-success'>Compiled</span>";
-						echo "<span class='pull-right'><input type='checkbox' class='select_file' value='".$file['id']."' id='file_".$file['id']."'></span></li>";
+						echo ( $is_editor )?"<span class='pull-right'><input type='checkbox' class='select_file' value='".$file['id']."' id='file_".$file['id']."'></span></li>":"";
+						$is_compiled=true;
 					}else{
 						echo "<span class='compile-info compile-error'><a href='#error_compile_".$file['id']."' data-toggle='collapse'> Compile Failed <span class='glyphicon glyphicon-chevron-down'></span></a></span>";
-						echo "<span class='pull-right'><input type='checkbox' class='select_file' value='".$file['id']."' id='file_".$file['id']."'></span></li>";
+						echo ( $is_editor )?"<span class='pull-right'><input type='checkbox' class='select_file' value='".$file['id']."' id='file_".$file['id']."'></span></li>":"";
+						
 						echo "<div id='error_compile_".$file['id']."' class='collapse'><pre class='alert-danger'>".file_get_contents($log_file)."</pre></div>";
 					}
 				}else{
 					echo "<span class='compile-info compile-success'>Compiled</span>";
-					echo "<span class='pull-right'><input type='checkbox' class='select_file' value='".$file['id']."' id='file_".$file['id']."'></span></li>";
+					echo ( $is_editor )?"<span class='pull-right'><input type='checkbox' class='select_file' value='".$file['id']."' id='file_".$file['id']."'></span></li>":"";
 				}
 			}else{
 				echo "<span class='compile-info compile-pending'> Pending Compile</span>";
-				echo "<span class='pull-right'><input type='checkbox' class='select_file' value='".$file['id']."' id='file_".$file['id']."'></span></li>";
+				echo ( $is_editor )?"<span class='pull-right'><input type='checkbox' class='select_file' value='".$file['id']."' id='file_".$file['id']."'></span></li>":"";
 			}
 		}elseif($file['compiled']=='2'){
 			echo "<span class='compile-info compile-pending'> File's contents changed since last compile</span>";
-			echo "<span class='pull-right'><input type='checkbox' class='select_file' value='".$file['id']."' id='file_".$file['id']."'></span></li>";
+			echo ( $is_editor )?"<span class='pull-right'><input type='checkbox' class='select_file' value='".$file['id']."' id='file_".$file['id']."'></span></li>":"";
 		}else{
-			echo "<span class='pull-right'><input type='checkbox' class='select_file' value='".$file['id']."' id='file_".$file['id']."'></span></li>";
+			echo ( $is_editor )?"<span class='pull-right'><input type='checkbox' class='select_file' value='".$file['id']."' id='file_".$file['id']."'></span></li>":"";
 		}
 	}
 	if($user->validate_edit_rights($editors)){ ?>

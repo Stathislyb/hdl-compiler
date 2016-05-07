@@ -8,6 +8,8 @@ class Messages {
 		"success_login" => array("Logged in successfully.","success"),
 		"success_register" => array("Registered user successfully. An e-mail will be sent to the adress you provided with details about activating your account.","success"),
 		"fail_register" => array("The user could not be registered. Make sure the values you gave were correct and try a different username.","danger"),
+		"success_edit_user" => array("Edit user successfully.","success"),
+		"fail_edit_user" => array("The user could not be edited. Make sure the values you gave were correct.","danger"),
 		"fail_register_confirm" => array("The confirmation password did not match.","danger"),
 		"invalid_mail" => array("The e-mail address you provided was invalid.","danger"),
 		"success_project_creation" => array("The project was created successfully.","success"),

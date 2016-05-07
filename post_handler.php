@@ -554,6 +554,33 @@ if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST["post_action"]) ){
 					}
 				}
 			break;
+			
+			// register user
+			case "Edit_User":
+				if(filter_var($_POST["email_edit"], FILTER_VALIDATE_EMAIL) && strlen($_POST["email_edit"])<=50 ) {
+					if( $db->confirm_user($user->username,$_POST["password_edit"]) ){
+						if( !empty($_POST["new_password_edit"]) && $_POST["new_password_edit"] == $_POST["rep_password_edit"]){
+							$new_pass=$_POST["new_password_edit"];
+						}else{
+							$new_pass=NULL;
+						}
+						if(strlen($_POST["phone_edit"])!=10){
+							$phone=NULL;
+						}else{
+							$phone=$_POST["phone_edit"];
+						}
+						if($db->edit_user($new_pass,$phone,$_POST["email_edit"],$_POST["ace_theme"],$user->id)){
+							array_push($_SESSION['vhdl_msg'], 'success_edit_user');
+						}else{
+							array_push($_SESSION['vhdl_msg'], 'fail_edit_user');
+						}
+					}else{
+						array_push($_SESSION['vhdl_msg'], 'fail_register_confirm');	
+					}
+				}else{
+					array_push($_SESSION['vhdl_msg'], 'invalid_mail');
+				}
+			break;
 
 		}
 		

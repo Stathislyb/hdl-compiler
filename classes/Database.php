@@ -85,6 +85,23 @@ class Database {
 		return $this->conn->lastInsertId();
 	}
 	
+	// Update the user's settings
+	public function edit_user($pass,$phone,$email,$theme,$id){
+		if($pass != NULL){
+			$pass_query = "password='".$pass."', ";
+		}else{
+			$pass_query = " ";
+		}
+		if($phone != NULL){
+			$phone_query = "telephone='".$phone."', ";
+		}else{
+			$phone_query = " ";
+		}
+		$query = "UPDATE users SET ".$pass_query.$phone_query."email='".$email."', theme='".$theme."' WHERE id = '".$id."'"; 
+		$statement = $this->conn->prepare($query); 
+		return $statement->execute();
+	}
+	
 	// Select the user's projects, returns a list of the projects on success and false on failure
 	public function get_user_projects($user_id) {
 		$query = "SELECT projects.* FROM projects_editors INNER JOIN projects ON projects_editors.project_id = projects.id WHERE projects_editors.user_id = '".$user_id."' AND user_type='1'"; 
