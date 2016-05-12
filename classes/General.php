@@ -273,5 +273,45 @@ class General {
 		$headers = 'From: noreply@spam.vlsi.gr'."\r\n".'Reply-To: noreply@spam.vlsi.gr'."\r\n".'X-Mailer: PHP/'.phpversion();
 		return mail($mail, $subject, $message, $headers);
 	}
+	
+	// Return an array of the files in the path that match the file types provided 
+	public function get_directory_files($path, $file_types, $filename){
+		$files = array($filename);
+		$scanned_files = array_diff(scandir($path), array('..', '.'));
+		foreach ($scanned_files as $scanned_file) {
+			$tmp_path = $path.$scanned_file."/";
+			if(is_dir($tmp_path)){
+				$inner_files = $this->get_directory_files($tmp_path, $file_types, $scanned_file);
+				array_push( $files, $inner_files );
+			}else{
+				foreach ($file_types as $type) {
+					if(substr($scanned_file, -strlen($type)) == $type){
+						array_push($files,$scanned_file);
+					}
+				}
+			}
+		}
+		//var_dump($files);
+		//echo "<br/><br/>";
+		return $files;
+	}
+	
+	// Adds files from the list to the zip object 
+	public function addfiles_to_zip($zip,$files,$path,$folder_name){
+		foreach($files as $file) {
+			if(is_array($file)){
+				$inner_folder_name = ($folder_name !='')? $folder_name.$file[0]."/" : $file[0]."/";
+				$inner_path = $path.$file[0]."/";
+				array_shift($file);
+				$this->addfiles_to_zip($zip,$file,$inner_path,$inner_folder_name);
+			}else{
+				$file_path = $path.$file;
+				if(file_exists($file_path) && is_readable($file_path)){
+					$zip->addFile($file_path, $folder_name.$file);
+				}
+			}
+		}
+		return;
+	}
 }
 ?>

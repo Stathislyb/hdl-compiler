@@ -101,6 +101,41 @@ if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST["post_action"]) ){
 					array_push($_SESSION['vhdl_msg'], 'permissions_fail');
 				}
 			break;
+			
+			// Download Project
+			case "Download_Project":
+				$project = $db->get_project($_POST['project_id']);
+				$editors = $db->get_project_editors($project['id']);
+				
+				if( $user->validate_edit_rights($editors) ){
+					$path = $BASE_DIR.$user->username."/".$project['short_code']."/";
+					$file_types = array(".vhdl",".vcd",".og");
+					$files = $gen->get_directory_files($path,$file_types,$project['short_code']);
+					
+					$zip = new ZipArchive();
+					$zip_name = $files[0].".zip";
+					if( $zip->open($path.$zip_name,  ZipArchive::CREATE) !== true){
+						echo "could not create file";
+					}else{
+						$gen->addfiles_to_zip($zip,$files,$path,'');
+						$zip->close();
+						if(file_exists($path.$zip_name) && is_readable($path.$zip_name)){
+							header('Content-Type: application/zip');
+							header('Content-disposition: attachment; filename='.$zip_name);
+							header('Content-Length: ' . filesize($path.$zip_name));
+							header("Pragma: no-cache"); 
+							header("Expires: 0"); 
+							ob_clean();
+							flush();
+							readfile($path.$zip_name);
+							unlink($path.$zip_name);
+							exit();
+						}
+					}
+				}else{
+					array_push($_SESSION['vhdl_msg'], 'permissions_fail');
+				}
+			break;
 
 			// Create Directory
 			case "Create_dir":

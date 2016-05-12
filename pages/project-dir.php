@@ -46,6 +46,12 @@ if( !isset($db) ){
 <hr/>
 <div class="row">
 	<div class="col-sm-3"> 
+		<?php  if( $is_editor ){ ?>
+			<form action='' method='post' >
+				<input type="hidden" value="<?php echo $project['id']; ?>" name="project_id">
+				<button type="submit" name="post_action" value='Download_Project' class="btn btn-info full-row" >Download Project Files</button>
+			</form><br/>
+		<?php  } ?>
 		<?php  if( $user->validate_ownership($editors) ){ ?>
 			<a href='<?php echo $BASE_URL; ?>/edit-project/<?php echo $project['short_code']; ?>'>
 				<button type='button' class='btn btn-primary full-row'>Edit Project</button>
