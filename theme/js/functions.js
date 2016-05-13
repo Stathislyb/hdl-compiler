@@ -43,6 +43,7 @@ $( document ).ready(function() {
     });
     
 	$('#Selected_Action').submit(function(event) {
+		var clicked_button = $(document.activeElement).html();
 		var selected_ids='';
        	$('.select_file:checked').each(function() {
             selected_ids = selected_ids+"-"+$(this).val();                
@@ -60,6 +61,21 @@ $( document ).ready(function() {
 			setTimeout(function() { $("#general-popup").hide(); }, 3000);
 			return false;
 		}
+		if(clicked_button=="Remove Selected"){
+			if( !confirm('Are you sure that you want to remove the selected files ? ') ){
+				event.preventDefault();
+			}
+		}
+    });
+	
+	$('#Remove_Project_form').submit(function(event) {
+		if( !confirm('Are you sure that you want to remove the project ? ') ){
+			event.preventDefault();
+		}
+    });
+	
+	$('#download_project_form').submit(function(event) {
+		$("#Download-Project-Modal").modal( 'hide' );
     });
 	
 	$('#nav-search').on('keyup', function () {

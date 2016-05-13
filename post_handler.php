@@ -106,17 +106,17 @@ if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST["post_action"]) ){
 			case "Download_Project":
 				$project = $db->get_project($_POST['project_id']);
 				$editors = $db->get_project_editors($project['id']);
-				
-				if( $user->validate_edit_rights($editors) ){
+				$file_types = array();
+				if(isset($_POST['download_vhdl']) && $_POST['download_vhdl']=='on') array_push($file_types,".vhdl");
+				if(isset($_POST['download_vcd']) && $_POST['download_vcd']=='on') array_push($file_types,".vcd");
+				if(isset($_POST['download_log']) && $_POST['download_log']=='on') array_push($file_types,".log");
+				if( $user->validate_edit_rights($editors) && !empty($file_types) ){
 					$path = $BASE_DIR.$user->username."/".$project['short_code']."/";
-					$file_types = array(".vhdl",".vcd",".og");
 					$files = $gen->get_directory_files($path,$file_types,$project['short_code']);
 					
 					$zip = new ZipArchive();
 					$zip_name = $files[0].".zip";
-					if( $zip->open($path.$zip_name,  ZipArchive::CREATE) !== true){
-						echo "could not create file";
-					}else{
+					if( $zip->open($path.$zip_name,  ZipArchive::CREATE) === true){
 						$gen->addfiles_to_zip($zip,$files,$path,'');
 						$zip->close();
 						if(file_exists($path.$zip_name) && is_readable($path.$zip_name)){
@@ -329,30 +329,32 @@ if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST["post_action"]) ){
 				if( $user->validate_edit_rights($editors) ){
 					foreach ($selected as $file_id) {
 						$file = $db->get_file($file_id);
-						if($file['relative_path']=='/'){
-							$full_path = $BASE_DIR.$_POST['owner'].'/'.$project['short_code'].'/'.$file['name'];
-						}else{
-							$full_path = $BASE_DIR.$_POST['owner'].'/'.$project['short_code'].$file['relative_path'].'/'.$file['name'];
-						}
+						if(!empty($file)){
+							if($file['relative_path']=='/'){
+								$full_path = $BASE_DIR.$_POST['owner'].'/'.$project['short_code'].'/'.$file['name'];
+							}else{
+								$full_path = $BASE_DIR.$_POST['owner'].'/'.$project['short_code'].$file['relative_path'].'/'.$file['name'];
+							}
 
-						$result = true;
+							$result = true;
 
-						if( is_dir($full_path) ){
-							$db->remove_inner_files($file_id);
-						}
-						if( !$db->remove_file($file_id) ){
-							$result=false;
-						}
-						if (file_exists($full_path)){
-							system("rm -rf ".escapeshellarg($full_path));
-						}else{
-							$result=false;
-						}
+							if( is_dir($full_path) ){
+								$db->remove_inner_files($file_id);
+							}
+							if( !$db->remove_file($file_id) ){
+								$result=false;
+							}
+							if (file_exists($full_path)){
+								system("rm -rf ".escapeshellarg($full_path));
+							}else{
+								$result=false;
+							}
 
-						if($result){
-							array_push($_SESSION['vhdl_msg'], 'file_removed_success');
-						}else{
-							array_push($_SESSION['vhdl_msg'], 'file_removed_fail');
+							if($result){
+								array_push($_SESSION['vhdl_msg'], 'file_removed_success');
+							}else{
+								array_push($_SESSION['vhdl_msg'], 'file_removed_fail');
+							}
 						}
 					}
 				}else{

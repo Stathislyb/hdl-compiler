@@ -47,16 +47,14 @@ if( !isset($db) ){
 <div class="row">
 	<div class="col-sm-3"> 
 		<?php  if( $is_editor ){ ?>
-			<form action='' method='post' >
-				<input type="hidden" value="<?php echo $project['id']; ?>" name="project_id">
-				<button type="submit" name="post_action" value='Download_Project' class="btn btn-info full-row" >Download Project Files</button>
-			</form><br/>
+			<button type="submit" name="post_action" value='Download_Project' class="btn btn-info full-row" data-toggle="modal" data-target="#Download-Project-Modal" >Download Project Files</button>
+			<br/>
 		<?php  } ?>
 		<?php  if( $user->validate_ownership($editors) ){ ?>
 			<a href='<?php echo $BASE_URL; ?>/edit-project/<?php echo $project['short_code']; ?>'>
 				<button type='button' class='btn btn-primary full-row'>Edit Project</button>
 			</a><br/>
-			<form action='' method='post' >
+			<form action='' method='post' id="Remove_Project_form" >
 				<input type="hidden" value="<?php echo $project['id']; ?>" name="project_id">
 				<button type="submit" name="post_action" value='Remove_Project' class="btn btn-danger full-row" >Remove Project</button>
 			</form><br/>
@@ -147,6 +145,51 @@ if( !isset($db) ){
 			include("pages/extra/waverforms_viewer.php");
 		} ?>
 <?php } ?>
+
+<?php  if( $is_editor ){ ?>
+<!-- Modal -->
+	<div id="Download-Project-Modal" class="modal fade" role="dialog">
+	  <div class="modal-dialog">
+		<div class="modal-content">
+		  <div class="modal-header">
+			  <!-- Modal header menu-->
+			<h3>Download Project</h3>
+		  </div>
+		  <div class="modal-body tab-content">
+			  <!-- Modal Body Directory-->
+			<form action='' method='post' id="download_project_form">
+				<h4>Chose File Types</h4>
+				<span class="row">
+					<span class="col-sm-4">
+						<label >Include .vhdl files : </label>
+						<input type="checkbox" name="download_vhdl" id="download_vhdl" checked><br/>
+					</span>
+					<span class="col-sm-4">
+						<label >Include .vcd files : </label>
+						<input type="checkbox" name="download_vcd"  id="download_vcd" checked><br/>
+					</span>
+					<span class="col-sm-4">
+						<label >Include .log files : </label>
+						<input type="checkbox" name="download_log"  id="download_log" checked><br/>
+						<input type="hidden" value="<?php echo $project['id']; ?>" name="project_id">
+						<input type="hidden" value="111" name="file_types"><br/>
+					</span>
+				</span>
+				<span class="row">
+					<span class="col-sm-12">
+						<button type="submit" name="post_action" value='Download_Project' class="btn btn-info full-row" >Download Project Files</button>
+					</span>
+				</span>
+			</form>
+			
+		  </div>
+		  <div class="modal-footer">
+			<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+		  </div>
+		</div>
+	  </div>
+	</div>
+<?php  } ?>
 
 <?php if($user->validate_edit_rights($editors)){ ?>
 	<!-- Modal -->
