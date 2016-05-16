@@ -75,7 +75,7 @@ $(function() {
 							}else{
 								selected_signals.splice(signal_index, 1);
 								window.wave_data[index]["expand"]=0;
-								$( "#expand_"+signal_index ).remove();
+								$( ".expand_button").remove();
 								draw_wave(data);
 							}
 						});
@@ -139,7 +139,7 @@ $(function() {
 							}else{
 								selected_signals.splice(signal_index, 1);
 								window.wave_data[index]["expand"]=0;
-								$( "#expand_"+signal_index ).remove();
+								$( ".expand_button").remove();
 								draw_wave(data);
 							}
 						});
@@ -201,13 +201,28 @@ $(function() {
 					for(current_time=0;current_time<=timeframe;current_time+=time_interval){
 						if(typeof wave_data[index][current_time] != 'undefined'){
 							wave_val = wave_data[index][current_time];
+							if(wave_data[index]['length']>1){
+								wave_val_bin = wave_val;
+								data_type=$("#waveform_data_type").val();
+								if(wave_val.match(/bU.*/g)){
+									wave_val=wave_val.substr(1);
+								}else{
+									if(data_type=='3'){
+										wave_val="D"+parseInt(wave_val.substr(1),2).toString(10);
+									}else if(data_type=='2'){
+										wave_val="H"+parseInt(wave_val.substr(1),2).toString(16);
+									}else{
+										wave_val="B"+wave_val.substr(1);
+									}
+								}
+							}
 						}	
 					}
 					ctx.fillText("Value : "+wave_val,x_canvas,y_canvas);
 					y_canvas=y_canvas+40;
 					if(wave_data[index]["expand"]==1){
 						for(j=1;j<=wave_data[index]["length"];j++){
-							sub_wave_val=wave_val.charAt(j);
+							sub_wave_val=wave_val_bin.charAt(j);
 							ctx.fillText("Value : "+sub_wave_val,x_canvas+15,y_canvas);
 							y_canvas=y_canvas+40;
 						}
@@ -309,6 +324,22 @@ $(function() {
 				for(current_time=0;current_time<=timeframe;current_time+=time_interval){
 					if(typeof wave_data[index][current_time] != 'undefined'){
 						wave_val = wave_data[index][current_time];
+						if(wave_data[index]['length']>1){
+							wave_val_bin = wave_val;
+							console.log("..");
+							data_type=$("#waveform_data_type").val();
+							if(wave_val.match(/bU.*/g)){
+								wave_val=wave_val.substr(1);
+							}else{
+								if(data_type=='3'){
+									wave_val="D"+parseInt(wave_val.substr(1),2).toString(10);
+								}else if(data_type=='2'){
+									wave_val="H"+parseInt(wave_val.substr(1),2).toString(16);
+								}else{
+									wave_val="B"+wave_val.substr(1);
+								}
+							}
+						}
 					}	
 				}
 				ctx.fillStyle = "#ffa";
@@ -318,7 +349,7 @@ $(function() {
 				y_canvas=y_canvas+40;
 				if(wave_data[index]["expand"]==1){
 					for(j=1;j<=wave_data[index]["length"];j++){
-						sub_wave_val=wave_val.charAt(j);
+						sub_wave_val=wave_val_bin.charAt(j);
 						ctx.fillStyle = "#efb";
 						ctx.fillRect(x_canvas+15,y_canvas-10,65,10);
 						ctx.fillStyle = "#000";
@@ -379,6 +410,13 @@ $(function() {
 		}
 	});
 	
+	// Data type dropdown event listener
+	$("#waveform_data_type").change(function(event){
+		if(window.wave_data){
+			draw_wave(wave_data);
+		}
+	});
+	
 });
 
 
@@ -434,8 +472,7 @@ function draw_wave(signal_data){
 	// get the canvas element
 	var canvas=document.getElementById("WavesCanvas");
 	
-	// get the canvas width
-	var x_interval = 95;
+	// get the canvas width	
 	var w = $("#WaveImage").width();
 	if(w > 800){
 		canvas.width=800;
@@ -443,6 +480,9 @@ function draw_wave(signal_data){
 	}else{
 		canvas.width=w;
 	}
+	
+	// calculate the length of each pulse
+	var x_interval=(w-130) / (max_limit - low_limit) ;
 	
 	// fix the canvas height to fit all the waves
 	var y_interval = 40;
@@ -468,10 +508,11 @@ function draw_wave(signal_data){
 	ctx.strokeStyle = "#000";
 	// init. font style : Times New Roman, size : 12px
 	ctx.font="12px 'Times New Roman'";
+	// draw the grid
+	draw_grid(x,y,h,signal_data['time_info']['duration'],time_frame,low_limit,max_limit,x_interval,ctx,sub,second_unit, window.selected_signals.length);
 	
 	$.each(window.selected_signals, function( i, index ) {
-		
-		if(signal_data[index]['length']>1){
+		if(signal_data[String(index)]['length']>1){
 			if($('#expand_'+i).length == 0){
 				corrected_y=y+57;
 				$('#canvas_div').append('<div id="expand_'+i+'" class="expand_button" style="top: '+corrected_y+'px;">+</div>');
@@ -498,8 +539,6 @@ function draw_wave(signal_data){
 		
 		// move through x for the waveform
 		x=110;
-		// calculate the length of each pulse
-		x_interval=(w-130) / (max_limit - low_limit) ;
 		
 		// draw the wave form
 		draw_signal(x,y,signal_data[index],signal_data['time_info']['duration'],time_frame,low_limit,max_limit,x_interval,ctx,sub,second_unit,time_interval);
@@ -566,12 +605,13 @@ function draw_signal(x,y,signal_data,duration,time_frame,low_limit,max_limit,x_i
 	var old_multivalue_named=-1;
 	var old_value =-1;
 	var old_pulse_height=-1;
-	var first_signal=0;
 	var first_timeframe=1;
 	var x_multi_intervals=0;
 	var last_frame=1;
 	var time_offset_y=15;
 	var time_counter=0;
+	var canvas=document.getElementById("WavesCanvas");
+	var h = canvas.height;
 	
 	//  for each time frame in the signal
 	for(current_time=0;current_time<=duration;current_time+=time_frame){
@@ -584,34 +624,10 @@ function draw_signal(x,y,signal_data,duration,time_frame,low_limit,max_limit,x_i
 		}
 		if(!isNaN(current_time) && current_time >= low_limit*time_frame && current_time < max_limit*time_frame){
 			
-			ctx.strokeStyle = "#000";
-			if(first_signal==1){
-				if(time_counter==0){
-					if(time_offset_y == 15){
-						time_offset_y = 0;
-					}else{
-						time_offset_y=15;
-					}
-					ctx.beginPath();
-					ctx.strokeStyle = "#aaa";
-					ctx.moveTo(x,0);
-					ctx.lineTo(x,h-40+time_offset_y);
-					ctx.stroke();
-					ctx.closePath();
-					current_time_str = ( current_time / (Math.pow(1000, sub)) ).toString();
-					x_time=x- ((current_time_str.length / 2) +1)*5;
-					ctx.fillText(current_time_str+second_unit,x_time,h-30+time_offset_y);
-					time_counter=time_interval;
-				}else{
-					time_counter--;
-				}
-				
-			}
-			
 			// begin path for the pulse
 			ctx.beginPath();
-			// default pulse color : black
-			ctx.strokeStyle = "#000";	
+			// default pulse color : blue
+			ctx.strokeStyle = "#015";	
 			
 			if(signal_data['length']==1){
 				if(value == -1){
@@ -646,13 +662,23 @@ function draw_signal(x,y,signal_data,duration,time_frame,low_limit,max_limit,x_i
 					x_multi_intervals = x_interval + x_multi_intervals;
 				}else{
 					if(first_timeframe != 1){
+						
+						data_type=$("#waveform_data_type").val();
 						if(old_multivalue_named.match(/bU.*/g)){
 							value_length=old_multivalue_named.length*10;
+							data_val=old_multivalue_named.substr(1);
 						}else{
-							value_length=old_multivalue_named.length*8;
+							if(data_type=='3'){
+								data_val="D"+parseInt(old_multivalue_named.substr(1),2).toString(10);
+							}else if(data_type=='2'){
+								data_val="H"+parseInt(old_multivalue_named.substr(1),2).toString(16);
+							}else{
+								data_val="B"+old_multivalue_named.substr(1);
+							}
+							value_length=data_val.length*8;
 						}
 						if(value_length < x_multi_intervals){
-							ctx.fillText(old_multivalue_named,x-x_multi_intervals+5,y+5);
+							ctx.fillText(data_val,x-x_multi_intervals+5,y+5);
 						}							
 					}
 					x_multi_intervals=x_interval;
@@ -684,13 +710,22 @@ function draw_signal(x,y,signal_data,duration,time_frame,low_limit,max_limit,x_i
 		if((current_time >= max_limit*time_frame || current_time == duration) && last_frame==1){
 			last_frame=0;
 			if(signal_data['length']>1){
-				if(String(old_value).match(/bU.*/g)){
-					value_length=old_value.length*10;
+				data_type=$("#waveform_data_type").val();
+				if(old_multivalue_named.match(/bU.*/g)){
+					value_length=old_multivalue_named.length*10;
+					data_val=old_multivalue_named.substr(1);
 				}else{
-					value_length=old_value.length*8;
+					if(data_type=='3'){
+						data_val="D"+parseInt(old_multivalue_named.substr(1),2).toString(10);
+					}else if(data_type=='2'){
+						data_val="H"+parseInt(old_multivalue_named.substr(1),2).toString(16);
+					}else{
+						data_val="B"+old_multivalue_named.substr(1);
+					}
+					value_length=data_val.length*8;
 				}
 				if(value_length < x_multi_intervals){
-					ctx.fillText(old_value,x-x_multi_intervals+5,y+5);
+					ctx.fillText(data_val,x-x_multi_intervals+5,y+5);
 				}
 			}
 			
@@ -707,10 +742,103 @@ function draw_signal(x,y,signal_data,duration,time_frame,low_limit,max_limit,x_i
 	
 }
 
+function draw_grid(x,y,h,duration,time_frame,low_limit,max_limit,x_interval,ctx,sub,second_unit,selected_signals){
+
+	var canvas=document.getElementById("WavesCanvas");
+	var w = canvas.width;
+	x=110;
+	wave_border = 110 +(max_limit-low_limit)*x_interval;
+	// draw 0 state for each signal
+	for(signals=0;signals<selected_signals;signals++){
+		ctx.beginPath();
+		ctx.strokeStyle = "#ddd";
+		ctx.moveTo(x,y);
+		ctx.lineTo(wave_border,y);
+		ctx.stroke();
+		ctx.closePath();
+		y+=40;
+	}
+	// draw timeline base horizontal
+	ctx.beginPath();
+	ctx.strokeStyle = "#444";
+	ctx.moveTo(x,h-13);
+	ctx.lineTo(wave_border,h-13);
+	ctx.stroke();
+	ctx.closePath();
+	// draw timeline base vertical
+	ctx.beginPath();
+	ctx.strokeStyle = "#222";
+	ctx.moveTo(x,0);
+	ctx.lineTo(x,h-13);
+	ctx.stroke();
+	ctx.closePath();
+	//  for each time frame
+	for(current_time=0;current_time<=duration;current_time+=time_frame){
+		if(!isNaN(current_time) && current_time >= low_limit*time_frame && current_time < max_limit*time_frame){
+			
+			//draw timeline grid
+			cur_time_normalized = current_time / (Math.pow(1000, sub));
+			time_frame_normalized = time_frame / (Math.pow(1000, sub));
+			division_1 = 10;
+			division_2 = 5;
+			division_3 = 1;
+			if( (cur_time_normalized%division_1 ) == 0){
+				ctx.beginPath();
+				ctx.strokeStyle = "#cdcdcd";
+				ctx.moveTo(x,0);
+				ctx.lineTo(x,h-13);
+				ctx.stroke();
+				ctx.closePath();
+				ctx.beginPath();
+				ctx.strokeStyle = "#444";
+				ctx.moveTo(x,h-13);
+				ctx.lineTo(x,h-23);
+				ctx.stroke();
+				ctx.closePath();
+				current_time_str = ( cur_time_normalized ).toString();
+				x_time=x- ((current_time_str.length / 2) +1)*5;
+				ctx.fillText(current_time_str+second_unit,x_time,h-2);
+			}else if( (cur_time_normalized%division_2) == 0){
+				ctx.beginPath();
+				ctx.strokeStyle = "#dadada";
+				ctx.moveTo(x,0);
+				ctx.lineTo(x,h-13);
+				ctx.stroke();
+				ctx.closePath();
+				ctx.beginPath();
+				ctx.strokeStyle = "#444";
+				ctx.moveTo(x,h-13);
+				ctx.lineTo(x,h-18);
+				ctx.stroke();
+				ctx.closePath();
+				if( ((max_limit-low_limit)*time_frame_normalized) < 100){
+					current_time_str = ( cur_time_normalized ).toString();
+					x_time=x- ((current_time_str.length / 2) +1)*5;
+					ctx.fillText(current_time_str+second_unit,x_time,h-2);
+				}
+			}else{
+				ctx.beginPath();
+				ctx.strokeStyle = "#eee";
+				ctx.moveTo(x,0);
+				ctx.lineTo(x,h-13);
+				ctx.stroke();
+				ctx.closePath();
+				ctx.beginPath();
+				ctx.strokeStyle = "#444";
+				ctx.moveTo(x,h-13);
+				ctx.lineTo(x,h-15);
+				ctx.stroke();
+				ctx.closePath();
+			}
+			x=x+x_interval;
+		}
+	}
+}
+
 function scale_time_subdivisions(input,sub){
 	input=input/1000;
 	sub++;
-	if( input % 1 == 0){
+	if( input % 10 == 0){
 		sub=scale_time_subdivisions(input,sub);
 	}
 	return sub;

@@ -20,8 +20,8 @@ if( !isset($db) ){
 			$full_path = $BASE_DIR.$search_user['username'].'/'.$_GET['project'].'/'.$file['name'];
 			$log_file = $full_path.".log";
 			$bin_file = str_replace(".vhdl", ".o", $full_path);
-			if( file_exists($bin_file) ){
-				if( file_exists($log_file) ){
+			if( file_exists($log_file) ){
+				if( file_exists($bin_file) ){
 					if( filesize($log_file) == 0 ){
 						echo "<span class='compile-info compile-success'>Compiled</span>";
 						echo ( $is_editor )?"<span class='pull-right'><input type='checkbox' class='select_file' value='".$file['id']."' id='file_".$file['id']."'></span></li>":"";
@@ -33,8 +33,12 @@ if( !isset($db) ){
 						echo "<div id='error_compile_".$file['id']."' class='collapse'><pre class='alert-danger'>".file_get_contents($log_file)."</pre></div>";
 					}
 				}else{
-					echo "<span class='compile-info compile-success'>Compiled</span>";
-					echo ( $is_editor )?"<span class='pull-right'><input type='checkbox' class='select_file' value='".$file['id']."' id='file_".$file['id']."'></span></li>":"";
+					if( filesize($log_file) != 0 ){
+						echo "<span class='compile-info compile-error'><a href='#error_compile_".$file['id']."' data-toggle='collapse'> Compile Failed <span class='glyphicon glyphicon-chevron-down'></span></a></span>";
+						echo ( $is_editor )?"<span class='pull-right'><input type='checkbox' class='select_file' value='".$file['id']."' id='file_".$file['id']."'></span></li>":"";
+						
+						echo "<div id='error_compile_".$file['id']."' class='collapse'><pre class='alert-danger'>".file_get_contents($log_file)."</pre></div>";
+					}
 				}
 			}else{
 				echo "<span class='compile-info compile-pending'> Pending Compile</span>";

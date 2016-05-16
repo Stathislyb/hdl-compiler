@@ -38,6 +38,11 @@
 	</div>
 	<div class="col-lg-9">
 		Time Scale (default 100%) : <div class="slider_main" id="slider_main"><div class="slider_button" id="slider_button"></div><input type="hidden" id="simulation_zoom" value="100"/></div><div class="slider_info" id="slider_info">100%</div>
+		<select id="waveform_data_type">
+			<option value="1">Binary</option>
+			<option value="2">Hexadecimal</option>
+			<option value="3">Decimal</option>
+		</select>
 		<br/><br/>
 		<p>Interactive Canvas : </p>
 		<div id="canvas_div" class="minh-50">
