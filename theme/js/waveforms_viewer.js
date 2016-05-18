@@ -15,14 +15,14 @@ $(function() {
 		$("#signals").html('');
 		$("#WaveImage").html('');
 		var canvas=document.getElementById("WavesCanvas");
-		var ctx=canvas.getContext("2d");
-		ctx.clearRect(0, 0, canvas.width, canvas.height);
+		canvas.height = 0;
 		window.selected_signals = [];
 		window.low_limit=0;
 		window.max_limit=30;
 		$("#slider_button").css('left', '100px');
 		$("#simulation_zoom").val('100');
 		$("#slider_info").html('100%');
+		$( ".expand_button").remove();
 	});
 	
 	$("#Display_Waveform").click(function(event){
@@ -232,11 +232,15 @@ $(function() {
 				ctx.beginPath();
 				ctx.strokeStyle = "#4af";
 				ctx.moveTo(x,0);
-				ctx.lineTo(x,h-10);
+				ctx.lineTo(x,h-13);
 				ctx.stroke();
 				ctx.closePath();
 				x_time=x- ((timeframe_str.toString().length / 2) +1)*5;
-				ctx.fillText(timeframe_str.toString()+second_divisions[second_div_index-sub],x_time,h-5);
+				fill_text = timeframe_str.toString()+second_divisions[second_div_index-sub];
+				ctx.fillStyle = "#fff";
+				ctx.fillRect(x_time-2,h-12,fill_text.length*7,12);
+				ctx.fillStyle = "#000";
+				ctx.fillText(fill_text,x_time,h-2);
 				
 				var ctx_canvas=canvas.getContext("2d");
 				ctx_canvas.drawImage(buffer, 0,0);
@@ -326,7 +330,6 @@ $(function() {
 						wave_val = wave_data[index][current_time];
 						if(wave_data[index]['length']>1){
 							wave_val_bin = wave_val;
-							console.log("..");
 							data_type=$("#waveform_data_type").val();
 							if(wave_val.match(/bU.*/g)){
 								wave_val=wave_val.substr(1);
@@ -362,11 +365,15 @@ $(function() {
 			ctx.beginPath();
 			ctx.strokeStyle = "#faa";
 			ctx.moveTo(x,0);
-			ctx.lineTo(x,h-10);
+			ctx.lineTo(x,h-13);
 			ctx.stroke();
 			ctx.closePath();
 			x_time=x- ((timeframe_str.toString().length / 2) +1)*5;
-			ctx.fillText(timeframe_str.toString()+second_divisions[second_div_index-sub],x_time,h-5);
+			fill_text = timeframe_str.toString()+second_divisions[second_div_index-sub];
+			ctx.fillStyle = "#fff";
+			ctx.fillRect(x_time-2,h-12,fill_text.length*7,12);
+			ctx.fillStyle = "#000";
+			ctx.fillText(fill_text,x_time,h-2);
 			
 		}
 	});
@@ -488,9 +495,11 @@ function draw_wave(signal_data){
 	var y_interval = 40;
 	canvas.height = y_interval*window.selected_signals.length+40;
 	var h = canvas.height;
+	var selected_signals_num = window.selected_signals.length;
 	$.each(window.selected_signals, function( i, index ) {
 		if(signal_data[index]["expand"] == 1){
 			h+=y_interval*signal_data[index]["length"];
+			selected_signals_num += parseInt(signal_data[index]["length"], 10);
 		}
 	});
 	canvas.height = h;
@@ -509,7 +518,7 @@ function draw_wave(signal_data){
 	// init. font style : Times New Roman, size : 12px
 	ctx.font="12px 'Times New Roman'";
 	// draw the grid
-	draw_grid(x,y,h,signal_data['time_info']['duration'],time_frame,low_limit,max_limit,x_interval,ctx,sub,second_unit, window.selected_signals.length);
+	draw_grid(x,y,h,signal_data['time_info']['duration'],time_frame,low_limit,max_limit,x_interval,ctx,sub,second_unit, selected_signals_num);
 	
 	$.each(window.selected_signals, function( i, index ) {
 		if(signal_data[String(index)]['length']>1){
@@ -742,14 +751,13 @@ function draw_signal(x,y,signal_data,duration,time_frame,low_limit,max_limit,x_i
 	
 }
 
-function draw_grid(x,y,h,duration,time_frame,low_limit,max_limit,x_interval,ctx,sub,second_unit,selected_signals){
-
+function draw_grid(x,y,h,duration,time_frame,low_limit,max_limit,x_interval,ctx,sub,second_unit,selected_signals_num){
 	var canvas=document.getElementById("WavesCanvas");
 	var w = canvas.width;
 	x=110;
 	wave_border = 110 +(max_limit-low_limit)*x_interval;
 	// draw 0 state for each signal
-	for(signals=0;signals<selected_signals;signals++){
+	for(signals=0;signals<selected_signals_num;signals++){
 		ctx.beginPath();
 		ctx.strokeStyle = "#ddd";
 		ctx.moveTo(x,y);
@@ -816,7 +824,7 @@ function draw_grid(x,y,h,duration,time_frame,low_limit,max_limit,x_interval,ctx,
 					x_time=x- ((current_time_str.length / 2) +1)*5;
 					ctx.fillText(current_time_str+second_unit,x_time,h-2);
 				}
-			}else{
+			}else if( (cur_time_normalized%division_3) == 0){
 				ctx.beginPath();
 				ctx.strokeStyle = "#eee";
 				ctx.moveTo(x,0);
@@ -829,6 +837,11 @@ function draw_grid(x,y,h,duration,time_frame,low_limit,max_limit,x_interval,ctx,
 				ctx.lineTo(x,h-15);
 				ctx.stroke();
 				ctx.closePath();
+				if( ((max_limit-low_limit)*time_frame_normalized) < 21){
+					current_time_str = ( cur_time_normalized ).toString();
+					x_time=x- ((current_time_str.length / 2) +1)*5;
+					ctx.fillText(current_time_str+second_unit,x_time,h-2);
+				}
 			}
 			x=x+x_interval;
 		}
