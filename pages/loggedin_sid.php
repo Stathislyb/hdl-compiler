@@ -14,6 +14,7 @@ if( !isset($db) ){
 	$shell_output=shell_exec($command);
 	//Extract the lines
 	$architectures = explode(PHP_EOL, $shell_output);
+	$is_compiled = false;
 ?>
 <br/><br/><br/>
 <div class="row">
@@ -47,49 +48,50 @@ if( !isset($db) ){
 	</div>
 </div>
 <hr/>
-<div class="row">
-	<div class="col-sm-9">
-		<h3>Simulate Project</h3>
-		<br/>
-		<form action='' method='post' id='Selected_Action'>
-			<div class="row">
-				<div class="col-sm-4">
-					<label >Select Architecture:</label>
-					<br/>
-					<div class="form-group space-top-10">
-						<select name='architecture' class="form-control width-auto">
-						<?php
-							foreach($architectures as $key => $value) {
-							  if (!empty($value)){
-									echo "<option value='".$value."'>".$value."</option>";
+<?php if($is_compiled){ ?>
+	<div class="row">
+		<div class="col-sm-9">
+			<h3>Simulate Project</h3>
+			<br/>
+			<form action='' method='post' id='Selected_Action'>
+				<div class="row">
+					<div class="col-sm-4">
+						<label >Select Architecture:</label>
+						<br/>
+						<div class="form-group space-top-10">
+							<select name='architecture' class="form-control width-auto">
+							<?php
+								foreach($architectures as $key => $value) {
+								  if (!empty($value)){
+										echo "<option value='".$value."'>".$value."</option>";
+									}
 								}
-							}
-						?>
-						</select>
+							?>
+							</select>
+						</div>
+					</div>
+					<div class="col-sm-6">
+						<label>Additional Option:</label>
+						<div class="checkbox">
+							<label><input type='checkbox' name='extralib' value='synopsys' />Include synopsis library for more primary units.</label>
+						</div>
+						<div class="checkbox">
+							<label><input type='checkbox' name='extrasim' value='vcd' checked/>Create a value changed dump VCD wave trace file.</label>
+						</div>
 					</div>
 				</div>
-				<div class="col-sm-6">
-					<label>Additional Option:</label>
-					<div class="checkbox">
-						<label><input type='checkbox' name='extralib' value='synopsys' />Include synopsis library for more primary units.</label>
-					</div>
-					<div class="checkbox">
-						<label><input type='checkbox' name='extrasim' value='vcd' checked/>Create a value changed dump VCD wave trace file.</label>
+				<div class="row">
+					<div class="form-group col-sm-4 space-top-10">
+						<button type="submit" name="post_action" value='SID_Simulate_Project' class="btn btn-info full-row" id="Simulate_Project">Simulate Project</button>
 					</div>
 				</div>
-			</div>
-			<div class="row">
-				<div class="form-group col-sm-4 space-top-10">
-					<button type="submit" name="post_action" value='SID_Simulate_Project' class="btn btn-info full-row" id="Simulate_Project">Simulate Project</button>
-				</div>
-			</div>
-		</form>
+			</form>
+		</div>
 	</div>
-</div>
-<?php if( !empty($vcd_files) ){ 
-		include("pages/extra/waverforms_viewer.php");
-	} ?>
-
+	<?php if( !empty($vcd_files) ){ 
+			include("pages/extra/waverforms_viewer.php");
+		} ?>
+<?php } ?>
 <!-- Modal -->
 <div id="Create-filedir-Modal" class="modal fade" role="dialog">
   <div class="modal-dialog">
@@ -118,7 +120,7 @@ if( !isset($db) ){
 			<span class="row">
 				<span class="col-sm-6">
 					<input name="userfile" type="file" />
-					<input type="hidden" name="MAX_FILE_SIZE" value="32000000" />
+					<input type="hidden" name="MAX_FILE_SIZE" value="5242880" />
 				</span>
 				<span class="col-sm-6">
 					<button type="submit" name="post_action" value='SID_Upload_File' class="btn btn-default">Upload File</button>

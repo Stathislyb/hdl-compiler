@@ -168,7 +168,7 @@ class Database {
 	
 	// Select project's owner and return his username
 	public function get_project_owner($project_id) {
-		$query = "SELECT users.username FROM projects JOIN projects_editors ON projects_editors.project_id = projects.id JOIN users ON users.id = projects_editors.user_id WHERE projects.id='".$project_id."' AND projects_editors.user_type = '1'"; 
+		$query = "SELECT * FROM projects JOIN projects_editors ON projects_editors.project_id = projects.id JOIN users ON users.id = projects_editors.user_id WHERE projects.id='".$project_id."' AND projects_editors.user_type = '1'"; 
 		$statement = $this->conn->prepare($query); 
 		$statement->execute();
 		return $statement->fetch();
@@ -465,7 +465,6 @@ class Database {
 	// Update SID's file for pending RE-compilation
 	public function file_recompile_prompt_sid($file_id) {
 		$query = "UPDATE sid_files SET compiled='2' WHERE id='".$file_id."%'"; 
-		echo $query;
 		$statement = $this->conn->prepare($query); 
 		$statement->execute();
 		return;

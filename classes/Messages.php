@@ -37,7 +37,8 @@ class Messages {
 		"compile_success"=>array("The file is successfully queued for compiling.","success"),
 		"simulation_success"=>array("The file is successfully queued for simulation.","success"),
 		"activation_success"=>array("Your account has successfully been activated.","success"),
-		"activation_fail"=>array("The activation code you provided was not correct.","danger")
+		"activation_fail"=>array("The activation code you provided was not correct.","danger"),
+		"space_fail"=>array("You have reached the limits of your available space.","danger")
 	);
 	
 	// Class constractor function

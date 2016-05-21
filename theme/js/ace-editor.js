@@ -6,7 +6,8 @@ $( document ).ready(function() {
 			var contents = editor.getSession().getValue();
 			var directory = $('#path').val();
 			var file_id = $('#file_id').val();
-			var formData = {ajax_action:"save_file",directory: directory,data: contents, file_id: file_id};
+			var project_id = $('#project_id').val();
+			var formData = {ajax_action:"save_file",directory: directory,data: contents, file_id: file_id, project_id:project_id};
 			$.ajax({
 				method: "POST",
 				url: window.base_url+"/ajax_handler.php",

@@ -88,7 +88,6 @@ if( !isset($db) ){
 				<div class="col-sm-12 space-top-10">
 					<form action='' method='post' id='Selected_Action'>
 						<input type="hidden" value="" name="selected_ids" id="selected_ids" />
-						<input type="hidden" value="<?php echo $search_user['username']; ?>" name="owner">
 						<input type="hidden" value="<?php echo $project['id']; ?>" name="project_id">
 						<button type="submit" name="post_action" value='Post_Library_Selected' class="btn btn-info" >Post Selected as Library</button>
 						<button type="submit" name="post_action" value='Compile_Selected' class="btn btn-success" >Compile Selected</button>
@@ -239,7 +238,7 @@ if( !isset($db) ){
 				<span class="row">
 					<span class="col-sm-6">
 						<input name="userfile" type="file" />
-						<input type="hidden" name="MAX_FILE_SIZE" value="32000000" />
+						<input type="hidden" name="MAX_FILE_SIZE" value="5242880" />
 						<input type="hidden" name="upload_dir" value="<?php echo $current_dir; ?>" />
 						<input type="hidden" value="<?php echo $_GET['project']; ?>" name="project_shortcode">
 						<input type="hidden" value="<?php echo $_GET['dir']; ?>" name="current_dir">

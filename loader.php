@@ -2,6 +2,7 @@
 $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
 $BASE_URL = $protocol.$_SERVER['SERVER_NAME']."/vhdl";
 $BASE_DIR = "/home/user/hdl-compiler/";
+$BASE_SID = "/tmp/VHDL/";
 
 require_once('classes/Database.php');
 require_once('classes/Messages.php');

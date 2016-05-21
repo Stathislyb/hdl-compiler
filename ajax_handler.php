@@ -68,31 +68,50 @@ if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST["ajax_action"]) && isset($
 		
 		// save changes on file
 		case "save_file":
-			if( isset($_POST['directory']) && isset($_POST['data'] ) ){
-				$directory=$gen->filter_letters($_POST['directory']);
-				$log_file = $directory.".log";
-				$bin_file = str_replace(".vhdl", ".o", $directory);
-				$contents=$_POST['data'];
-				if (file_exists($directory)  && is_writable($directory) ){
-					$ret=file_put_contents($directory,$contents);
-					if(!$ret) { 
-						error_get_last();
-						fail_500();
+			if($_POST['project_id'] == "SID"){
+				$is_editor = true;
+				$owner_used_space = filesize($BASE_SID.$_SESSION['SID']) / pow(1024,2);
+				$owner_space = 20 ;
+			}else{
+				$project = $db->get_project($_POST['project_id']);
+				$editors = $db->get_project_editors($project['id']);
+				$owner = $db->get_project_owner($project['id']);
+				$is_editor = $user->validate_edit_rights($editors);
+				$owner_used_space = filesize($BASE_DIR.$owner['username']) / pow(1024,2);
+				$owner_space = $owner['available_space'];
+			}
+			
+			if( $is_editor ){
+				if($owner_used_space < $owner_space){
+					if( isset($_POST['directory']) && isset($_POST['data'] ) ){
+						$directory=$gen->filter_letters($_POST['directory']);
+						$log_file = $directory.".log";
+						$bin_file = str_replace(".vhdl", ".o", $directory);
+						$contents=$_POST['data'];
+						if (file_exists($directory)  && is_writable($directory) ){
+							$ret=file_put_contents($directory,$contents);
+							if(!$ret) { 
+								error_get_last();
+								fail_500();
+							}
+							if( file_exists($log_file) ){
+								unlink($log_file);
+							}
+							if( file_exists($bin_file) ){
+								unlink($bin_file);
+							}
+							if($_SESSION['vhdl_user']['username'] == "Guest"){
+								$db->file_recompile_prompt_sid($_POST['file_id']);
+							}else{
+								$db->file_recompile_prompt($_POST['file_id']);
+							}
+							echo "Changes saved.";
+						}else{ //end if file exists
+							echo "File does not exist.";
+						}
 					}
-					if( file_exists($log_file) ){
-						unlink($log_file);
-					}
-					if( file_exists($bin_file) ){
-						unlink($bin_file);
-					}
-					if($_SESSION['vhdl_user']['username'] == "Guest"){
-						$db->file_recompile_prompt_sid($_POST['file_id']);
-					}else{
-						$db->file_recompile_prompt($_POST['file_id']);
-					}
-					echo "Changes saved.";
-				}else{ //end if file exists
-					echo "File does not exist.";
+				}else{
+					echo $messages->messages['space_fail'][0];
 				}
 			}
 		break;
