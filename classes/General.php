@@ -8,43 +8,6 @@ class General {
 	public function __destruct(){
 	}
 	
-	// Return the directory in the correct format
-	public function clear_dir($dir){
-		if(empty($dir)){
-			$dir="/";
-		}
-		if($dir!="/"){
-			$dir = "/".$dir;
-			$dir = rtrim($dir, "/");
-		}
-		return $dir;
-	}
-	
-	// Return path of links to the currect directory
-	public function path_to_links($full_path, $user, $project, $BASE_URL){
-		$project_shortcode = $this->create_short_code($project);
-		$output = "<b><a href='".$BASE_URL."/project/".$user."'>".$user."> </a></b>";
-		$path = explode('/',$full_path);
-		foreach ($path as $key=>$step) {
-			$link_path = '';
-			for($i=0;$i<=$key;$i++){
-				if($i!=0 && $i!=$key){
-					$link_path .= $path[$i]."/";
-				}else{
-					$link_path .= $path[$i];
-				}
-			}
-			$link = $BASE_URL."/project/".$user."/".$project_shortcode."/directory/".$link_path;
-			if($key == 0){
-				$output .= "<a href='".$link."'>".$project."/ </a>";
-			}else{
-				if(!empty($step)){
-					$output .= "<a href='".$link."'>".$step."/ </a>";
-				}
-			}
-		}
-		return $output;
-	}
 	
 	// Return the shortcode of a string
 	public function create_short_code($string){
@@ -167,7 +130,7 @@ class General {
 	}
 	
 	// Extract file and update the database
-	public function extract_file($file, $directory, $current_dir, $project_id){
+	public function extract_file($file, $directory, $project_id){
 		$zip = new ZipArchive;
 		$db = new Database;
 		
@@ -175,28 +138,11 @@ class General {
 			for($i = 0; $i < $zip->numFiles; $i++) {
 				$filearray = $zip->getNameIndex($i);
 				$fileinfo = pathinfo($filearray);
-				
-				if( $fileinfo['dirname'] == "." ){
-					$relative_dir = $current_dir;
-					$absolute_dir = $directory;
-				}else{
-					if($current_dir=="/"){
-						$absolute_dir = $directory.$fileinfo['dirname'];
-					}else{
-						$absolute_dir = $directory.$current_dir.$fileinfo['dirname'];
-					}
-					$relative_dir = $current_dir.$fileinfo['dirname'];
-				}
+				$absolute_dir = $directory;
 				
 				if( isset( $fileinfo['extension'] ) ){
-					if( $db->add_dir_file($fileinfo['basename'], $project_id, "file", $relative_dir) >0 ){
+					if( $db->add_file($fileinfo['basename'], $project_id) >0 ){
 						copy("zip://".$file."#".$filearray, $absolute_dir."/".$fileinfo['basename']);
-					}else{
-						return false;
-					}
-				}else{
-					if( $db->add_dir_file($fileinfo['basename'], $project_id, "directory", $relative_dir) >0 ){
-						mkdir($absolute_dir."/".$fileinfo['basename'],0777);
 					}else{
 						return false;
 					}

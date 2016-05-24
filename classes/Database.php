@@ -55,6 +55,15 @@ class Database {
 		return $statement->execute();
 	}
 	
+	// Return 1 if user is admin, 0 otherwise
+	public function user_type($id) {
+		$query = "SELECT * FROM users WHERE id = '".$id."'"; 
+		$statement = $this->conn->prepare($query); 
+		$statement->execute();
+		$result = $statement->fetch();
+		return $result['type'];
+	}
+	
 	// Return 1 if user is activated, 0 otherwise
 	public function is_user_active($id) {
 		$query = "SELECT * FROM users WHERE id = '".$id."'"; 
@@ -256,8 +265,8 @@ class Database {
 	}
 	
 	// Select the project's files, returns a list of the project's files
-	public function get_project_files($project_id, $dir) {
-		$query = "SELECT * FROM project_files WHERE project_id = '".$project_id."' AND relative_path='".$dir."' ORDER BY type"; 
+	public function get_project_files($project_id) {
+		$query = "SELECT * FROM project_files WHERE project_id = '".$project_id."' ORDER BY id"; 
 		$statement = $this->conn->prepare($query); 
 		$statement->execute();
 		return $statement->fetchAll();
@@ -280,16 +289,16 @@ class Database {
 	}
 	
 	// Add directory or file in database
-	public function add_dir_file($dir_name, $project_id, $file_type,  $current_dir) {
-		$query = "INSERT INTO project_files (name, project_id, type, relative_path) Values('".$dir_name."','".$project_id."' ,'".$file_type."' ,'".$current_dir."')"; 
+	public function add_file($dir_name, $project_id) {
+		$query = "INSERT INTO project_files (name, project_id) Values('".$dir_name."','".$project_id."')"; 
 		$statement = $this->conn->prepare($query); 
 		$statement->execute();
 		return $this->conn->lastInsertId();
 	}
 	
 	// Check if a file/dir exists already, return true or false
-	public function check_file_dir_exist($dir_name, $project_id,  $current_dir) {
-		$query = "SELECT COUNT(*) FROM project_files WHERE project_id = '".$project_id."' AND name='".$dir_name."' AND relative_path='".$current_dir."' "; 
+	public function check_file_exist($name, $project_id) {
+		$query = "SELECT COUNT(*) FROM project_files WHERE project_id = '".$project_id."' AND name='".$name."' AND "; 
 		$statement = $this->conn->prepare($query); 
 		$statement->execute();
 		$result = $statement->fetch();
@@ -303,19 +312,6 @@ class Database {
 	// Removes file from database, return true or false
 	public function remove_file($file_id) {
 		$query = "DELETE FROM project_files WHERE id = '".$file_id."'"; 
-		$statement = $this->conn->prepare($query); 
-		return $statement->execute();
-	}
-	
-	// Removes files in the given directory from database, return true or false
-	public function remove_inner_files($file_id) {
-		$file = $this->get_file($file_id);
-		if($file['relative_path']=='/'){
-			$relative_dir = '/'.$file['name'];
-		}else{
-			$relative_dir = $file['relative_path'].'/'.$file['name'];
-		}
-		$query = "DELETE FROM project_files WHERE project_id = '".$file['project_id']."' AND relative_path LIKE '".$relative_dir."%'"; 
 		$statement = $this->conn->prepare($query); 
 		return $statement->execute();
 	}
@@ -338,7 +334,7 @@ class Database {
 	
 	// Select the libraries starting with given library name
 	public function find_libraries_like($name) {
-		$query = "SELECT name FROM libraries WHERE name LIKE '".$name."%' LIMIT 10"; 
+		$query = "SELECT name FROM libraries WHERE name LIKE '".$name."%' AND approved='1' LIMIT 10"; 
 		$statement = $this->conn->prepare($query); 
 		$statement->execute();
 		return $statement->fetchAll();
@@ -373,9 +369,9 @@ class Database {
 	}
 	
 	// Add library into the database
-	public function add_library($filename, $owner) {
+	public function add_library($filename, $owner, $file_id) {
 		$user = $this->get_user_information($owner, 'username');
-		$query = "INSERT INTO libraries (name, owner_id) Values('".$filename."','".$user['id']."')"; 
+		$query = "INSERT INTO libraries (name, owner_id, file_id) Values('".$filename."','".$user['id']."','".$file_id."')"; 
 		$statement = $this->conn->prepare($query); 
 		$statement->execute();
 		return $this->conn->lastInsertId();
@@ -383,7 +379,7 @@ class Database {
 	
 	// Select the requested number of latest libraries
 	public function get_latest_libraries($name,$num,$begin) {
-		$query = "SELECT libraries.*, users.username as owner FROM libraries JOIN users ON libraries.owner_id = users.id WHERE name LIKE '".$name."%' ORDER BY libraries.id DESC LIMIT ".$num.",".$begin; 
+		$query = "SELECT libraries.*, users.username as owner FROM libraries JOIN users ON libraries.owner_id = users.id WHERE name LIKE '".$name."%' AND libraries.approved='1' ORDER BY libraries.id DESC LIMIT ".$num.",".$begin; 
 		$statement = $this->conn->prepare($query); 
 		$statement->execute();
 		return $statement->fetchAll();
@@ -391,7 +387,7 @@ class Database {
 	
 	// Select the library by name
 	public function get_library($library_name) {
-		$query = "SELECT * FROM libraries WHERE name='".$library_name."'"; 
+		$query = "SELECT * FROM libraries WHERE name='".$library_name."' AND approved='1'"; 
 		$statement = $this->conn->prepare($query); 
 		$statement->execute();
 		return $statement->fetch();
@@ -399,7 +395,7 @@ class Database {
 	
 	// Return number of libraries
 	public function count_libraries($name) {
-		$query = "SELECT COUNT(*) FROM libraries WHERE name LIKE '".$name."%'"; 
+		$query = "SELECT COUNT(*) FROM libraries WHERE name LIKE '".$name."%' AND approved='1'"; 
 		$statement = $this->conn->prepare($query); 
 		$statement->execute();
 		$result = $statement->fetch();

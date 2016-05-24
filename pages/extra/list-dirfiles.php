@@ -10,11 +10,7 @@ if( !isset($db) ){
 		echo "<li class='list-group-item'> There are no files in this directory </li>";
 	}
 	foreach ($files as $file) {
-		if($file['relative_path'] == "/"){
-			$path = $BASE_URL."/project/".$search_user['username']."/".$_GET['project']."/".$file['type']."/".$file['name'];
-		}else{
-			$path = $BASE_URL."/project/".$search_user['username']."/".$_GET['project']."/".$file['type'].$file['relative_path']."/".$file['name'];
-		}
+		$path = $BASE_URL."/project/".$search_user['username']."/".$_GET['project']."/file/".$file['name'];
 		echo "<li class='list-group-item'><a href='".$path."'>".$file['name']."</a>";
 		if($file['compiled']=='1'){
 			$full_path = $BASE_DIR.$search_user['username'].'/'.$_GET['project'].'/'.$file['name'];

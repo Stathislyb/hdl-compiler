@@ -7,7 +7,7 @@
 					  <ul id="search-nav-dropdown-ul" class="dropdown-menu">
 						<li><a href="javascript:void(0)">Projects</a></li>
 						<li><a href="javascript:void(0)">Users</a></li>
-						<li><a href="javascript:void(0)">Libraries</a></li>
+						<li><a href="javascript:void(0)">Components</a></li>
 					  </ul>
 					</li>
 					<li class="navbar-form">

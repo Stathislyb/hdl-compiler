@@ -23,6 +23,7 @@ if(isset($_SESSION['SID']) && $_SESSION['SID']>0){
 	$_SESSION['vhdl_user']['username'] = "Guest";
 	$_SESSION['vhdl_user']['id'] = "0";
 	$_SESSION['vhdl_user']['loged_in'] = 1;
+	$_SESSION['vhdl_user']['type'] = 0;
 }
 
 if( isset($_SESSION['vhdl_user']) ){

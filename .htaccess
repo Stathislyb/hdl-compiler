@@ -5,11 +5,11 @@ RewriteEngine On
 
 RewriteBase /vhdl/
 RewriteRule ^()$ index.php [NC,L]
-RewriteRule ^(edit-project|libraries)/([^/]+)[\/]?$ index.php?action=$1&short_code=$2 [NC,L]
+RewriteRule ^libraries/([^/]+)[\/]?$ index.php?action=$1&short_code=$2 [NC,L]
+RewriteRule ^edit-project/([^/]+)/([^/]+)[\/]?$ index.php?action=edit-project&user=$1&short_code=$2 [NC,L]
 RewriteRule ^libraries/page/([^/]+)[\/]?$ index.php?action=libraries&page=$1 [NC,L]
 RewriteRule ^project/([^/]+)/([^/]+)/(file)/(.*) index.php?action=project-file&user=$1&project=$2&file=$4 [NC,L]
-RewriteRule ^project/([^/]+)/([^/]+)/(directory)/(.*) index.php?action=project-dir&user=$1&project=$2&dir=$4 [NC,L]
-RewriteRule ^project/([^/]+)/([^/]+)[\/]?$ index.php?action=project-dir&user=$1&project=$2&dir=/ [NC,L]
+RewriteRule ^project/([^/]+)/([^/]+)[\/]?$ index.php?action=project-dir&user=$1&project=$2 [NC,L]
 RewriteRule ^project/([^/]+)[\/]?$ index.php?action=project-user&ptype=1&user=$1 [NC,L]
 RewriteRule ^file/(.*) index.php?action=sid-file&file=$1 [NC,L]
 RewriteRule ^(settings|profile|create-project|libraries|edit-project|project) index.php?action=$1 [NC,L]

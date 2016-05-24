@@ -95,7 +95,6 @@ $( document ).ready(function() {
 				}else if(type == 'Users'){
 					item = '<li><a class="dropdown-item" onclick="navbar_search_user(this)" href="#" role="option"></a></li>';
 				}else{
-					console.log('...');
 					item = '<li><a class="dropdown-item" onclick="navbar_search_library(this)" href="#" role="option"></a></li>';
 				}
 				$(".nav-search-typeahead").typeahead({source:data, autoSelect: true, delay:200, item:item});

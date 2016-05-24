@@ -23,17 +23,14 @@ if( !isset($db) ){
 	$user_theme = strtolower(str_replace(' ', '_',$ace_themes[$user_theme_id]));
 	
 	if($project['public']==1 && !empty($_GET['file'])){
-		$file_name = substr(strrchr($_GET['file'], '/'), 1 );
-		if(empty($file_name)){
-			$file_name = $_GET['file'];
-			$dir = $gen->clear_dir("/");
-		}else{
-			$dir_length = strlen($_GET['file']) - strlen($file_name)-1;
-			$dir = substr($_GET['file'],0,$dir_length );
-			$dir = $gen->clear_dir($dir);
-		}
+		$file_name = $_GET['file'];
 		
-		echo $gen->path_to_links($dir, $search_user['username'], $project['name'], $BASE_URL);
+		//user link
+		echo "<b><a href='".$BASE_URL."/project/".$search_user['username']."'>".$search_user['username']."> </a></b>";
+		//project link
+		echo "<a href='".$BASE_URL."/project/".$search_user['username']."/".$project['short_code']."'>".$project['name']."/ </a>";
+		//file link
+		echo "<a href='".$BASE_URL."/project/".$search_user['username']."/".$project['short_code']."/file/".$file_name."'>".$file_name."/ </a>";
 ?>
 <br/><br/><br/>
 <div class="row">

@@ -5,7 +5,8 @@ if( !isset($db) ){
 }
 ?>
 <?php 
-	$project = $db->get_project_shortcode($_GET['short_code'], $_SESSION['vhdl_user']['id']);
+	$search_user = $db->get_user_information($_GET['user'],"username");
+	$project = $db->get_project_shortcode($_GET['short_code'], $search_user['id']);
 	$editors = $db->get_project_editors($project['id']);
 
 	if( $user->validate_ownership($editors) ){

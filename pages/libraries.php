@@ -19,7 +19,7 @@ if( !isset($db) ){
 
 		<div class="form-group">
 			<form action="" method="post" id="filter_libraries" onsubmit="return false;">
-				<input name="name" type="text" value="<?php echo $name; ?>" class="form-control" placeholder="Search Libraries" id="filter_libs_input"/>
+				<input name="name" type="text" value="<?php echo $name; ?>" class="form-control" placeholder="Search Components" id="filter_libs_input"/>
 			</form>
 		</div>
 		<div id="libraries_container">

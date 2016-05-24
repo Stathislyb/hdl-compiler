@@ -60,6 +60,7 @@ if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST["post_action"]) ){
 				$short_code = $gen->create_short_code($_POST['project_name']);
 				$project = $db->get_project($_POST['project_id']);
 				$editors = $db->get_project_editors($project['id']);
+				$owner = $db->get_project_owner($project['id']);
 				
 				if( $user->validate_ownership($editors) ){
 					if( strlen($short_code) < 5 ){
@@ -68,10 +69,10 @@ if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST["post_action"]) ){
 						$db->add_project_multi_editors($_POST['projet_authors'], $project['id']);
 						if($db->edit_project($_POST['project_name'], $_POST['project_description'], $short_code, $_POST['project_id'], $_POST['project_share']) ){
 							array_push($_SESSION['vhdl_msg'], 'success_project_edit');
-							$old_name = $BASE_DIR.$_SESSION['vhdl_user']['username']."/".$project['short_code'];
-							$new_name = $BASE_DIR.$_SESSION['vhdl_user']['username']."/".$short_code;
+							$old_name = $BASE_DIR.$owner['username']."/".$project['short_code'];
+							$new_name = $BASE_DIR.$owner['username']."/".$short_code;
 							rename($old_name, $new_name);
-							header("Location:".$BASE_URL."/project/".$_SESSION['vhdl_user']['username']."/".$short_code);
+							header("Location:".$BASE_URL."/project/".$owner['username']."/".$short_code);
 							exit();
 						}else{
 							array_push($_SESSION['vhdl_msg'], 'fail_project_edit');
@@ -137,47 +138,20 @@ if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST["post_action"]) ){
 				}
 			break;
 
-			// Create Directory
-			case "Create_dir":
-				$name = $gen->create_short_code($_POST['dir_name']);
-				$path = $BASE_DIR.$_POST['owner']."/".$_POST['project_shortcode'].$_POST['current_dir']."/".$name;
-				$project = $db->get_project_shortcode($_POST['project_shortcode'], $_SESSION['vhdl_user']['id']);
-				$editors = $db->get_project_editors($project['id']);
-				$file_exists = $db->check_file_dir_exist($name, $project['id'],  $_POST['current_dir']);
-				if( $user->validate_edit_rights($editors) ){
-					if(!$file_exists){
-						if( mkdir($path,0700)){
-							if($db->add_dir_file($name, $project['id'], "directory", $_POST['current_dir']) > 0){
-								array_push($_SESSION['vhdl_msg'], 'success_create_dir');
-								header("Location:".$BASE_URL."/project/".$_POST['owner']."/".$_POST['project_shortcode']."/directory".$_POST['current_dir']);
-								exit();
-							}
-						}
-						rmdir($path);
-					}
-					array_push($_SESSION['vhdl_msg'], 'fail_create_dir');
-				}else{
-					array_push($_SESSION['vhdl_msg'], 'permissions_fail');
-				}
-			break;
-
 			// Create File
 			case "Create_file":
 				$name = $gen->create_short_code($_POST['file_name']);
-				if($_POST['current_dir']=="/"){
-					$path = $BASE_DIR.$_POST['owner']."/".$_POST['project_shortcode']."/".$name;
-				}else{
-					$path = $BASE_DIR.$_POST['owner']."/".$_POST['project_shortcode'].$_POST['current_dir']."/".$name;
-				}
-				$project = $db->get_project_shortcode($_POST['project_shortcode'], $_SESSION['vhdl_user']['id']);
+				$owner = $db->get_user_information($_POST['owner'],"username");
+				$path = $BASE_DIR.$owner['username']."/".$_POST['project_shortcode']."/".$name;
+				$project = $db->get_project_shortcode($_POST['project_shortcode'], $owner['id']);
 				$editors = $db->get_project_editors($project['id']);
-				$file_exists = $db->check_file_dir_exist($name, $project['id'],  $_POST['current_dir']);
+				$file_exists = $db->check_file_exist($name, $project['id']);
 				if( $user->validate_edit_rights($editors) ){
 					if(!$file_exists){
 						if( fopen($path,"w+") && !$file_exists){				
-							if($db->add_dir_file($name, $project['id'], "file", $_POST['current_dir']) > 0){
+							if($db->add_file($name, $project['id']) > 0){
 								array_push($_SESSION['vhdl_msg'], 'success_create_file');
-								header("Location:".$BASE_URL."/project/".$_POST['owner']."/".$_POST['project_shortcode']."/directory".$_POST['current_dir']);
+								header("Location:".$BASE_URL."/project/".$_POST['owner']."/".$_POST['project_shortcode']);
 								exit();
 							}
 						}
@@ -192,23 +166,22 @@ if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST["post_action"]) ){
 			case "Upload_File":
 				$path = $_POST['upload_dir'];
 				$name = $gen->create_short_code(basename($_FILES['userfile']['name']));
+				$owner = $db->get_user_information($_POST['owner'],"username");
 				$uploadfile = $path . $name;
-				$current_dir = $_POST['current_dir'];
-				$project = $db->get_project_shortcode($_POST['project_shortcode'], $_SESSION['vhdl_user']['id']);
+				$project = $db->get_project_shortcode($_POST['project_shortcode'], $owner['id']);
 				$editors = $db->get_project_editors($project['id']);
-				$file_exists = $db->check_file_dir_exist($name, $project['id'],  $_POST['current_dir']);
-				$owner = $db->get_project_owner($project['id']);
+				$file_exists = $db->check_file_exist($name, $project['id']);
 				$owner_used_space = ( filesize($BASE_DIR.$owner['username']) + $_FILES['userfile']['size'] ) / pow(1024,2);
 				
 				if($owner['available_space'] < $owner_used_space || $_FILES['userfile']['size']>5242880){
 					array_push($_SESSION['vhdl_msg'], 'space_fail');
-					header("Location:".$BASE_URL."/project/".$_POST['owner']."/".$_POST['project_shortcode']."/directory".$_POST['current_dir']);
+					header("Location:".$BASE_URL."/project/".$_POST['owner']."/".$_POST['project_shortcode']);
 					exit();
 				}
 				if( $user->validate_edit_rights($editors) ){
 					if($file_exists){
 						array_push($_SESSION['vhdl_msg'], 'file_exists');
-						header("Location:".$BASE_URL."/project/".$_POST['owner']."/".$_POST['project_shortcode']."/directory".$_POST['current_dir']);
+						header("Location:".$BASE_URL."/project/".$_POST['owner']."/".$_POST['project_shortcode']);
 						exit();			
 					}
 
@@ -217,11 +190,11 @@ if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST["post_action"]) ){
 					//uploading successfully done 
 					} else { 
 						array_push($_SESSION['vhdl_msg'], 'fail_upload_file');
-						header("Location:".$BASE_URL."/project/".$_POST['owner']."/".$_POST['project_shortcode']."/directory/".$_POST['current_dir']);
+						header("Location:".$BASE_URL."/project/".$_POST['owner']."/".$_POST['project_shortcode']);
 						exit();
 					} 
 					
-					$file_id = $db->add_dir_file($name, $project['id'], "file", $current_dir);
+					$file_id = $db->add_file($name, $project['id']);
 					if($file_id > 0){		
 						
 						$ret=move_uploaded_file($_FILES['userfile']['tmp_name'], $uploadfile);
@@ -230,7 +203,7 @@ if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST["post_action"]) ){
 							$checkfile = pathinfo($uploadfile);
 							if ( $checkfile['extension'] == "zip" || $checkfile['extension'] == "ZIP" ){
 
-								if( $gen->extract_file($uploadfile,$path, $current_dir, $project['id']) ){
+								if( $gen->extract_file($uploadfile,$path, $project['id']) ){
 									array_push($_SESSION['vhdl_msg'], 'success_upload_file');
 								}else{
 									array_push($_SESSION['vhdl_msg'], 'fail_upload_file_unzip');
@@ -262,13 +235,8 @@ if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST["post_action"]) ){
 					foreach ($selected as $file_id) {
 						$file = $db->get_file($file_id);
 						if($file['type']=='file'){
-							if($file['relative_path']=='/'){
-								$full_path = $BASE_DIR.$owner['username'].'/'.$project['short_code'].'/'.$file['name'];
-								$directory = $BASE_DIR.$owner['username'].'/'.$project['short_code'].'/';
-							}else{
-								$full_path = $BASE_DIR.$owner['username'].'/'.$project['short_code'].$file['relative_path'].'/'.$file['name'];
-								$directory = $BASE_DIR.$owner['username'].'/'.$project['short_code'].$file['relative_path'].'/';
-							}
+							$full_path = $BASE_DIR.$owner['username'].'/'.$project['short_code'].'/'.$file['name'];
+							$directory = $BASE_DIR.$owner['username'].'/'.$project['short_code'].'/';
 
 							if (file_exists($full_path)){
 								check_and_create_job_directory();
@@ -339,17 +307,10 @@ if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST["post_action"]) ){
 					foreach ($selected as $file_id) {
 						$file = $db->get_file($file_id);
 						if(!empty($file)){
-							if($file['relative_path']=='/'){
-								$full_path = $BASE_DIR.$owner['username'].'/'.$project['short_code'].'/'.$file['name'];
-							}else{
-								$full_path = $BASE_DIR.$owner['username'].'/'.$project['short_code'].$file['relative_path'].'/'.$file['name'];
-							}
+							$full_path = $BASE_DIR.$owner['username'].'/'.$project['short_code'].'/'.$file['name'];
 
 							$result = true;
 
-							if( is_dir($full_path) ){
-								$db->remove_inner_files($file_id);
-							}
 							if( !$db->remove_file($file_id) ){
 								$result=false;
 							}
@@ -379,15 +340,12 @@ if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST["post_action"]) ){
 				if( $user->validate_edit_rights($editors) ){
 					foreach ($selected as $file_id) {
 						$file = $db->get_file($file_id);
-						if($file['relative_path']=='/'){
-							$full_path = $BASE_DIR.$owner['username'].'/'.$project['short_code'].'/'.$file['name'];
-						}else{
-							$full_path = $BASE_DIR.$owner['username'].'/'.$project['short_code'].$file['relative_path'].'/'.$file['name'];
-						}
+						$full_path = $BASE_DIR.$owner['username'].'/'.$project['short_code'].'/'.$file['name'];
 
 						if(!is_dir($full_path) && !$db->check_lib_exist($file['name']) ){
 							$result=true;
-							if( !($db->add_library($file['name'],$owner['username']) > 0) ){
+							$lib_id = $db->add_library($file['name'],$owner['username'],$file_id);
+							if( !($lib_id > 0) ){
 								$result=false;
 							}		
 
@@ -421,17 +379,16 @@ if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST["post_action"]) ){
 
 				$full_path = $BASE_DIR.$owner['username'].'/'.$project['short_code'].'/libraries/'.$library;
 				$libs_path = $BASE_DIR.'libraries/'.$library;
-				$directory = $BASE_DIR.$owner['username'].'/'.$project['short_code'].'/libraries';
+				$directory = $BASE_DIR.$owner['username'].'/'.$project['short_code'].'/';
 
 				$result=true;
 				$editors = $db->get_project_editors($project['id']);
 				if( $user->validate_edit_rights($editors) ){
 					if(!is_dir($directory)){
-						mkdir($directory,0777);
-						$db->add_dir_file("libraries", $project['id'], "directory", "/");
+						$result=false;
 					}
 
-					if($db->check_file_dir_exist($library, $project['id'],  "/libraries")){
+					if($db->check_file_exist($library, $project['id'])){
 						array_push($_SESSION['vhdl_msg'], 'import_library_fail');
 					}else{
 						if( copy($libs_path, $full_path) ){
@@ -441,7 +398,7 @@ if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST["post_action"]) ){
 						}
 
 						if($result){
-							if($db->add_dir_file($library, $project['id'], "file", "/libraries") > 0){
+							if($db->add_file($library, $project['id']) > 0){
 								array_push($_SESSION['vhdl_msg'], 'import_library_success');
 								header("Location:".$BASE_URL."/project/".$owner['username']."/".$project['short_code']."/directory/libraries");
 								exit();
@@ -481,7 +438,7 @@ if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST["post_action"]) ){
 				
 				if(20 < $owner_used_space || $_FILES['userfile']['size']>5242880){
 					array_push($_SESSION['vhdl_msg'], 'space_fail');
-					header("Location:".$BASE_URL."/project/".$_POST['owner']."/".$_POST['project_shortcode']."/directory".$_POST['current_dir']);
+					header("Location:".$BASE_URL);
 					exit();
 				}
 				
@@ -509,7 +466,7 @@ if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST["post_action"]) ){
 						$checkfile = pathinfo($uploadfile);
 						if ( $checkfile['extension'] == "zip" || $checkfile['extension'] == "ZIP" ){
 
-							if( $gen->extract_file($uploadfile,$path, $current_dir, $project['id']) ){
+							if( $gen->extract_file($uploadfile,$path, $project['id']) ){
 								array_push($_SESSION['vhdl_msg'], 'success_upload_file');
 							}else{
 								array_push($_SESSION['vhdl_msg'], 'fail_upload_file_unzip');
@@ -650,6 +607,7 @@ if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST["post_action"]) ){
 				$_SESSION['vhdl_user']['id'] = $id;
 				$_SESSION['vhdl_user']['loged_in'] = 1;
 				$_SESSION['vhdl_user']['activated'] = $db->is_user_active($id);
+				$_SESSION['vhdl_user']['type'] = $db->user_type($id);
 				$user = new User($_SESSION['vhdl_user']);
 				array_push($_SESSION['vhdl_msg'],"success_login");
 			}else{
@@ -694,6 +652,7 @@ if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST["post_action"]) ){
 			$_SESSION['vhdl_user']['id'] = "0";
 			$_SESSION['vhdl_user']['loged_in'] = 1;
 			$_SESSION['vhdl_user']['activated'] = 1;
+			$_SESSION['vhdl_user']['type'] = 0;
 			$user = new User($_SESSION['vhdl_user']);
 		break;
 			
@@ -709,6 +668,7 @@ if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST["post_action"]) ){
 			$_SESSION['vhdl_user']['id'] = "0";
 			$_SESSION['vhdl_user']['loged_in'] = 1;
 			$_SESSION['vhdl_user']['activated'] = 1;
+			$_SESSION['vhdl_user']['type'] = 0;
 			$user = new User($_SESSION['vhdl_user']);
 		break;
 			

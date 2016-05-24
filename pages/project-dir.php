@@ -11,17 +11,12 @@ if( !isset($db) ){
 	$is_editor = $user->validate_edit_rights($editors);
 	$is_compiled = false;
 	if( $is_editor || $project['public']==1){
-		$_GET['dir'] = $gen->clear_dir($_GET['dir']);
-		$files = $db->get_project_files($project['id'], $_GET['dir']);
+		$files = $db->get_project_files($project['id']);
 		
 		if($_SESSION['vhdl_user']['username'] == "Guest"){
-			$current_dir=$BASE.$_SESSION['PID']."/"; 
+			$current_dir=$BASE.$_SESSION['SID']."/"; 
 		}else{
-			if($_GET['dir']=='/'){
-				$current_dir=$BASE_DIR.$search_user['username']."/".$project['short_code']."/"; 
-			}else{
-				$current_dir=$BASE_DIR.$search_user['username']."/".$project['short_code'].$_GET['dir']."/"; 
-			}
+			$current_dir=$BASE_DIR.$search_user['username']."/".$project['short_code']."/"; 
 		}
 		
 		$vcd_files = glob($current_dir."*.vcd");
@@ -32,7 +27,10 @@ if( !isset($db) ){
 		//Extract the lines
 		$architectures = explode(PHP_EOL, $shell_output);
 		
-		echo $gen->path_to_links($_GET['dir'], $search_user['username'], $project['name'], $BASE_URL);
+		//user link
+		echo "<b><a href='".$BASE_URL."/project/".$search_user['username']."'>".$search_user['username']."> </a></b>";
+		//project link
+		echo "<a href='".$BASE_URL."/project/".$search_user['username']."/".$project['short_code']."'>".$project['name']."/ </a>";
 ?>
 <br/><br/><br/>
 <div class="row">
@@ -51,7 +49,7 @@ if( !isset($db) ){
 			<br/>
 		<?php  } ?>
 		<?php  if( $user->validate_ownership($editors) ){ ?>
-			<a href='<?php echo $BASE_URL; ?>/edit-project/<?php echo $project['short_code']; ?>'>
+			<a href='<?php echo $BASE_URL; ?>/edit-project/<?php echo $search_user['username']; ?>/<?php echo $project['short_code']; ?>'>
 				<button type='button' class='btn btn-primary full-row'>Edit Project</button>
 			</a><br/>
 			<form action='' method='post' id="Remove_Project_form" >
@@ -89,7 +87,7 @@ if( !isset($db) ){
 					<form action='' method='post' id='Selected_Action'>
 						<input type="hidden" value="" name="selected_ids" id="selected_ids" />
 						<input type="hidden" value="<?php echo $project['id']; ?>" name="project_id">
-						<button type="submit" name="post_action" value='Post_Library_Selected' class="btn btn-info" >Post Selected as Library</button>
+						<button type="submit" name="post_action" value='Post_Library_Selected' class="btn btn-info" >Post Selected as Component</button>
 						<button type="submit" name="post_action" value='Compile_Selected' class="btn btn-success" >Compile Selected</button>
 						<button type="submit" name="post_action" value='Remove_Selected' class="btn btn-danger" >Remove Selected</button>
 					</form>
@@ -197,25 +195,9 @@ if( !isset($db) ){
 		<div class="modal-content">
 		  <div class="modal-header">
 			  <!-- Modal header menu-->
-			<h3>Add File or Directory</h3>
+			<h3>Add File</h3>
 		  </div>
 		  <div class="modal-body tab-content">
-			  <!-- Modal Body Directory-->
-			<form action='' method='post'>
-				<h4>Create Directory</h4>
-				<span class="row">
-					<span class="col-sm-6">
-						<input type="text" name="dir_name" size='15' placeholder="Directory Name"/>
-						<input type="hidden" value="<?php echo $_GET['project']; ?>" name="project_shortcode">
-						<input type="hidden" value="<?php echo $_GET['dir']; ?>" name="current_dir">
-						<input type="hidden" value="<?php echo $search_user['username']; ?>" name="owner">
-					</span>
-					<span class="col-sm-6">
-						<button type="submit" name="post_action" value='Create_dir' class="btn btn-default">Create Directory</button>
-					</span>
-				</span>
-			</form>
-			<br/>
 			<!-- Modal Body Create File-->
 			<form action='' method='post'>
 				<h4>Create File</h4>
@@ -223,7 +205,6 @@ if( !isset($db) ){
 					<span class="col-sm-6">
 						<input type="text" name="file_name" size='15' placeholder="File Name"/>
 						<input type="hidden" value="<?php echo $_GET['project']; ?>" name="project_shortcode">
-						<input type="hidden" value="<?php echo $_GET['dir']; ?>" name="current_dir">
 						<input type="hidden" value="<?php echo $search_user['username']; ?>" name="owner">
 					</span>
 					<span class="col-sm-6">
@@ -241,7 +222,6 @@ if( !isset($db) ){
 						<input type="hidden" name="MAX_FILE_SIZE" value="5242880" />
 						<input type="hidden" name="upload_dir" value="<?php echo $current_dir; ?>" />
 						<input type="hidden" value="<?php echo $_GET['project']; ?>" name="project_shortcode">
-						<input type="hidden" value="<?php echo $_GET['dir']; ?>" name="current_dir">
 						<input type="hidden" value="<?php echo $search_user['username']; ?>" name="owner">
 					</span>
 					<span class="col-sm-6">

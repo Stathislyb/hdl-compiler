@@ -9,8 +9,8 @@ if( !isset($db) ){
 ?>
 
 <div class="list-group">
-	<a href='<?php echo $BASE_URL; ?>/libraries' class="btn btn-primary btn-outline pull-right" role="button">View All Libraries </a>
-	<h3>Recent Libraries</h3>
+	<a href='<?php echo $BASE_URL; ?>/libraries' class="btn btn-primary btn-outline pull-right" role="button">View All Components </a>
+	<h3>Recent Components</h3>
 	<?php 
 	foreach($libraries as $library){ 
 		$link_library = $BASE_URL."/libraries/".$library['name']; 
