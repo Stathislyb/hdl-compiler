@@ -131,6 +131,19 @@ $( document ).ready(function() {
 		});
     });
 	
+	$('#filter_users_input').on('keyup', function () {
+		var query = $('#filter_users_input').val();
+		var formData = {ajax_action:"filter_users",query:query};
+		$.ajax({
+			url : window.base_url+"/ajax_handler.php",
+			type: "POST",
+			data : formData,
+			success: function(data){
+				$("#users_container").html(data);
+			}
+		});
+    });
+	
 	$('.collapse')
 		.on('shown.bs.collapse', function(){
 			$(this).parent().find(".glyphicon-chevron-down").removeClass("glyphicon-chevron-down").addClass("glyphicon glyphicon-chevron-up");
@@ -150,7 +163,7 @@ function navbar_search_project(e) {
 		data : formData,
 		dataType:"json",
 		success: function(data){
-			var link = window.location.protocol + "//" + window.location.host + "/project/"+data['owner']+"/"+data['project'];
+			var link = window.location.protocol + "//" + window.location.host + "/vhdl/project/"+data['owner']+"/"+data['project'];
 			window.location.replace(link);
 		}
 	});
@@ -158,13 +171,13 @@ function navbar_search_project(e) {
 
 function navbar_search_user(e) {
 	var user = $(e).html();
-	var link = window.location.protocol + "//" + window.location.host + "/project/"+user;
+	var link = window.location.protocol + "//" + window.location.host + "/vhdl/project/"+user;
 	window.location.replace(link);
 };
 
 function navbar_search_library(e) {
 	var library = $(e).html();
-	var link = window.location.protocol + "//" + window.location.host + "/libraries/"+library;
+	var link = window.location.protocol + "//" + window.location.host + "/vhdl/libraries/"+library;
 	window.location.replace(link);
 };
 
@@ -192,7 +205,7 @@ function update_editors_field() {
 
 function lib_change_page(page) {
 	var form = $("#filter_libraries");
-	var link = window.location.protocol + "//" + window.location.host + "/libraries/page/"+page;
+	var link = window.location.protocol + "//" + window.location.host + "/vhdl/libraries/page/"+page;
 	form.attr("action", link);
 	form.attr("onsubmit", '');
 	form.submit();

@@ -11,7 +11,13 @@ if( !isset($db) ){
 
 <h2>Projects by <?php echo $search_user['username']; ?></h2>
 
-<?php require('pages/extra/list-other-user-projects.php'); ?>
+<?php 
+if($user->type == '0'){
+	require('pages/extra/list-other-user-projects.php'); 
+}else{
+	require('pages/extra/list-other-user-projects_admin.php'); 
+}
+?>
 
 <?php
 	}else{

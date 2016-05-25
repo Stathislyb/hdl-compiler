@@ -12,14 +12,10 @@ RewriteRule ^project/([^/]+)/([^/]+)/(file)/(.*) index.php?action=project-file&u
 RewriteRule ^project/([^/]+)/([^/]+)[\/]?$ index.php?action=project-dir&user=$1&project=$2 [NC,L]
 RewriteRule ^project/([^/]+)[\/]?$ index.php?action=project-user&ptype=1&user=$1 [NC,L]
 RewriteRule ^file/(.*) index.php?action=sid-file&file=$1 [NC,L]
-RewriteRule ^(settings|profile|create-project|libraries|edit-project|project) index.php?action=$1 [NC,L]
-
-# Handle common HTTP status codes
-ErrorDocument 400 /index.php?action=error&code=400
-ErrorDocument 401 /index.php?action=error&code=401
-ErrorDocument 403 /index.php?action=error&code=403
-ErrorDocument 404 /index.php?action=error&code=404
-ErrorDocument 500 /index.php?action=error&code=500
+RewriteRule ^create-project/(.*) index.php?action=create-project&user=$1 [NC,L]
+RewriteRule ^admin/(users|components|projects)[\/]?$ index.php?action=admin&option=$1 [NC,L]
+RewriteRule ^admin/(users|components|projects)/page/([^/]+)[\/]?$ index.php?action=admin&option=$1&page=$2 [NC,L]
+RewriteRule ^(admin|settings|profile|create-project|libraries|edit-project|project) index.php?action=$1 [NC,L]
 
 # Protect the htaccess file
 <files .htaccess>

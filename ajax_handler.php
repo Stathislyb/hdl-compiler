@@ -66,6 +66,13 @@ if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST["ajax_action"]) && isset($
 			require('pages/extra/list-all-libraries.php');
 		break;
 		
+		// Show the filtered users
+		case "filter_users":
+			$name = $_POST["query"];
+			$page = 0;
+			require('pages/extra/list-all-users_admin.php');
+		break;
+		
 		// save changes on file
 		case "save_file":
 			if($_POST['project_id'] == "SID"){

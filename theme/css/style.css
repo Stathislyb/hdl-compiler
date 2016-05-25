@@ -518,3 +518,49 @@ font-family:Tahoma, Geneva, sans-serif;
 .minh-50{
 	min-height:50px;
 }
+
+.admin-nav-form{
+	max-width: 141px;
+}
+
+.pseudo-nav{
+	border: 1px solid transparent;
+	background-color: #f8f8f8;
+    border-color: #e7e7e7;
+    text-align: center;
+	margin-top: -20px;
+    border-top: none;
+	color: #484B56;
+    font-size: 1.1em;
+	border-radius: 12px;
+    overflow: hidden;
+	padding: 0;
+}
+.pseudo-nav-ul{
+	list-style: none;
+    margin: 0 auto;
+    padding: 0;
+}
+.pseudo-nav-li:last-child {
+    border-right:none;
+}
+.pseudo-nav-li:hover{
+	background-color: #DEDEDE;
+	border-left: 1px solid #C3C3C3;
+	border-right: 1px solid #C3C3C3;
+}
+.pseudo-nav-selected{
+	background-color: #eaeaea;
+}
+.pseudo-nav-link{
+	padding: 5px;
+	display: inline-block;
+    width: 100%;
+    height: 100%;
+	text-decoration: none;
+	color: #484B56;
+}
+.pseudo-nav-link:hover{
+	text-decoration: none;
+	color: #484B56;
+}

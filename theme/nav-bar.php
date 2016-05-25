@@ -25,6 +25,11 @@
 						<a href="<?php echo $BASE_URL; ?>/settings" title="Settings"><span class="glyphicon glyphicon-cog top-5"></span></a>
 						<a href="<?php echo $BASE_URL; ?>" ><?php echo $_SESSION['vhdl_user']['username']; ?></a>
 					</div>
+					<?php if($user->type=='1'){ ?>
+						<form class="navbar-form pull-right admin-nav-form" method="post" action="<?php echo $BASE_URL; ?>/admin">
+							<button type="submit" class="btn btn-default" >Administration</button>
+						</form>
+					<?php } ?>
 				<?php }else{ ?>
 					<div class="navbar-form pull-left nav-home">
 						<a href="<?php echo $BASE_URL; ?>" >Home</a>

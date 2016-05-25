@@ -332,6 +332,23 @@ class Database {
 		return $statement->fetchAll();
 	}
 	
+	// Select the requested number of latest users
+	public function get_latest_users($name,$num,$begin) {
+		$query = "SELECT * FROM users WHERE username LIKE '".$name."%' ORDER BY id DESC LIMIT ".$num.",".$begin; 
+		$statement = $this->conn->prepare($query); 
+		$statement->execute();
+		return $statement->fetchAll();
+	}
+	
+	// Return number of users
+	public function count_users($name) {
+		$query = "SELECT COUNT(*) FROM users WHERE username LIKE '".$name."%' "; 
+		$statement = $this->conn->prepare($query); 
+		$statement->execute();
+		$result = $statement->fetch();
+		return $result['COUNT(*)'];
+	}
+	
 	// Select the libraries starting with given library name
 	public function find_libraries_like($name) {
 		$query = "SELECT name FROM libraries WHERE name LIKE '".$name."%' AND approved='1' LIMIT 10"; 

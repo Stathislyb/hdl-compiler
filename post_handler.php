@@ -31,20 +31,25 @@ if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST["post_action"]) ){
 			// Create Project
 			case "create_project":
 				$short_code = $gen->create_short_code($_POST['project_name']);
-
+				$username = $user->username;
+				if($user->type=='1'){
+					if( isset($_POST['original_user']) && !empty($_POST['original_user']) ){
+						$username = $_POST['original_user'];
+					}
+				}
 				if( strlen($short_code) < 5 ){
 					array_push($_SESSION['vhdl_msg'], 'invalid_project_name');
 				}else{
 					$project_id = $db->create_project($_POST['project_name'], $_POST['project_description'], $short_code, $_POST['project_share']);
 
 					if($project_id > 0){
-						if( $db->add_project_editor($_SESSION['vhdl_user']['username'], $project_id, 1) >0 ){
+						if( $db->add_project_editor($username, $project_id, 1) >0 ){
 							if(!empty($_POST['projet_authors'])){
 								$db->add_project_multi_editors($_POST['projet_authors'], $project_id);
 							}
 							array_push($_SESSION['vhdl_msg'], 'success_project_creation');
-							mkdir($BASE_DIR.$_SESSION['vhdl_user']['username']."/".$short_code,0777);
-							header("Location:".$BASE_URL."/project/".$_SESSION['vhdl_user']['username']."/".$short_code);
+							mkdir($BASE_DIR.$username."/".$short_code,0777);
+							header("Location:".$BASE_URL."/project/".$username."/".$short_code);
 							exit();
 						}else{
 							array_push($_SESSION['vhdl_msg'], 'fail_project_creation');

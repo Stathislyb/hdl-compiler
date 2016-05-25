@@ -30,6 +30,7 @@ if($user->id > 0){
 			<label for="project_description">Project description:</label>
 			<textarea form='create-project' name='project_description' class="form-control" rows="5" placeholder="Project description"></textarea>
 			<br />
+			<?php echo (isset($_GET['user']) && !empty($_GET['user']) )? "<input type='hidden' name='original_user' value='".$_GET['user']."' />":''; ?>
 			<button type="submit" name="post_action" value='create_project' class="btn btn-default" >Create Project</button>
 		</form>
 	</div>
