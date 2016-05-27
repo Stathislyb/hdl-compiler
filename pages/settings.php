@@ -7,7 +7,11 @@ if( !isset($db) ){
 <?php 
 if( isset($_SESSION['vhdl_user']['id']) ){
 	if( $_SESSION['vhdl_user']['id']>0){
-		$user_info = $db->get_user_information($user->id,"id");
+		$edit_user_id = $user->id;
+		if( isset($_GET['user_id']) && $_GET['user_id']>0 &&  $user->type==1 ){
+			$edit_user_id=$_GET['user_id'];
+		}
+		$user_info = $db->get_user_information($edit_user_id,"id");
 		$ace_themes = array("Chrome","Clouds","Clouds Midnight","Cobalt","Crimson Editor","Dawn","Eclipse","Idle Fingers",
 				"Kr Theme","Merbivore","Merbivore Soft","Mono Industrial","Monokai","Pastel On Dark","Solarized Dark",
 				"Solarized Light","TextMate","Tomorrow","Tomorrow Night","Tomorrow Night Blue","Tomorrow Night Bright",
@@ -67,12 +71,18 @@ if( isset($_SESSION['vhdl_user']['id']) ){
 	<hr/>
 	<div class="row">
 		<div class="col-sm-6"> 
-			<label for="project_name">Password:</label>
-			<div class="form-group">
-				<input type="password" name="password_edit" size='25' autocomplete="off" class="form-control" data-error="Minimum of 5 characters" data-minlength="5" placeholder="Password" required/>
-				<div class="help-block with-errors"></div>
-			</div>
-			<button type="submit" id="edit_user_btn" class="btn btn-primary" name="post_action" value="Edit_User">Submit</button>
+		
+			<?php if( $user->type==1 ){	?>
+				<input type="hidden" name="user_id_edit" value="<?php echo $edit_user_id; ?>" />
+				<button type="submit" id="edit_user_btn" class="btn btn-primary" name="post_action" value="Edit_User_Admin">Submit</button>
+			<?php }else{	?>
+				<label for="project_name">Password:</label>
+				<div class="form-group">
+					<input type="password" name="password_edit" size='25' autocomplete="off" class="form-control" data-error="Minimum of 5 characters" data-minlength="5" placeholder="Password" required/>
+					<div class="help-block with-errors"></div>
+				</div>
+				<button type="submit" id="edit_user_btn" class="btn btn-primary" name="post_action" value="Edit_User">Submit</button>
+			<?php }	?>
 		</div>
 	</div>
 	<hr/>

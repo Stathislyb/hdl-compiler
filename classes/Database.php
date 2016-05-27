@@ -86,9 +86,9 @@ class Database {
 	}
 	
 	// Register user in database, returns id on success and 0 on failure
-	public function register_user($username, $password, $email, $phone, $code) {
+	public function register_user($username, $password, $email, $phone, $code, $active, $type) {
 		$password = md5($password);
-		$query = "INSERT INTO users (username, password, email, telephone, activ_code) Values('".$username."','".$password."','".$email."','".$phone."','".$code."')"; 
+		$query = "INSERT INTO users (username, password, email, telephone, activ_code, activated, type) Values('".$username."','".$password."','".$email."','".$phone."','".$code."','".$active."','".$type."')"; 
 		$statement = $this->conn->prepare($query); 
 		$statement->execute();
 		return $this->conn->lastInsertId();
@@ -486,6 +486,20 @@ class Database {
 	// Removes SID file from database, return true or false
 	public function remove_file_sid($file_id) {
 		$query = "DELETE FROM sid_files WHERE id = '".$file_id."'"; 
+		$statement = $this->conn->prepare($query); 
+		return $statement->execute();
+	}
+	
+	// Remove user from the editor's list of all projects
+	public function remove_user_editor($user_id) {
+		$query = "DELETE FROM projects_editors WHERE user_id='".$user_id."' AND user_type='0'"; 
+		$statement = $this->conn->prepare($query); 
+		return $statement->execute();
+	}
+	
+	// Remove user from the database
+	public function remove_user($user_id) {
+		$query = "DELETE FROM users WHERE id='".$user_id."'"; 
 		$statement = $this->conn->prepare($query); 
 		return $statement->execute();
 	}

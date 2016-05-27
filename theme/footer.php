@@ -3,8 +3,8 @@
 				<div id="copyright">
 					<center>
 					Copyright 2014-2016<br/>
-					Minas Dasygenis, <a href="http://arch.icte.uowm.gr/mdasygenis"> http://arch.icte.uowm.gr/mdasygenis</a>.<br />
-					Lymperidis Efstathios<br />
+					Minas Dasygenis, <a href="http://arch.icte.uowm.gr/mdasygenis">http://arch.icte.uowm.gr/mdasygenis</a>.<br />
+					Lymperidis Efstathios, <a href="https://gr.linkedin.com/in/efstathios-lymperidis-98b5747b">https://gr.linkedin.com/in/efstathios-lymperidis-98b5747b</a>.<br />
 					Licensed under the Apache License, Version 2.0 (the "License").<br />
 					http://www.apache.org/licenses/LICENSE-2.0<br />
 					</center>

@@ -15,6 +15,7 @@ RewriteRule ^file/(.*) index.php?action=sid-file&file=$1 [NC,L]
 RewriteRule ^create-project/(.*) index.php?action=create-project&user=$1 [NC,L]
 RewriteRule ^admin/(users|components|projects)[\/]?$ index.php?action=admin&option=$1 [NC,L]
 RewriteRule ^admin/(users|components|projects)/page/([^/]+)[\/]?$ index.php?action=admin&option=$1&page=$2 [NC,L]
+RewriteRule ^settings/(.*) index.php?action=settings&user_id=$1 [NC,L]
 RewriteRule ^(admin|settings|profile|create-project|libraries|edit-project|project) index.php?action=$1 [NC,L]
 
 # Protect the htaccess file

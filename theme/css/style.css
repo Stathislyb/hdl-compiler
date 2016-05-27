@@ -564,3 +564,11 @@ font-family:Tahoma, Geneva, sans-serif;
 	text-decoration: none;
 	color: #484B56;
 }
+
+.inline-block{
+	display:inline-block;
+}
+
+.alternative_row{
+	background-color: #F1F4F5;
+}

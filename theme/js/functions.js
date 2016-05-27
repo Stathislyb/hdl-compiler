@@ -29,7 +29,6 @@ $( document ).ready(function() {
 		$("#nav-search").val('');
 	});
 	
-	
     $('#select_all').click(function(event) { 
         if(this.checked) { 
             $('.select_file').each(function() {
@@ -209,4 +208,34 @@ function lib_change_page(page) {
 	form.attr("action", link);
 	form.attr("onsubmit", '');
 	form.submit();
+};
+
+function admin_users_change_page(page) {
+	var form = $("#filter_users");
+	var link = window.location.protocol + "//" + window.location.host + "/vhdl/admin/users/page/"+page;
+	form.attr("action", link);
+	form.attr("onsubmit", '');
+	form.submit();
+};
+
+function admin_components_change_page(page) {
+	var form = $("#filter_components");
+	var link = window.location.protocol + "//" + window.location.host + "/vhdl/admin/components/page/"+page;
+	form.attr("action", link);
+	form.attr("onsubmit", '');
+	form.submit();
+};
+
+function admin_projects_change_page(page) {
+	var form = $("#filter_projects");
+	var link = window.location.protocol + "//" + window.location.host + "/vhdl/admin/projects/page/"+page;
+	form.attr("action", link);
+	form.attr("onsubmit", '');
+	form.submit();
+};
+
+function confirm_user_removal() {
+	if( !confirm('Are you sure that you want to remove the user and all their projects ? ') ){
+		event.preventDefault();
+	}
 };
