@@ -333,8 +333,22 @@ class Database {
 	}
 	
 	// Select the requested number of latest users
-	public function get_latest_users($name,$num,$begin) {
+	public function get_latest_users_admin($name,$num,$begin) {
 		$query = "SELECT * FROM users WHERE username LIKE '".$name."%' ORDER BY id DESC LIMIT ".$num.",".$begin; 
+		$statement = $this->conn->prepare($query); 
+		$statement->execute();
+		return $statement->fetchAll();
+	}
+	// Select the requested number of latest components
+	public function get_latest_components_admin($name,$num,$begin) {
+		$query = "SELECT * FROM libraries WHERE name LIKE '".$name."%' ORDER BY approved,id LIMIT ".$num.",".$begin; 
+		$statement = $this->conn->prepare($query); 
+		$statement->execute();
+		return $statement->fetchAll();
+	}
+	// Select the requested number of latest projects
+	public function get_latest_projects_admin($name,$num,$begin) {
+		$query = "SELECT * FROM projects WHERE name LIKE '".$name."%' ORDER BY id DESC LIMIT ".$num.",".$begin; 
 		$statement = $this->conn->prepare($query); 
 		$statement->execute();
 		return $statement->fetchAll();
@@ -403,8 +417,21 @@ class Database {
 	}
 	
 	// Select the library by name
-	public function get_library($library_name) {
-		$query = "SELECT * FROM libraries WHERE name='".$library_name."' AND approved='1'"; 
+	public function get_library($library_name,$type) {
+		if($type==1){
+			$approved="";
+		}else{
+			$approved="AND approved='1'";
+		}
+		$query = "SELECT * FROM libraries WHERE name='".$library_name."' ".$approved; 
+		$statement = $this->conn->prepare($query); 
+		$statement->execute();
+		return $statement->fetch();
+	}
+	
+	// Select the library by id
+	public function get_library_id($library_id) {
+		$query = "SELECT * FROM libraries WHERE id='".$library_id."' "; 
 		$statement = $this->conn->prepare($query); 
 		$statement->execute();
 		return $statement->fetch();
@@ -503,6 +530,38 @@ class Database {
 		$statement = $this->conn->prepare($query); 
 		return $statement->execute();
 	}
+	
+	// Approve library
+	public function approve_library_admin($lib_id) {
+		$query = "UPDATE libraries SET approved='1' WHERE id='".$lib_id."'"; 
+		$statement = $this->conn->prepare($query); 
+		$statement->execute();
+		if($statement->rowCount()==1){
+			return true;
+		}else{
+			return false;
+		}
+	}
+	
+	// Disapprove library
+	public function disapprove_library_admin($lib_id) {
+		$query = "UPDATE libraries SET approved='0' WHERE id='".$lib_id."'"; 
+		$statement = $this->conn->prepare($query); 
+		$statement->execute();
+		if($statement->rowCount()==1){
+			return true;
+		}else{
+			return false;
+		}
+	}
+	
+	// Remove library from database
+	public function remove_library($lib_id) {
+		$query = "DELETE FROM libraries WHERE id='".$lib_id."'"; 
+		$statement = $this->conn->prepare($query); 
+		return $statement->execute();
+	}
+	
 }
 
 

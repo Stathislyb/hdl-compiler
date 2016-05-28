@@ -72,6 +72,18 @@ if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST["ajax_action"]) && isset($
 			$page = 0;
 			require('pages/extra/list-all-users_admin.php');
 		break;
+		// Show the filtered components
+		case "filter_components":
+			$name = $_POST["query"];
+			$page = 0;
+			require('pages/extra/list-all-components_admin.php');
+		break;
+		// Show the filtered projects
+		case "filter_projects":
+			$name = $_POST["query"];
+			$page = 0;
+			require('pages/extra/list-all-projects_admin.php');
+		break;
 		
 		// save changes on file
 		case "save_file":
@@ -119,6 +131,26 @@ if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST["ajax_action"]) && isset($
 					}
 				}else{
 					echo $messages->messages['space_fail'][0];
+				}
+			}
+		break;
+		
+		// save changes on library
+		case "save_library":			
+			if( $user->type==1 ){
+				if( isset($_POST['directory']) && isset($_POST['data'] ) ){
+					$directory=$gen->filter_letters($_POST['directory']);
+					$contents=$_POST['data'];
+					if (file_exists($directory)  && is_writable($directory) ){
+						$ret=file_put_contents($directory,$contents);
+						if(!$ret) { 
+							error_get_last();
+							fail_500();
+						}
+						echo "Changes saved.";
+					}else{ //end if file exists
+						echo "File does not exist.";
+					}
 				}
 			}
 		break;

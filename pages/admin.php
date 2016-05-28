@@ -44,16 +44,16 @@ if(isset($_POST['name'])){
 	<?php require('pages/extra/list-all-users_admin.php'); 
 }elseif($option=='components'){?>
 	<div class="form-group">
-		<form action="" method="post" id="filter_users" onsubmit="return false;">
-			<input name="name" type="text" value="<?php echo $name; ?>" class="form-control" placeholder="Search User" id="filter_users_input"/>
+		<form action="" method="post" id="filter_components" onsubmit="return false;">
+			<input name="name" type="text" value="<?php echo $name; ?>" class="form-control" placeholder="Search Component" id="filter_components_input"/>
 		</form>
 	</div>
-	<?php require('pages/extra/list-all-users_admin.php'); 
+	<?php require('pages/extra/list-all-components_admin.php'); 
 }elseif($option=='projects'){?>
 	<div class="form-group">
-		<form action="" method="post" id="filter_users" onsubmit="return false;">
-			<input name="name" type="text" value="<?php echo $name; ?>" class="form-control" placeholder="Search User" id="filter_users_input"/>
+		<form action="" method="post" id="filter_projects" onsubmit="return false;">
+			<input name="name" type="text" value="<?php echo $name; ?>" class="form-control" placeholder="Search Project" id="filter_projects_input"/>
 		</form>
 	</div>
-	<?php require('pages/extra/list-all-users_admin.php'); 
+	<?php require('pages/extra/list-all-projects_admin.php'); 
 } ?>

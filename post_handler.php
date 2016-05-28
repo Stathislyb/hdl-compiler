@@ -710,6 +710,93 @@ if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST["post_action"]) ){
 					exit();
 				}
 			break;
+			
+			// Remove Project by Admin
+			case "Remove_Project_Admin":
+				if( $user->type==1){
+					$project = $db->get_project($_POST['project_id']);
+					$owner = $db->get_project_owner($_POST['project_id']);
+					$full_path = $BASE_DIR.$owner['username'].'/'.$project['short_code'];
+					$db->clear_project($project['id']);
+					$db->remove_project($project['id']);
+					if (file_exists($full_path)){
+						system("rm -rf ".escapeshellarg($full_path));
+					}
+					array_push($_SESSION['vhdl_msg'], 'remove_project_success');
+					header("Location:".$BASE_URL."/admin/projects");
+					exit();
+				}else{
+					array_push($_SESSION['vhdl_msg'], 'permissions_fail');
+					header("Location:".$BASE_URL);
+					exit();
+				}
+			break;
+			
+			// Approve Component by Admin
+			case "Approve_Component_Admin":
+				if( $user->type==1){
+					if( $db->approve_library_admin($_POST['library_id']) ){
+						array_push($_SESSION['vhdl_msg'], 'approve_component_success');
+					}else{
+						array_push($_SESSION['vhdl_msg'], 'approve_component_fail');
+					}
+					header("Location:".$BASE_URL."/admin/components");
+					exit();
+				}else{
+					array_push($_SESSION['vhdl_msg'], 'permissions_fail');
+					header("Location:".$BASE_URL);
+					exit();
+				}
+			break;
+			
+			// Disapprove Component by Admin
+			case "Disapprove_Component_Admin":
+				if( $user->type==1){
+					if( $db->disapprove_library_admin($_POST['library_id']) ){
+						array_push($_SESSION['vhdl_msg'], 'disapprove_component_success');
+					}else{
+						array_push($_SESSION['vhdl_msg'], 'disapprove_component_fail');
+					}
+					header("Location:".$BASE_URL."/admin/components");
+					exit();
+				}else{
+					array_push($_SESSION['vhdl_msg'], 'permissions_fail');
+					header("Location:".$BASE_URL);
+					exit();
+				}
+			break;
+			
+			// Remove Component by Admin
+			case "Remove_Component_Admin":
+				if( $user->type==1){
+					$library = $db->get_library_id($_POST['library_id']);
+					
+					if(!empty($library)){
+						$full_path = $BASE_DIR.'libraries/'.$library['name'];
+						$result = true;
+
+						if( !$db->remove_library($library['id']) ){
+							$result=false;
+						}
+						if (file_exists($full_path)){
+							system("rm -rf ".escapeshellarg($full_path));
+						}else{
+							$result=false;
+						}
+
+						if($result){
+							array_push($_SESSION['vhdl_msg'], 'library_removed_success');
+						}else{
+							array_push($_SESSION['vhdl_msg'], 'library_removed_fail');
+						}
+					}
+					header("Location:".$BASE_URL."/admin/components");
+					exit();
+					
+				}else{
+					array_push($_SESSION['vhdl_msg'], 'permissions_fail');
+				}
+			break;
 
 		}
 		

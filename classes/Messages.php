@@ -40,7 +40,13 @@ class Messages {
 		"activation_fail"=>array("The activation code you provided was not correct.","danger"),
 		"space_fail"=>array("You have reached the limits of your available space.","danger"),
 		"success_remove_user" => array("The user was removed successfully.","success"),
-		"fail_remove_user" => array("The user was not properly removed.","danger")
+		"fail_remove_user" => array("The user was not properly removed.","danger"),
+		"approve_component_success" => array("The component was approved successfully.","success"),
+		"approve_component_fail" => array("Failed to approve the component.","danger"),
+		"disapprove_component_success" => array("The component was disapproved successfully.","success"),
+		"disapprove_component_fail" => array("Failed to disapprove the component.","danger"),
+		"library_removed_success" => array("The component was removed successfully.","success"),
+		"library_removed_fail" => array("Failed to remove the component.","danger")
 	);
 	
 	// Class constractor function

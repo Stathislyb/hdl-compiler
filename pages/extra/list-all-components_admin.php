@@ -9,8 +9,8 @@ if( !isset($user->type) || $user->type != '1' ){
 }
 ?>
 <?php
-	$found_users = $db->get_latest_users_admin($name,$page,19);
-	$found_user_num = $db->count_users($name);
+	$found_components = $db->get_latest_components_admin($name,$page,19);
+	$found_components_num = $db->count_users($name);
 	$alter=0;
 ?>
 
@@ -22,21 +22,31 @@ if( !isset($user->type) || $user->type != '1' ){
 			</center>
 		</li>
 		<?php 
-		foreach($found_users as $found_user){ 
-			$link_user = $BASE_URL."/project/".$found_user['username']; 
-			$link_edit =  $BASE_URL."/settings/".$found_user['id'];
+		foreach($found_components as $found_component){ 
+			$link_user = $BASE_URL."/libraries/".$found_component['name']; 
+			$link_edit =  $BASE_URL."/settings/".$found_component['id'];
 			$alter = ($alter==1)?0:1;
 		?>
 			<li class="list-group-item row <?php echo ($alter==1)?"alternative_row":""; ?>">
 				<a href="<?php echo $link_user; ?>" class="col-sm-4">
 					<h3 class="list-group-item-heading inline-block">
-						<?php echo $found_user['username']; ?>
+						<?php echo $found_component['name']; ?>
 					</h3>
 				</a>
-				<a href="<?php echo $link_edit; ?>" class="col-sm-offset-5 col-sm-1 btn btn-info">Edit</a>
-				<form class="form" action="" method="post" onsubmit="confirm_user_removal_admin()" >
-					<input type="hidden" name="user_id" value="<?php echo $found_user['id']; ?>" />
-					<button type="submit" class="col-sm-offset-1 col-sm-1 btn btn-danger" name="post_action" value="Remove_User_Admin">Remove</button>
+				<?php if($found_component['approved']==0){ ?>
+					<form class="form" action="" method="post" >
+						<input type="hidden" name="library_id" value="<?php echo $found_component['id']; ?>" />
+						<button type="submit" class="col-sm-offset-5 col-sm-1 btn btn-success" name="post_action" value="Approve_Component_Admin">Approve</button>
+					</form>
+				<?php }else{ ?>
+					<form class="form" action="" method="post" >
+						<input type="hidden" name="library_id" value="<?php echo $found_component['id']; ?>" />
+						<button type="submit" class="col-sm-offset-5 col-sm-1 btn btn-warning" name="post_action" value="Dispprove_Component_Admin">Dispprove</button>
+					</form>
+				<?php } ?>
+				<form class="form" action="" method="post" onsubmit="confirm_component_removal_admin()" >
+					<input type="hidden" name="library_id" value="<?php echo $found_component['id']; ?>" />
+					<button type="submit" class="col-sm-offset-1 col-sm-1 btn btn-danger" name="post_action" value="Remove_Component_Admin">Remove</button>
 				</form>
 			</li>
 		<?php } ?>
@@ -45,10 +55,10 @@ if( !isset($user->type) || $user->type != '1' ){
 	<center>
 		<ul class="pagination">
 			<?php 
-			if($found_user_num > 20){
+			if($found_components_num > 20){
 				$j=1;
-				for($i=0;$i<$found_user_num;$i+=20){
-					echo "<li><a href='javascript:void(0)' onclick='admin_users_change_page($j);'>".$j."</a></li>";
+				for($i=0;$i<$found_components_num;$i+=20){
+					echo "<li><a href='javascript:void(0)' onclick='admin_components_change_page($j);'>".$j."</a></li>";
 					$j++;
 				}
 			}
