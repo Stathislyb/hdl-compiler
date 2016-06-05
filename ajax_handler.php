@@ -2,9 +2,6 @@
 // load necessary files
 include('loader.php');
 
-// Session is necessary for this file
-session_dasygenis();
-
 //handles the post requests
 if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST["ajax_action"]) && isset($_SESSION['vhdl_user']['loged_in']) && $_SESSION['vhdl_user']['loged_in']==1){
 
@@ -111,7 +108,7 @@ if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST["ajax_action"]) && isset($
 							$ret=file_put_contents($directory,$contents);
 							if(!$ret) { 
 								error_get_last();
-								fail_500();
+								echo "Failed to save the file.";
 							}
 							if( file_exists($log_file) ){
 								unlink($log_file);
@@ -145,7 +142,7 @@ if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST["ajax_action"]) && isset($
 						$ret=file_put_contents($directory,$contents);
 						if(!$ret) { 
 							error_get_last();
-							fail_500();
+							echo "Failed to save the file.";
 						}
 						echo "Changes saved.";
 					}else{ //end if file exists
@@ -157,12 +154,12 @@ if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST["ajax_action"]) && isset($
 		
 		// Generate if necessary and get the json information from requested vcd file
 		case "read_vcd":
-			$project_id = $_POST["project_id"];
 			$project = $db->get_project($_POST['project_id']);
 			$editors = $db->get_project_editors($project['id']);
+			$owner = $db->get_project_owner($_POST["project_id"]);
 			
-			$path = $BASE_DIR.$_SESSION['vhdl_user']['username']."/".$project['short_code']."/";
-			$vcd_file = $BASE_DIR.$_SESSION['vhdl_user']['username']."/".$project['short_code']."/".$_POST["vcd_name"];;
+			$path = $BASE_DIR.$owner['username']."/".$project['short_code']."/";
+			$vcd_file = $BASE_DIR.$owner['username']."/".$project['short_code']."/".$_POST["vcd_name"];;
 			$data = array();
 			$module = "";
 			$time_interval_couter=0;

@@ -1,6 +1,4 @@
 <?php
-// Session is necessary for this file
-session_dasygenis();
 
 //handles the post requests
 if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST["post_action"]) ){
@@ -153,7 +151,7 @@ if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST["post_action"]) ){
 				$file_exists = $db->check_file_exist($name, $project['id']);
 				if( $user->validate_edit_rights($editors) ){
 					if(!$file_exists){
-						if( fopen($path,"w+") && !$file_exists){				
+						if( fopen($path,"w+") ){				
 							if($db->add_file($name, $project['id']) > 0){
 								array_push($_SESSION['vhdl_msg'], 'success_create_file');
 								header("Location:".$BASE_URL."/project/".$_POST['owner']."/".$_POST['project_shortcode']);
@@ -239,29 +237,27 @@ if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST["post_action"]) ){
 				if( $user->validate_edit_rights($editors) ){
 					foreach ($selected as $file_id) {
 						$file = $db->get_file($file_id);
-						if($file['type']=='file'){
-							$full_path = $BASE_DIR.$owner['username'].'/'.$project['short_code'].'/'.$file['name'];
-							$directory = $BASE_DIR.$owner['username'].'/'.$project['short_code'].'/';
+						$full_path = $BASE_DIR.$owner['username'].'/'.$project['short_code'].'/'.$file['name'];
+						$directory = $BASE_DIR.$owner['username'].'/'.$project['short_code'].'/';
 
-							if (file_exists($full_path)){
-								check_and_create_job_directory();
-								$extra=process_pre_options($_POST);
-								//$prefile="-a ".$extra;
-								$prefile="-a ";
-								$postfile="";
-								$executable='/usr/lib/ghdl/bin/ghdl';
-								$timeout=6;
-								if( file_exists($full_path.".log") ){
-									unlink($full_path.".log");
-								}
-								create_job_file($directory,$file['name'],$prefile,$postfile,$executable,$timeout);
-								$db->file_compile_pending($file['id']);
-								
-								array_push($_SESSION['vhdl_msg'], 'compile_success');
-							}else{
-								array_push($_SESSION['vhdl_msg'], 'compile_fail');
+						if (file_exists($full_path)){
+							$extra=$gen->process_pre_options($_POST);
+							//$prefile="-a ".$extra;
+							$prefile="-a ";
+							$postfile="";
+							$executable='/usr/lib/ghdl/bin/ghdl';
+							$timeout=6;
+							if( file_exists($full_path.".log") ){
+								unlink($full_path.".log");
 							}
+							$gen->create_job_file($JOBDIRECTORY,$directory,$file['name'],$prefile,$postfile,$executable,$timeout);
+							$db->file_compile_pending($file['id']);
+							
+							array_push($_SESSION['vhdl_msg'], 'compile_success');
+						}else{
+							array_push($_SESSION['vhdl_msg'], 'compile_fail');
 						}
+						
 					}
 				}else{
 					array_push($_SESSION['vhdl_msg'], 'permissions_fail');
@@ -278,7 +274,6 @@ if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST["post_action"]) ){
 					$explodedarchitecture=explode(" ",$architectureclean);
 					$unit=$explodedarchitecture[0];
 					$architecture=$explodedarchitecture[1];	
-					check_and_create_job_directory();
 					
 					$extra_pre = '';
 					if ( isset($_POST['extralib'] ) ){
@@ -290,12 +285,12 @@ if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST["post_action"]) ){
 					$extra_post = '';
 					if ( isset($_POST['extrasim'] ) ){
 						if ( $_POST['extrasim'] == "vcd"){ 
-							$extra_post = " --vcd=testbench.vcd ";
+							$extra_post = " --vcd=".$project['short_code'].".vcd ";
 						}
 					}
 					$postfile=$architecture.$extra_post;
 					
-					create_job_file($directory,$unit,$prefile,$postfile);
+					$gen->create_job_file($JOBDIRECTORY,$directory,$unit,$prefile,$postfile);
 					array_push($_SESSION['vhdl_msg'], 'simulation_success');
 					
 				}else{
@@ -382,7 +377,7 @@ if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST["post_action"]) ){
 				$library = $_POST['library'];
 				$owner = $db->get_project_owner($project['id']);
 
-				$full_path = $BASE_DIR.$owner['username'].'/'.$project['short_code'].'/libraries/'.$library;
+				$full_path = $BASE_DIR.$owner['username'].'/'.$project['short_code'].'/'.$library;
 				$libs_path = $BASE_DIR.'libraries/'.$library;
 				$directory = $BASE_DIR.$owner['username'].'/'.$project['short_code'].'/';
 
@@ -405,7 +400,7 @@ if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST["post_action"]) ){
 						if($result){
 							if($db->add_file($library, $project['id']) > 0){
 								array_push($_SESSION['vhdl_msg'], 'import_library_success');
-								header("Location:".$BASE_URL."/project/".$owner['username']."/".$project['short_code']."/directory/libraries");
+								header("Location:".$BASE_URL."/project/".$owner['username']."/".$project['short_code']);
 								exit();
 							}else{
 								array_push($_SESSION['vhdl_msg'], 'import_library_fail');
@@ -499,8 +494,7 @@ if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST["post_action"]) ){
 					$directory = $BASE.$_SESSION['SID'].'/';
 
 					if (file_exists($full_path)){
-						check_and_create_job_directory();
-						$extra=process_pre_options($_POST);
+						$extra=$gen->process_pre_options($_POST);
 						//$prefile="-a ".$extra;
 						$prefile="-a ";
 						$postfile="";
@@ -509,7 +503,7 @@ if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST["post_action"]) ){
 						if( file_exists($full_path.".log") ){
 							unlink($full_path.".log");
 						}
-						create_job_file($directory,$file['name'],$prefile,$postfile,$executable,$timeout);
+						$gen->create_job_file($JOBDIRECTORY,$directory,$file['name'],$prefile,$postfile,$executable,$timeout);
 						$db->file_compile_pending_sid($file['id']);
 
 						array_push($_SESSION['vhdl_msg'], 'compile_success');
@@ -524,8 +518,7 @@ if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST["post_action"]) ){
 				$architectureclean=filter_var($_POST['architecture'],FILTER_SANITIZE_STRING);	
 				$explodedarchitecture=explode(" ",$architectureclean);
 				$unit=$explodedarchitecture[0];
-				$architecture=$explodedarchitecture[1];	
-				check_and_create_job_directory();
+				$architecture=$explodedarchitecture[1];
 
 				$extra_pre = '';
 				if ( isset($_POST['extralib'] ) ){
@@ -542,7 +535,7 @@ if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST["post_action"]) ){
 				}
 				$postfile=$architecture.$extra_post;
 
-				create_job_file($directory,$unit,$prefile,$postfile);
+				$gen->create_job_file($JOBDIRECTORY,$directory,$unit,$prefile,$postfile);
 				array_push($_SESSION['vhdl_msg'], 'simulation_success');
 				
 			break;
@@ -692,7 +685,7 @@ if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST["post_action"]) ){
 									$gen->send_email($message,$subject,$_POST["email"]);
 								}
 								array_push($_SESSION['vhdl_msg'], 'success_register');	
-								mkdir($BASE_DIR.$_POST["username"],0700);
+								mkdir($BASE_DIR.$_POST["username"],0777);
 							}else{
 								array_push($_SESSION['vhdl_msg'], 'fail_register');
 							}
@@ -841,7 +834,7 @@ if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST["post_action"]) ){
 						$message = "Welcome to our website!\r\rYou, or someone using your email address, has completed registration at HDL Everywhere. You can complete registration by clicking the following link:\r http://snf-703457.vm.okeanos.grnet.gr/vhdl/ \rAnd after logging in, enter the Activation Code : ".$code." \r\r If this is an error, ignore this email and you will be removed from our mailing list.";
 						$gen->send_email($message,$subject,$_POST["email"]);
 						array_push($_SESSION['vhdl_msg'], 'success_register');	
-						mkdir($BASE_DIR.$_POST["username"],0700);
+						mkdir($BASE_DIR.$_POST["username"],0777);
 					}else{
 						array_push($_SESSION['vhdl_msg'], 'fail_register');
 					}
@@ -868,7 +861,7 @@ if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST["post_action"]) ){
 		case "new_sid":
 			srand();
 			$number=rand()%100000;
-			while(!mkdir($BASE.$number,0700)){
+			while(!mkdir($BASE.$number,0777)){
 				$number=rand()%100000;
 			}
 			// Ok we found a new random file

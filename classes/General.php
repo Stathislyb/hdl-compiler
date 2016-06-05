@@ -259,5 +259,65 @@ class General {
 		}
 		return;
 	}
+	
+	//compile will happen at the directory
+	//file is the vhdl file
+	//prefile are the parameters before the file
+	//postfile are the parameters after the file
+	function create_job_file($JOBDIRECTORY,$directory,$file,$prefile,$postfile='',$executable='/usr/lib/ghdl/bin/ghdl',$timeout=6){
+		$results=$this->get_latest_file_name($JOBDIRECTORY);
+		$last=$results[0];
+		$nrfiles=$results[1]-1;
+
+		if ( $last ==""){
+			//No files in current directory, so we put a new one there  
+			$last=0;
+		}
+		
+		$last=tempnam($JOBDIRECTORY,"VHDL");
+		$jobid=basename($last);
+		$cmd="cd '$directory' ;rm '$file'.log ;  ( '$executable' $prefile '$file' $postfile >> '$file'.log  2>&1 ) &  sleep ".$timeout."  ; killall -9 ".$file."-".$postfile."  ";
+		$ourhandle=fopen($last,'w') or die ("cannot create job file");
+		fwrite($ourhandle,$cmd); 
+		
+		fclose($ourhandle);
+		
+	}
+	
+	function get_latest_file_name($dir){
+		$latest_ctime = 0;
+		$latest_filename = '';    
+		$path=$dir;
+		$number_of_files=0;
+
+		$d = dir($path);
+		while (false !== ($entry = $d->read())) {
+		  $number_of_files=$number_of_files+1;
+		  $filepath = "{$path}/{$entry}";
+		  // could do also other checks than just checking whether the entry is a file
+		  if (is_file($filepath) && filectime($filepath) > $latest_ctime) {
+			$latest_ctime = filectime($filepath);
+			$latest_filename = $entry;
+		  }
+		}
+
+		return array($latest_filename,$number_of_files);
+	}
+	
+	function process_pre_options($postarray){
+		$extra="";
+
+		if ( isset($postarray['extralib'] ) )
+		   {
+		   foreach ( $_POST['extralib'] as $value )
+			{
+			   if ( $value == "synopsys")
+					{ $extra=$extra." --ieee=synopsys "; }
+			}
+		   }//end if set
+
+		return $extra;
+	}
+
 }
 ?>
