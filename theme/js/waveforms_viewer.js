@@ -6,14 +6,27 @@ $(function() {
 	window.max_limit=30;
 	
 	var isDown = false;
+	var delay_pos=0;
+	var	delay_neg=0;
 	var mouse_down_x;
 	var mouse_down_y;
+	
+	
+	$("#btn-download-image").click(function(event){
+		var canvas = document.getElementById("WavesCanvas");
+		var dataURL = canvas.toDataURL('image/png');
+		var img = canvas.toDataURL("image/jpg");
+		$("#btn-download-image").attr('href', dataURL);
+	});
+	
+	$("#btn-sim-tutorial").click(function(event){
+		$("#waveforms_viewer_tutorial").toggle();
+	});
 	
 	$("#waveforms_close_btn").click(function(event){
 		$("#waveforms_container").addClass("hidden");
 		$("#waveforms_shadow").addClass("hidden");
 		$("#signals").html('');
-		$("#WaveImage").html('');
 		var canvas=document.getElementById("WavesCanvas");
 		canvas.height = 0;
 		window.selected_signals = [];
@@ -66,14 +79,14 @@ $(function() {
 						$("#module_"+module).append(signal_html);
 						$("#signal_"+counter).click(function(event) {
 							var signal_symbol = $("#"+event.target.id+"_val").val();
-							var signal_index=selected_signals.indexOf(signal_symbol);
+							var signal_index=window.selected_signals.indexOf(signal_symbol);
 							$("#"+event.target.id).toggleClass('selected_sig');
 							$("#"+event.target.id+"_glyph").toggleClass('glyphicon-ok');
 							if(signal_index == -1){
-								selected_signals[selected_signals.length] = signal_symbol;
+								window.selected_signals[window.selected_signals.length] = signal_symbol;
 								draw_wave(data);
 							}else{
-								selected_signals.splice(signal_index, 1);
+								window.selected_signals.splice(signal_index, 1);
 								window.wave_data[index]["expand"]=0;
 								$( ".expand_button").remove();
 								draw_wave(data);
@@ -130,14 +143,14 @@ $(function() {
 						$("#module_"+module).append(signal_html);
 						$("#signal_"+counter).click(function(event) {
 							var signal_symbol = $("#"+event.target.id+"_val").val();
-							var signal_index=selected_signals.indexOf(signal_symbol);
+							var signal_index=window.selected_signals.indexOf(signal_symbol);
 							$("#"+event.target.id).toggleClass('selected_sig');
 							$("#"+event.target.id+"_glyph").toggleClass('glyphicon-ok');
 							if(signal_index == -1){
-								selected_signals[selected_signals.length] = signal_symbol;
+								window.selected_signals[window.selected_signals.length] = signal_symbol;
 								draw_wave(data);
 							}else{
-								selected_signals.splice(signal_index, 1);
+								window.selected_signals.splice(signal_index, 1);
 								window.wave_data[index]["expand"]=0;
 								$( ".expand_button").remove();
 								draw_wave(data);
@@ -160,119 +173,129 @@ $(function() {
     }); 
 	
 	$("#WavesCanvas").mousedown(function(event){
-		switch (event.which) {
-		// for mouse 1 (left click), allow setting information marker 
-		case 1: 
-			draw_wave(wave_data);
-			x=event.pageX - $('#WavesCanvas').offset().left;
-			canvas_width = $('#WavesCanvas').width();
-			if(x > 110 && x < (canvas_width-20)){
-				var second_divisions = ["ds", "cs", "ms", "µs", "ns", "ps", "fs", "as", "zs", "yz"];
-				var second_div_index=second_divisions.indexOf(wave_data['time_info']['timescale']);
-				x_interval =(canvas_width-130) / (max_limit - low_limit) ;
-				time_interval = wave_data['time_info']['duration'] / ( wave_data['time_info']['intervals'] -1);
-				timeframe =( ( Math.floor((x-110) / x_interval) + low_limit ) * time_interval );
-				sub=scale_time_subdivisions(time_interval,0);
-				timeframe_str = timeframe / (Math.pow(1000, sub));
-				
-				
-				var wave_val=0;
-				var current_time_temp=0;
-				
-				// get the canvas element
-				var canvas=document.getElementById("WavesCanvas");
-				var h = canvas.height;
-				var buffer = document.getElementById("BufferCanvas");
-				
-				// start from (15,36)
-				var x_canvas=15;
-				var y_canvas=36;
-				
-				// init. the drawing colours and fonts
-				var ctx=buffer.getContext("2d");
-				// init. stroke and fill colors : black
-				ctx.fillStyle = "#000";
-				ctx.strokeStyle = "#000";
-				// init. font style : Times New Roman, size : 12px
-				ctx.font="12px 'Times New Roman'";
-				
-				
-				$.each(window.selected_signals, function( i, index ) {
-					for(current_time=0;current_time<=timeframe;current_time+=time_interval){
-						if(typeof wave_data[index][current_time] != 'undefined'){
-							wave_val = wave_data[index][current_time];
-							if(wave_data[index]['length']>1){
-								wave_val_bin = wave_val;
-								data_type=$("#waveform_data_type").val();
-								if(wave_val.match(/bU.*/g)){
-									wave_val=wave_val.substr(1);
+		x=event.pageX - $('#WavesCanvas').offset().left;
+		canvas_width = $('#WavesCanvas').width();
+		draw_wave(wave_data);
+		if(x > 110 && x < (canvas_width-20)){
+			var second_divisions = ["ds", "cs", "ms", "µs", "ns", "ps", "fs", "as", "zs", "yz"];
+			var second_div_index=second_divisions.indexOf(wave_data['time_info']['timescale']);
+			x_interval =(canvas_width-130) / (max_limit - low_limit) ;
+			time_interval = wave_data['time_info']['duration'] / ( wave_data['time_info']['intervals'] -1);
+			timeframe =( ( Math.floor((x-110) / x_interval) + low_limit ) * time_interval );
+			sub=scale_time_subdivisions(time_interval,0);
+			timeframe_str = timeframe / (Math.pow(1000, sub));
+			
+			
+			var wave_val=0;
+			var current_time_temp=0;
+			
+			// get the canvas element
+			var canvas = document.getElementById("WavesCanvas");
+			var h = canvas.height;
+			var buffer = document.getElementById("BufferCanvas");
+			
+			// start from (15,36)
+			var x_canvas=15;
+			var y_canvas=36;
+			
+			// init. the drawing colours and fonts
+			var ctx=buffer.getContext("2d");
+			// init. stroke and fill colors : black
+			ctx.fillStyle = "#000";
+			ctx.strokeStyle = "#000";
+			// init. font style : Times New Roman, size : 12px
+			ctx.font="12px 'Times New Roman'";
+			
+			$.each(window.selected_signals, function( i, index ) {
+				for(current_time=0;current_time<=timeframe;current_time+=time_interval){
+					if(typeof wave_data[index][current_time] != 'undefined'){
+						wave_val = wave_data[index][current_time];
+						if(wave_data[index]['length']>1){
+							wave_val_bin = wave_val;
+							data_type=$("#waveform_data_type").val();
+							if(wave_val.match(/bU.*/g)){
+								wave_val=wave_val.substr(1);
+							}else{
+								if(data_type=='3'){
+									wave_val="D"+parseInt(wave_val.substr(1),2).toString(10);
+								}else if(data_type=='2'){
+									wave_val="H"+parseInt(wave_val.substr(1),2).toString(16);
 								}else{
-									if(data_type=='3'){
-										wave_val="D"+parseInt(wave_val.substr(1),2).toString(10);
-									}else if(data_type=='2'){
-										wave_val="H"+parseInt(wave_val.substr(1),2).toString(16);
-									}else{
-										wave_val="B"+wave_val.substr(1);
-									}
+									wave_val="B"+wave_val.substr(1);
 								}
 							}
-						}	
-					}
-					ctx.fillText("Value : "+wave_val,x_canvas,y_canvas);
-					y_canvas=y_canvas+40;
-					if(wave_data[index]["expand"]==1){
-						for(j=1;j<=wave_data[index]["length"];j++){
-							sub_wave_val=wave_val_bin.charAt(j);
-							ctx.fillText("Value : "+sub_wave_val,x_canvas+15,y_canvas);
-							y_canvas=y_canvas+40;
 						}
+					}	
+				}
+				
+				ctx.fillText("Value : "+wave_val,x_canvas,y_canvas);
+				y_canvas=y_canvas+40;
+				if(wave_data[index]["expand"]==1){
+					for(j=1;j<=wave_data[index]["length"];j++){
+						sub_wave_val=wave_val_bin.charAt(j);
+						ctx.fillText("Value : "+sub_wave_val,x_canvas+15,y_canvas);
+						y_canvas=y_canvas+40;
 					}
-				});
-				
-				ctx.beginPath();
-				ctx.strokeStyle = "#4af";
-				ctx.moveTo(x,0);
-				ctx.lineTo(x,h-13);
-				ctx.stroke();
-				ctx.closePath();
-				x_time=x- ((timeframe_str.toString().length / 2) +1)*5;
-				fill_text = timeframe_str.toString()+second_divisions[second_div_index-sub];
-				ctx.fillStyle = "#fff";
-				ctx.fillRect(x_time-2,h-12,fill_text.length*7,12);
-				ctx.fillStyle = "#000";
-				ctx.fillText(fill_text,x_time,h-2);
-				
-				var ctx_canvas=canvas.getContext("2d");
-				ctx_canvas.drawImage(buffer, 0,0);
-				
-				// Recreate a jpg image of the canvas
-				var img = canvas.toDataURL("image/jpg");
-				document.getElementById("WaveImage").innerHTML='<img src="'+img+'"/>';
-				
-			}
-		 
+				}
+			});
+			
+			ctx.beginPath();
+			ctx.strokeStyle = "#4af";
+			ctx.moveTo(x,0);
+			ctx.lineTo(x,h-13);
+			ctx.stroke();
+			ctx.closePath();
+			x_time=x- ((timeframe_str.toString().length / 2) +1)*5;
+			fill_text = timeframe_str.toString()+second_divisions[second_div_index-sub];
+			ctx.fillStyle = "#fff";
+			ctx.fillRect(x_time-2,h-12,fill_text.length*7,12);
+			ctx.fillStyle = "#000";
+			ctx.fillText(fill_text,x_time,h-2);
+			
+			var ctx_canvas=canvas.getContext("2d");
+			ctx_canvas.drawImage(buffer, 0,0);
+			
+		}
 		
-		// for mouse 2 (right click), allow time scrolling 
-		case 3:
-			isDown = true;
-			mouse_down_x= event.pageX;
-			mouse_down_y= event.pageY;
-		} 
+		isDown = true;
+		delay_pos=0;
+		delay_neg=0;
+		mouse_down_x= event.pageX;
+		
 	});
 	$(document).mouseup(function(event){
 		if(isDown){
 			isDown = false;
+			delay_pos=0;
+			delay_neg=0;
 		}
 	});
 	
 	
 	$( "#WavesCanvas" ).mousemove(function( event ) {
 		if(isDown){
-			var mouse_up_x= event.pageX;
-			var mouse_up_y= event.pageY;
-			var dif = Math.round((mouse_down_x-mouse_up_x)/10);
-			mouse_down_x = mouse_up_x;
+			var mouse_x= event.pageX;
+			var dif = mouse_down_x-mouse_x;
+			if(dif>0){
+				delay_pos = dif/10 + delay_pos;
+				if(delay_pos>=1){
+					delay_pos=0;
+					dif=1;
+				}else{
+					dif=0;
+				}
+			}
+			if(dif<0){
+				delay_neg = dif/10 + delay_neg;
+				if(delay_neg<=-1){
+					delay_neg=0;
+					dif=-1;
+				}else{
+					dif=0;
+				}
+			}
 			
+			mouse_down_x = mouse_x;
 			temp_low_limit = low_limit +dif;
 			temp_max_limit = max_limit +dif;
 			if(temp_low_limit < 0){
@@ -287,7 +310,9 @@ $(function() {
 				}
 			}
 			
-			draw_wave(wave_data);
+			if(dif!=0){
+				draw_wave(wave_data);
+			}
 		}
 		canvas_width = $('#WavesCanvas').width();
 		x=event.pageX - $('#WavesCanvas').offset().left ;	
@@ -345,8 +370,13 @@ $(function() {
 						}
 					}	
 				}
+				if(wave_val[wave_val.length-1]=='U'){
+					digit_width=9;
+				}else{
+					digit_width=6;
+				}
 				ctx.fillStyle = "#ffa";
-				ctx.fillRect(x_canvas,y_canvas-10,80,10);
+				ctx.fillRect(x_canvas,y_canvas-10,38+wave_val.length*digit_width,10);
 				ctx.fillStyle = "#000";
 				ctx.fillText("Value : "+wave_val,x_canvas,y_canvas);
 				y_canvas=y_canvas+40;
@@ -377,7 +407,6 @@ $(function() {
 			
 		}
 	});
-	
 	
 	
 	// When the mouse leaves the canvas, redraw it from the buffer 
@@ -480,7 +509,7 @@ function draw_wave(signal_data){
 	var canvas=document.getElementById("WavesCanvas");
 	
 	// get the canvas width	
-	var w = $("#WaveImage").width();
+	var w = $("#WavesCanvas").width();
 	if(w > 800){
 		canvas.width=800;
 		w=800;
@@ -523,7 +552,7 @@ function draw_wave(signal_data){
 	$.each(window.selected_signals, function( i, index ) {
 		if(signal_data[String(index)]['length']>1){
 			if($('#expand_'+i).length == 0){
-				corrected_y=y+57;
+				corrected_y=y+42;
 				$('#canvas_div').append('<div id="expand_'+i+'" class="expand_button" style="top: '+corrected_y+'px;">+</div>');
 				$("#expand_"+i).click(function(event) {
 					if(window.wave_data[index]["expand"]==1){
@@ -537,7 +566,7 @@ function draw_wave(signal_data){
 					}
 				});
 			}else{
-				corrected_y=y+57;
+				corrected_y=y+42;
 				$('#expand_'+i).css('top', corrected_y + 'px');
 			}
 		}
@@ -592,13 +621,7 @@ function draw_wave(signal_data){
 		// reinit some values and move through the y axis
 		y=y+40;
 	});
-	
-	// draw all the lines in the canvas
-	
-	// Create a jpg image of the canvas
-	var img = canvas.toDataURL("image/jpg");
-	document.getElementById("WaveImage").innerHTML='<img src="'+img+'"/>';
-	
+		
 	// Save canvas to buffer
 	var buffer = document.getElementById("BufferCanvas");
 	buffer.width = canvas.width;

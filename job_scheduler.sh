@@ -19,6 +19,8 @@
 #Set variables here
 jobdir=/tmp/jobs
 statusdir=/tmp/status
+siddir=/tmp/VHDL
+userdir=/home/user/hdl-compiler
 maxexectime=10
 
 
@@ -86,13 +88,16 @@ fi
 ##lets find the oldest one
 jobfile=`find $jobdir  -type f -printf '%T+ %p\n' | sort | head -n 1| cut -f 2  -d" "`
 number=`basename $jobfile`
-echo $number > $processingstatus
 echo "Working on Job ID: $number [in queue $jobs] at `/bin/date +"%D %H:%M"` " | tee  $statusfile
+echo $localqueue/$number
 mv $jobfile $localqueue
 . $localqueue/$number > /dev/null 2>&1 
 # pid=$!
 # echo Process pid: $pid
 # (sleep $maxexectime && kill -9 $pid ) > /dev/null 2>&1 
 rm $localqueue/$number
+find $siddir -type f -size +10M -delete
+find $userdir -type f -size +20M -delete
+rm -rf ~/.local/share/Trash/*
 done
 

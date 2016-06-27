@@ -572,3 +572,7 @@ font-family:Tahoma, Geneva, sans-serif;
 .alternative_row{
 	background-color: #F1F4F5;
 }
+
+.hidden_soft{
+	display:none;
+}
