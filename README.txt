@@ -10,7 +10,7 @@ Lymberidis Efstathios.
 https://gr.linkedin.com/in/efstathios-lymperidis-98b5747b
 
 Project initialized and currently supervised by
-Minas Dasygenis, 2014
+Minas Dasygenis
 http://arch.icte.uowm.gr/mdasygenis
 
 
@@ -31,4 +31,5 @@ Install:
 2) ln -s files $BASE
 3) Edit loader.php [variables]
 4) Edit job_scheduler.sh [variables]
+4) Edit classes/Database.php [DB login and name information]
 5) Run scheduler
