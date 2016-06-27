@@ -34,7 +34,7 @@
 	
 <div id="waveforms_container" class="waveforms_container row hidden">
 	<span id="waveforms_close_btn" class="glyphicon glyphicon-remove btn-close pointer"></span>
-	<div class="col-lg-3">
+	<div class="col-lg-3 pad-right-40">
 		<div class="row">
 			<h3>List of Signals</h3>
 			<div id="signals" class="col-scroll-400"></div>

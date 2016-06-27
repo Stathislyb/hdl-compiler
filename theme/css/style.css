@@ -390,6 +390,9 @@ font-family:Tahoma, Geneva, sans-serif;
 .top-5{
 	top: 5px;
 }
+.pad-right-40{
+	padding-right: 40px;
+}
 
 .popup{
 	position: fixed;
