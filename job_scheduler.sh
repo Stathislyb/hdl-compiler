@@ -89,7 +89,6 @@ fi
 jobfile=`find $jobdir  -type f -printf '%T+ %p\n' | sort | head -n 1| cut -f 2  -d" "`
 number=`basename $jobfile`
 echo "Working on Job ID: $number [in queue $jobs] at `/bin/date +"%D %H:%M"` " | tee  $statusfile
-echo $localqueue/$number
 mv $jobfile $localqueue
 . $localqueue/$number > /dev/null 2>&1 
 # pid=$!
