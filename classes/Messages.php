@@ -29,6 +29,8 @@ class Messages {
 		"file_removed_fail"=>array("Failed to remove the file.","danger"),
 		"add_library_success"=>array("The library was successfully published.","success"),
 		"add_library_fail"=>array("Failed to publish the library.","danger"),
+		"suggest_library_success"=>array("The suggestion for updating the library was successfully added.","success"),
+		"suggest_library_fail"=>array("Failed to suggest the update for the library.","danger"),
 		"import_library_success"=>array("The library was imported in your project successfully.","success"),
 		"import_library_fail"=>array("Failed to import the library in your project.","danger"),
 		"permissions_fail"=>array("You do not have the rights to perform the requested action.","danger"),

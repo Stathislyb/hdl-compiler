@@ -342,25 +342,63 @@ if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST["post_action"]) ){
 						$file = $db->get_file($file_id);
 						$full_path = $BASE_DIR.$owner['username'].'/'.$project['short_code'].'/'.$file['name'];
 
-						if(!is_dir($full_path) && !$db->check_lib_exist($file['name']) ){
-							$result=true;
-							$lib_id = $db->add_library($file['name'],$owner['username'],$file_id);
-							if( !($lib_id > 0) ){
-								$result=false;
-							}		
+						if( !is_dir($full_path) ){
+							
+							if($db->is_new_library($file_id)){							
+								$counter=1;
+								$library_name = $file['name'];
+								if($db->check_lib_exist($library_name)){
+									while($db->check_lib_exist($library_name)){
+										$library_name = "[".$counter."]".$library_name;
+										$counter++;
+									}
+								}
+								
+								$result=true;
+								$lib_id = $db->add_library($file['name'],$owner['username'],$file_id);
+								if( !($lib_id > 0) ){
+									$result=false;
+								}		
 
-							if (file_exists($full_path)){
-								if( !copy($full_path,$BASE_DIR."libraries/".$file['name']) ){
+								if(file_exists($full_path)){
+									if( !copy($full_path,$BASE_DIR."libraries/".$library_name) ){
+										$result=false;
+									}
+								}else{
 									$result=false;
 								}
-							}else{
-								$result=false;
-							}
 
-							if($result){
-								array_push($_SESSION['vhdl_msg'], 'add_library_success');
+								if($result){
+									array_push($_SESSION['vhdl_msg'], 'add_library_success');
+								}else{
+									array_push($_SESSION['vhdl_msg'], 'add_library_fail');
+								}
+								
 							}else{
-								array_push($_SESSION['vhdl_msg'], 'add_library_fail');
+								$result=true;
+								$library=$db->get_library_file_id($file_id);
+								if(!file_exists($BASE_DIR."update_libraries/".$library['name'])){
+									$update_id = $db->suggest_update_library($library['id'],$library['name']);
+									if( !($update_id > 0) ){
+										$result=false;
+									}	
+								}else{
+									unlink($BASE_DIR."update_libraries/".$library['name']);
+								}								
+
+								if (file_exists($full_path)){
+									if( !copy($full_path,$BASE_DIR."update_libraries/".$library['name']) ){
+										$result=false;
+									}
+								}else{
+									$result=false;
+								}
+								
+								if($result){
+									array_push($_SESSION['vhdl_msg'], 'suggest_library_success');
+								}else{
+									array_push($_SESSION['vhdl_msg'], 'suggest_library_fail');
+								}
 							}
 
 						}else{

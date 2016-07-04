@@ -1,9 +1,6 @@
-
 <?php
-
 // load necessary files
 include('loader.php');
-
 
 $allowed_action=false;
 if( isset($_GET['action']) ){

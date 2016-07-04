@@ -341,7 +341,7 @@ class Database {
 	}
 	// Select the requested number of latest components
 	public function get_latest_components_admin($name,$num,$begin) {
-		$query = "SELECT * FROM libraries WHERE name LIKE '".$name."%' ORDER BY approved,id LIMIT ".$num.",".$begin; 
+		$query = "SELECT * FROM libraries WHERE name LIKE '".$name."%' ORDER BY approved ASC, pending_suggestion DESC, id ASC LIMIT ".$num.",".$begin; 
 		$statement = $this->conn->prepare($query); 
 		$statement->execute();
 		return $statement->fetchAll();
@@ -408,6 +408,17 @@ class Database {
 		return $this->conn->lastInsertId();
 	}
 	
+	// Add update suggestion for library into the database
+	public function suggest_update_library($lib_id, $name) {
+		$query = "UPDATE libraries SET pending_suggestion='1' WHERE id='".$lib_id."%'"; 
+		$statement = $this->conn->prepare($query); 
+		$statement->execute();
+		$query = "INSERT INTO library_updates (lib_id, library) Values('".$lib_id."','".$name."')"; 
+		$statement = $this->conn->prepare($query); 
+		$statement->execute();
+		return $this->conn->lastInsertId();
+	}
+	
 	// Select the requested number of latest libraries
 	public function get_latest_libraries($name,$num,$begin) {
 		$query = "SELECT libraries.*, users.username as owner FROM libraries JOIN users ON libraries.owner_id = users.id WHERE name LIKE '".$name."%' AND libraries.approved='1' ORDER BY libraries.id DESC LIMIT ".$num.",".$begin; 
@@ -437,6 +448,14 @@ class Database {
 		return $statement->fetch();
 	}
 	
+	// Select the library by file id
+	public function get_library_file_id($file_id) {
+		$query = "SELECT * FROM libraries WHERE file_id='".$file_id."' "; 
+		$statement = $this->conn->prepare($query); 
+		$statement->execute();
+		return $statement->fetch();
+	}
+	
 	// Return number of libraries
 	public function count_libraries($name) {
 		$query = "SELECT COUNT(*) FROM libraries WHERE name LIKE '".$name."%' AND approved='1'"; 
@@ -444,6 +463,19 @@ class Database {
 		$statement->execute();
 		$result = $statement->fetch();
 		return $result['COUNT(*)'];
+	}
+	
+	// Check if it's a new library or update
+	public function is_new_library($new_file_id){
+		$query = "SELECT COUNT(*) FROM libraries WHERE file_id = '".$new_file_id."'";
+		$statement = $this->conn->prepare($query); 
+		$statement->execute();
+		$result = $statement->fetch();
+		if($result['COUNT(*)'] == 0){
+			return true;
+		}else{
+			return false;
+		}
 	}
 	
 	// Update file for pending compilation
