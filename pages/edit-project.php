@@ -21,7 +21,7 @@ if( !isset($db) ){
 				<div class="help-block with-errors"></div>
 			</div>
 			<label for="projet_authors_lookup">Add other People to the Project:</label>
-			<input type="text" name="projet_authors_lookup" size='25' class="form-control typeahead" id="typeahead-input" autocomplete="off"/>
+			<input type="text" name="projet_authors_lookup" size='25' class="form-control add-editors-typeahead" id="typeahead-input" autocomplete="off"/>
 			<ul class="list-group" id="editor-users">
 				<?php echo $gen->list_editors_li($editors); ?>
 			</ul>

@@ -14,7 +14,7 @@ if( !isset($user->type) || $user->type != '1' ){
 	$alter=1;
 ?>
 
-<div id="users_container">
+<div id="components_container">
 	<ul class="list-group">
 		<?php 
 		foreach($found_components as $found_component){ 

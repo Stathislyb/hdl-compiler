@@ -10,8 +10,16 @@ if( !isset($db) ){
 		echo "<li class='list-group-item'> There are no files in this directory </li>";
 	}
 	foreach ($files as $file) {
+		$outdated = false;
+		if($file['component'] > 0){
+			$library =  $db->get_library_id($file['component']);
+			$outdated = ($library['version']==$file['version'])?false:true;
+		}
 		$path = $BASE_URL."/project/".$search_user['username']."/".$_GET['project']."/file/".$file['name'];
 		echo "<li class='list-group-item'><a href='".$path."'>".$file['name']."</a>";
+		if($outdated){
+			echo "<span class='compile-info compile-success'><a href='".$BASE_URL."/libraries/".$library['name']."'>New version available</a></span>";
+		}
 		if($file['compiled']=='1'){
 			$full_path = $BASE_DIR.$search_user['username'].'/'.$_GET['project'].'/'.$file['name'];
 			$log_file = $full_path.".log";

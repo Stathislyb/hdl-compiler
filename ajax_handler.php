@@ -145,6 +145,7 @@ if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST["ajax_action"]) && isset($
 							echo "Failed to save the file.";
 						}
 						echo "Changes saved.";
+						$db->increase_library_version($_POST['library_id']);
 					}else{ //end if file exists
 						echo "File does not exist.";
 					}

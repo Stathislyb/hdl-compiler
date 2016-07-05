@@ -288,7 +288,7 @@ class Database {
 		return $statement->fetch();
 	}
 	
-	// Add directory or file in database
+	// Add file in database
 	public function add_file($dir_name, $project_id) {
 		$query = "INSERT INTO project_files (name, project_id) Values('".$dir_name."','".$project_id."')"; 
 		$statement = $this->conn->prepare($query); 
@@ -296,9 +296,24 @@ class Database {
 		return $this->conn->lastInsertId();
 	}
 	
+	// Add file from library in database
+	public function add_file_component($library, $project_id) {
+		$query = "INSERT INTO project_files (name, project_id,component,version) Values('".$library['name']."','".$project_id."','".$library['id']."','".$library['version']."')"; 
+		$statement = $this->conn->prepare($query); 
+		$statement->execute();
+		return $this->conn->lastInsertId();
+	}
+	
+	// Update file from library in database
+	public function update_file_component($library, $project_id) {
+		$query = "UPDATE project_files SET version='".$library['version']."' WHERE project_id='".$project_id."' AND component='".$library['id']."'"; 
+		$statement = $this->conn->prepare($query); 
+		return $statement->execute();
+	}
+	
 	// Check if a file/dir exists already, return true or false
 	public function check_file_exist($name, $project_id) {
-		$query = "SELECT COUNT(*) FROM project_files WHERE project_id = '".$project_id."' AND name='".$name."' AND "; 
+		$query = "SELECT COUNT(*) FROM project_files WHERE project_id = '".$project_id."' AND name='".$name."' "; 
 		$statement = $this->conn->prepare($query); 
 		$statement->execute();
 		$result = $statement->fetch();
@@ -410,13 +425,45 @@ class Database {
 	
 	// Add update suggestion for library into the database
 	public function suggest_update_library($lib_id, $name) {
-		$query = "UPDATE libraries SET pending_suggestion='1' WHERE id='".$lib_id."%'"; 
+		$query = "UPDATE libraries SET pending_suggestion='1' WHERE id='".$lib_id."'"; 
 		$statement = $this->conn->prepare($query); 
-		$statement->execute();
+		$statement->execute(); 
 		$query = "INSERT INTO library_updates (lib_id, library) Values('".$lib_id."','".$name."')"; 
 		$statement = $this->conn->prepare($query); 
 		$statement->execute();
 		return $this->conn->lastInsertId();
+	}
+	
+	// Select update suggestion by library id
+	public function get_library_suggestion($library_id) {
+		$query = "SELECT * FROM library_updates WHERE lib_id='".$library_id."' "; 
+		$statement = $this->conn->prepare($query); 
+		$statement->execute();
+		return $statement->fetch();
+	}
+	
+	// Remove update suggestion from database
+	public function remove_library_suggestion($library_id) {
+		$query = "UPDATE libraries SET pending_suggestion='0' WHERE id='".$library_id."'"; 
+		$statement = $this->conn->prepare($query); 
+		$statement->execute();		
+		$query = "DELETE FROM library_updates WHERE lib_id='".$library_id."'"; 
+		$statement = $this->conn->prepare($query); 
+		return $statement->execute();
+	}
+	
+	// Increase the library's version by 1
+	public function increase_library_version($lib_id) {
+		$library=$this->get_library_id($lib_id);
+		$new_version = $library['version']+1;
+		$query = "UPDATE libraries SET version='".$new_version."' WHERE id='".$lib_id."'"; 
+		$statement = $this->conn->prepare($query); 
+		$statement->execute();
+		if($statement->rowCount()==1){
+			return true;
+		}else{
+			return false;
+		}
 	}
 	
 	// Select the requested number of latest libraries
@@ -478,9 +525,40 @@ class Database {
 		}
 	}
 	
+	// Approve library
+	public function approve_library_admin($lib_id) {
+		$query = "UPDATE libraries SET approved='1' WHERE id='".$lib_id."'"; 
+		$statement = $this->conn->prepare($query); 
+		$statement->execute();
+		if($statement->rowCount()==1){
+			return true;
+		}else{
+			return false;
+		}
+	}
+	
+	// Disapprove library
+	public function disapprove_library_admin($lib_id) {
+		$query = "UPDATE libraries SET approved='0' WHERE id='".$lib_id."'"; 
+		$statement = $this->conn->prepare($query); 
+		$statement->execute();
+		if($statement->rowCount()==1){
+			return true;
+		}else{
+			return false;
+		}
+	}
+	
+	// Remove library from database
+	public function remove_library($lib_id) {
+		$query = "DELETE FROM libraries WHERE id='".$lib_id."'"; 
+		$statement = $this->conn->prepare($query); 
+		return $statement->execute();
+	}
+	
 	// Update file for pending compilation
 	public function file_compile_pending($file_id) {
-		$query = "UPDATE project_files SET compiled='1' WHERE id='".$file_id."%'"; 
+		$query = "UPDATE project_files SET compiled='1' WHERE id='".$file_id."'"; 
 		$statement = $this->conn->prepare($query); 
 		$statement->execute();
 		return;
@@ -488,7 +566,7 @@ class Database {
 	
 	// Update file for pending RE-compilation
 	public function file_recompile_prompt($file_id) {
-		$query = "UPDATE project_files SET compiled='2' WHERE id='".$file_id."%'"; 
+		$query = "UPDATE project_files SET compiled='2' WHERE id='".$file_id."'"; 
 		$statement = $this->conn->prepare($query); 
 		$statement->execute();
 		return;
@@ -528,7 +606,7 @@ class Database {
 	
 	// Update file for pending compilation
 	public function file_compile_pending_sid($file_id) {
-		$query = "UPDATE sid_files SET compiled='1' WHERE id='".$file_id."%'"; 
+		$query = "UPDATE sid_files SET compiled='1' WHERE id='".$file_id."'"; 
 		$statement = $this->conn->prepare($query); 
 		$statement->execute();
 		return;
@@ -536,7 +614,7 @@ class Database {
 	
 	// Update SID's file for pending RE-compilation
 	public function file_recompile_prompt_sid($file_id) {
-		$query = "UPDATE sid_files SET compiled='2' WHERE id='".$file_id."%'"; 
+		$query = "UPDATE sid_files SET compiled='2' WHERE id='".$file_id."'"; 
 		$statement = $this->conn->prepare($query); 
 		$statement->execute();
 		return;
@@ -559,37 +637,6 @@ class Database {
 	// Remove user from the database
 	public function remove_user($user_id) {
 		$query = "DELETE FROM users WHERE id='".$user_id."'"; 
-		$statement = $this->conn->prepare($query); 
-		return $statement->execute();
-	}
-	
-	// Approve library
-	public function approve_library_admin($lib_id) {
-		$query = "UPDATE libraries SET approved='1' WHERE id='".$lib_id."'"; 
-		$statement = $this->conn->prepare($query); 
-		$statement->execute();
-		if($statement->rowCount()==1){
-			return true;
-		}else{
-			return false;
-		}
-	}
-	
-	// Disapprove library
-	public function disapprove_library_admin($lib_id) {
-		$query = "UPDATE libraries SET approved='0' WHERE id='".$lib_id."'"; 
-		$statement = $this->conn->prepare($query); 
-		$statement->execute();
-		if($statement->rowCount()==1){
-			return true;
-		}else{
-			return false;
-		}
-	}
-	
-	// Remove library from database
-	public function remove_library($lib_id) {
-		$query = "DELETE FROM libraries WHERE id='".$lib_id."'"; 
 		$statement = $this->conn->prepare($query); 
 		return $statement->execute();
 	}

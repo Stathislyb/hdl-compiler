@@ -110,8 +110,8 @@ $( document ).ready(function() {
 			data : formData,
 			dataType:"json",
 			success: function(data){
-				$('.typeahead').typeahead('destroy');
-				$(".typeahead").typeahead({source:data, autoSelect: true, delay:200});
+				$('.add-editors-typeahead').typeahead('destroy');
+				$(".add-editors-typeahead").typeahead({source:data, autoSelect: true, delay:200});
 			}
 		});
     });
@@ -205,8 +205,8 @@ function navbar_search_library(e) {
 };
 
 function typeahead_update_value(e) {
-	var user = $(e).html();
-	$('#editor-users').append("<li class='list-group-item'><span class='editor-item'>"+user+"</span><span onclick='typeahead_remove_item(this)' class='glyphicon glyphicon-remove pull-right btn btn-danger btn-xs' aria-hidden='true'></span></li>");
+	var item = $(e).html();
+	$('#editor-users').append("<li class='list-group-item'><span class='editor-item'>"+item+"</span><span onclick='typeahead_remove_item(this)' class='glyphicon glyphicon-remove pull-right btn btn-danger btn-xs' aria-hidden='true'></span></li>");
 	update_editors_field();
 };
 

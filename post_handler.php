@@ -412,11 +412,11 @@ if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST["post_action"]) ){
 
 			case "Import_Library":
 				$project = $db->get_project($_POST['project_id']);
-				$library = $_POST['library'];
+				$library = $db->get_library_id($_POST['library_id']);
 				$owner = $db->get_project_owner($project['id']);
 
-				$full_path = $BASE_DIR.$owner['username'].'/'.$project['short_code'].'/'.$library;
-				$libs_path = $BASE_DIR.'libraries/'.$library;
+				$full_path = $BASE_DIR.$owner['username'].'/'.$project['short_code'].'/'.$library['name'];
+				$libs_path = $BASE_DIR.'libraries/'.$library['name'];
 				$directory = $BASE_DIR.$owner['username'].'/'.$project['short_code'].'/';
 
 				$result=true;
@@ -425,31 +425,89 @@ if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST["post_action"]) ){
 					if(!is_dir($directory)){
 						$result=false;
 					}
-
-					if($db->check_file_exist($library, $project['id'])){
-						array_push($_SESSION['vhdl_msg'], 'import_library_fail');
+					
+					if( copy($libs_path, $full_path) ){
+						chmod($full_path, fileperms($libs_path));
 					}else{
-						if( copy($libs_path, $full_path) ){
-							chmod($full_path, fileperms($libs_path));
-						}else{
+						$result=false;
+					}
+					
+					if($db->check_file_exist($library['name'], $project['id'])){
+						if(!($db->update_file_component($library, $project['id']) > 0)){
 							$result=false;
 						}
-
-						if($result){
-							if($db->add_file($library, $project['id']) > 0){
-								array_push($_SESSION['vhdl_msg'], 'import_library_success');
-								header("Location:".$BASE_URL."/project/".$owner['username']."/".$project['short_code']);
-								exit();
-							}else{
-								array_push($_SESSION['vhdl_msg'], 'import_library_fail');
-							}
-						}else{
-							array_push($_SESSION['vhdl_msg'], 'import_library_fail');
+					}else{
+						if(!($db->add_file_component($library, $project['id']) > 0)){
+							$result=false;
 						}
+					}
+					
+					if($result){
+						array_push($_SESSION['vhdl_msg'], 'import_library_success');
+						header("Location:".$BASE_URL."/project/".$owner['username']."/".$project['short_code']);
+						exit();
+					}else{
+						array_push($_SESSION['vhdl_msg'], 'import_library_fail');
 					}
 				}else{
 					array_push($_SESSION['vhdl_msg'], 'permissions_fail');
 				}
+			break;
+			
+			case "Apply_Update_Admin":
+				if( $user->type=='1' ){
+					
+					$result=true;
+					$suggestion = $db->get_library_suggestion($_POST['library_id']);
+					$suggestion_path = $BASE_DIR."update_libraries/".$suggestion['library'];
+					$library_path = $BASE_DIR."libraries/".$suggestion['library'];							
+
+					if (file_exists($suggestion_path)){
+						if( copy($suggestion_path,$library_path) ){
+							unlink($suggestion_path);
+							$db->remove_library_suggestion($_POST['library_id']);
+							$db->increase_library_version($_POST['library_id']);
+						}else{
+							$result=false;
+						}
+					}else{
+						$result=false;
+					}
+					
+					if($result){
+						array_push($_SESSION['vhdl_msg'], 'suggest_approve_success');
+					}else{
+						array_push($_SESSION['vhdl_msg'], 'suggest_approve_fail');
+					}
+					
+				}else{
+					array_push($_SESSION['vhdl_msg'], 'permissions_fail');
+				}
+				header("Location:".$BASE_URL."/admin/components/");
+				exit();
+			break;
+			
+			case "Discard_Update_Admin":
+				if( $user->type=='1' ){
+					
+					$suggestion = $db->get_library_suggestion($_POST['library_id']);
+					$full_path = $BASE_DIR."update_libraries/".$suggestion['library'];
+					
+					if(file_exists($full_path)){
+						unlink($full_path);
+					}
+					
+					if( $db->remove_library_suggestion($_POST['library_id']) ){
+						array_push($_SESSION['vhdl_msg'], 'suggest_remove_success');
+					}else{
+						array_push($_SESSION['vhdl_msg'], 'suggest_remove_fail');
+					}
+					
+				}else{
+					array_push($_SESSION['vhdl_msg'], 'permissions_fail');
+				}
+				header("Location:".$BASE_URL."/admin/components/");
+				exit();
 			break;
 				
 				// SID Create File

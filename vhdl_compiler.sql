@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Jul 04, 2016 at 10:11 AM
+-- Generation Time: Jul 05, 2016 at 01:41 PM
 -- Server version: 10.1.10-MariaDB
 -- PHP Version: 5.5.33
 
@@ -29,10 +29,11 @@ SET time_zone = "+00:00";
 CREATE TABLE `libraries` (
   `id` int(11) NOT NULL,
   `name` varchar(50) NOT NULL,
-  `approved` int(1) NOT NULL DEFAULT '0',
+  `approved` tinyint(1) NOT NULL DEFAULT '0',
   `owner_id` int(11) NOT NULL,
   `file_id` int(11) NOT NULL,
   `version` smallint(4) NOT NULL DEFAULT '1',
+  `pending_suggestion` tinyint(1) NOT NULL DEFAULT '0',
   `rating` float NOT NULL DEFAULT '0',
   `rating_count` int(10) NOT NULL DEFAULT '0',
   `downloads` int(10) NOT NULL DEFAULT '0'
@@ -42,10 +43,10 @@ CREATE TABLE `libraries` (
 -- Dumping data for table `libraries`
 --
 
-INSERT INTO `libraries` (`id`, `name`, `approved`, `owner_id`, `file_id`, `version`, `rating`, `rating_count`, `downloads`) VALUES
-(3, 'adder.vhdl', 1, 1001, 118, 1, 0, 0, 0),
-(4, 'testbench.vhdl', 1, 1001, 119, 1, 0, 0, 0),
-(6, 'decoder.vhdl', 1, 1001, 99, 1, 0, 0, 0);
+INSERT INTO `libraries` (`id`, `name`, `approved`, `owner_id`, `file_id`, `version`, `pending_suggestion`, `rating`, `rating_count`, `downloads`) VALUES
+(3, 'adder.vhdl', 1, 1001, 118, 1, 0, 0, 0, 0),
+(4, 'testbench.vhdl', 1, 1001, 119, 5, 0, 0, 0, 0),
+(6, 'decoder.vhdl', 1, 1001, 99, 7, 0, 0, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -56,7 +57,6 @@ INSERT INTO `libraries` (`id`, `name`, `approved`, `owner_id`, `file_id`, `versi
 CREATE TABLE `library_updates` (
   `id` int(11) NOT NULL,
   `lib_id` int(11) NOT NULL,
-  `file` varchar(50) NOT NULL,
   `library` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -131,13 +131,14 @@ CREATE TABLE `project_files` (
 --
 
 INSERT INTO `project_files` (`id`, `name`, `project_id`, `compiled`, `component`, `version`) VALUES
-(99, 'decoder.vhdl', 41, 1, 0, 0),
+(99, 'decoder.vhdl', 41, 2, 0, 0),
 (100, 'testbench.vhdl', 41, 1, 0, 0),
 (103, 'main.vhdl', 42, 0, 0, 0),
 (118, 'adder.vhdl', 45, 2, 0, 0),
 (119, 'testbench.vhdl', 45, 1, 0, 0),
 (154, 'testbench.vhdl', 51, 1, 0, 0),
-(155, 'main.vhdl', 51, 0, 0, 0);
+(155, 'main.vhdl', 51, 0, 0, 0),
+(168, 'decoder.vhdl', 51, 0, 6, 7);
 
 -- --------------------------------------------------------
 
@@ -251,12 +252,12 @@ ALTER TABLE `libraries`
 -- AUTO_INCREMENT for table `library_updates`
 --
 ALTER TABLE `library_updates`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 --
 -- AUTO_INCREMENT for table `projects`
 --
 ALTER TABLE `projects`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
 --
 -- AUTO_INCREMENT for table `projects_editors`
 --
@@ -266,7 +267,7 @@ ALTER TABLE `projects_editors`
 -- AUTO_INCREMENT for table `project_files`
 --
 ALTER TABLE `project_files`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=158;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=169;
 --
 -- AUTO_INCREMENT for table `sid_files`
 --

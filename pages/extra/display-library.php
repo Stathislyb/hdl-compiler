@@ -33,7 +33,7 @@ if( !isset($db) ){
 				}
 				?>
 			</select>
-			<input type="hidden" value="<?php echo $library['name']; ?>" name="library"/>
+			<input type="hidden" value="<?php echo $library['id']; ?>" name="library_id"/>
 			<button type="submit" name="post_action" value='Import_Library' class="btn btn-success" >Include to Project</button>
 		</form>
 	</div>
