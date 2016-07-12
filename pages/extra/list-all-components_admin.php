@@ -41,7 +41,7 @@ if( !isset($user->type) || $user->type != '1' ){
 				<?php }else{ ?>
 					<form class="form" action="" method="post" >
 						<input type="hidden" name="library_id" value="<?php echo $found_component['id']; ?>" />
-						<button type="submit" class="col-sm-offset-<?php echo ($found_component['pending_suggestion']==1)?"3":"5"; ?> col-sm-1 btn btn-warning" name="post_action" value="Dispprove_Component_Admin">Dispprove</button>
+						<button type="submit" class="col-sm-offset-<?php echo ($found_component['pending_suggestion']==1)?"3":"5"; ?> col-sm-1 btn btn-warning" name="post_action" value="Disapprove_Component_Admin">Dispprove</button>
 					</form>
 				<?php } ?>
 				<form class="form" action="" method="post" onsubmit="confirm_component_removal_admin()" >

@@ -52,7 +52,8 @@ class Messages {
 		"disapprove_component_success" => array("The component was disapproved successfully.","success"),
 		"disapprove_component_fail" => array("Failed to disapprove the component.","danger"),
 		"library_removed_success" => array("The component was removed successfully.","success"),
-		"library_removed_fail" => array("Failed to remove the component.","danger")
+		"library_removed_fail" => array("Failed to remove the component.","danger"),
+		"invalid_POST" => array("Some of the posted data did not have values of the correct format.","danger")
 	);
 	
 	// Class constractor function

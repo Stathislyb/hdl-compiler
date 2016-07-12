@@ -41,7 +41,7 @@ if( isset($_SESSION['vhdl_user']['id']) ){
 		<div class="col-sm-6"> 
 			<label for="project_name">Phone number:</label>
 			<div class="form-group">
-				<input type="text" name="phone_edit" size='25' class="form-control" data-error="The mobile number you provided is invalid" data-minlength="10" placeholder="Phone number" value="<?php echo $user_info['telephone']; ?>" />
+				<input type="text" name="phone_edit" size='25' class="form-control" data-error="The mobile number you provided is invalid" data-minlength="10" placeholder="Phone number" value="<?php echo $user_info['telephone']==0?'':$user_info['telephone']; ?>" />
 				<div class="help-block with-errors"></div>
 			</div>
 		</div>
@@ -67,6 +67,15 @@ if( isset($_SESSION['vhdl_user']['id']) ){
 				</select>
 			</div>
 		</div>
+		<?php if( $user->type==1 ){	?>
+			<div class="col-sm-6"> 
+				<label for="project_name">Available Disk Space (MB) :</label>
+				<div class="form-group">
+					<input type="text" name="available_space_edit" size='5' class="form-control" autocomplete="off" data-error="Minimum of 1 characters" data-minlength="1" placeholder="Available Space in MB" value="<?php echo $user_info['available_space']; ?>" />
+					<div class="help-block with-errors"></div>
+				</div>
+			</div>
+		<?php }	?>
 	</div>
 	<hr/>
 	<div class="row">

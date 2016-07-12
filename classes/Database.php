@@ -95,7 +95,7 @@ class Database {
 	}
 	
 	// Update the user's settings
-	public function edit_user($pass,$phone,$email,$theme,$id){
+	public function edit_user($pass,$phone,$email,$theme,$id,$space){
 		if($pass != NULL){
 			$pass_query = "password='".$pass."', ";
 		}else{
@@ -106,7 +106,12 @@ class Database {
 		}else{
 			$phone_query = " ";
 		}
-		$query = "UPDATE users SET ".$pass_query.$phone_query."email='".$email."', theme='".$theme."' WHERE id = '".$id."'"; 
+		if($space != NULL){
+			$space_query = "available_space='".$space."', ";
+		}else{
+			$space_query = " ";
+		}
+		$query = "UPDATE users SET ".$pass_query.$phone_query.$space_query."email='".$email."', theme='".$theme."' WHERE id = '".$id."'"; 
 		$statement = $this->conn->prepare($query); 
 		return $statement->execute();
 	}

@@ -160,7 +160,7 @@ if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST["ajax_action"]) && isset($
 			$owner = $db->get_project_owner($_POST["project_id"]);
 			
 			$path = $BASE_DIR.$owner['username']."/".$project['short_code']."/";
-			$vcd_file = $BASE_DIR.$owner['username']."/".$project['short_code']."/".$_POST["vcd_name"];;
+			$vcd_file = $BASE_DIR.$owner['username']."/".$project['short_code']."/".$_POST["vcd_name"];
 			$data = array();
 			$module = "";
 			$time_interval_couter=0;

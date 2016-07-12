@@ -270,7 +270,7 @@ if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST["post_action"]) ){
 				if( $user->validate_edit_rights($editors) ){
 					$owner = $db->get_project_owner($project['id']);
 					$directory = $BASE_DIR.$owner['username'].'/'.$project['short_code'].'/';
-					$architectureclean=filter_var($_POST['architecture'],FILTER_SANITIZE_STRING);	
+					$architectureclean=$_POST['architecture'];	
 					$explodedarchitecture=explode(" ",$architectureclean);
 					$unit=$explodedarchitecture[0];
 					$architecture=$explodedarchitecture[1];	
@@ -611,7 +611,7 @@ if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST["post_action"]) ){
 				
 			case "SID_Simulate_Project":
 				$directory = $BASE.$_SESSION['SID'].'/';
-				$architectureclean=filter_var($_POST['architecture'],FILTER_SANITIZE_STRING);	
+				$architectureclean=$_POST['architecture'];	
 				$explodedarchitecture=explode(" ",$architectureclean);
 				$unit=$explodedarchitecture[0];
 				$architecture=$explodedarchitecture[1];
@@ -662,55 +662,47 @@ if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST["post_action"]) ){
 			
 			// Edit user
 			case "Edit_User":
-				if(filter_var($_POST["email_edit"], FILTER_VALIDATE_EMAIL) && strlen($_POST["email_edit"])<=50 ) {
-					if( $db->confirm_user($user->username,$_POST["password_edit"]) ){
-						if( !empty($_POST["new_password_edit"]) && $_POST["new_password_edit"] == $_POST["rep_password_edit"]){
-							$new_pass=$_POST["new_password_edit"];
-						}else{
-							$new_pass=NULL;
-						}
-						if(strlen($_POST["phone_edit"])!=10){
-							$phone=NULL;
-						}else{
-							$phone=$_POST["phone_edit"];
-						}
-						if($db->edit_user($new_pass,$phone,$_POST["email_edit"],$_POST["ace_theme"],$user->id)){
-							array_push($_SESSION['vhdl_msg'], 'success_edit_user');
-						}else{
-							array_push($_SESSION['vhdl_msg'], 'fail_edit_user');
-						}
+				if( $db->confirm_user($user->username,$_POST["password_edit"]) ){
+					if( !empty($_POST["new_password_edit"]) && $_POST["new_password_edit"] == $_POST["rep_password_edit"]){
+						$new_pass=$_POST["new_password_edit"];
 					}else{
-						array_push($_SESSION['vhdl_msg'], 'fail_edit_user');	
+						$new_pass=NULL;
+					}
+					if(strlen($_POST["phone_edit"])!=10){
+						$phone=NULL;
+					}else{
+						$phone=$_POST["phone_edit"];
+					}
+					if($db->edit_user($new_pass,$phone,$_POST["email_edit"],$_POST["ace_theme"],$user->id)){
+						array_push($_SESSION['vhdl_msg'], 'success_edit_user');
+					}else{
+						array_push($_SESSION['vhdl_msg'], 'fail_edit_user');
 					}
 				}else{
-					array_push($_SESSION['vhdl_msg'], 'invalid_mail');
+					array_push($_SESSION['vhdl_msg'], 'fail_edit_user');	
 				}
 			break;
 			
 			// Edit user By Admin
 			case "Edit_User_Admin":
-				if(filter_var($_POST["email_edit"], FILTER_VALIDATE_EMAIL) && strlen($_POST["email_edit"])<=50 ) {
-					if( $user->type==1 ){
-						if( !empty($_POST["new_password_edit"]) && $_POST["new_password_edit"] == $_POST["rep_password_edit"]){
-							$new_pass=$_POST["new_password_edit"];
-						}else{
-							$new_pass=NULL;
-						}
-						if(strlen($_POST["phone_edit"])!=10){
-							$phone=NULL;
-						}else{
-							$phone=$_POST["phone_edit"];
-						}
-						if($db->edit_user($new_pass,$phone,$_POST["email_edit"],$_POST["ace_theme"],$_POST['user_id_edit'])){
-							array_push($_SESSION['vhdl_msg'], 'success_edit_user');
-						}else{
-							array_push($_SESSION['vhdl_msg'], 'fail_edit_user');
-						}
+				if( $user->type==1 ){
+					if( !empty($_POST["new_password_edit"]) && $_POST["new_password_edit"] == $_POST["rep_password_edit"]){
+						$new_pass=$_POST["new_password_edit"];
 					}else{
-						array_push($_SESSION['vhdl_msg'], 'fail_edit_user');	
+						$new_pass=NULL;
+					}
+					if(strlen($_POST["phone_edit"])!=10){
+						$phone=NULL;
+					}else{
+						$phone=$_POST["phone_edit"];
+					}
+					if($db->edit_user($new_pass,$phone,$_POST["email_edit"],$_POST["ace_theme"],$_POST['user_id_edit'],$_POST['available_space_edit'])){
+						array_push($_SESSION['vhdl_msg'], 'success_edit_user');
+					}else{
+						array_push($_SESSION['vhdl_msg'], 'fail_edit_user');
 					}
 				}else{
-					array_push($_SESSION['vhdl_msg'], 'invalid_mail');
+					array_push($_SESSION['vhdl_msg'], 'fail_edit_user');	
 				}
 			break;
 			
@@ -762,34 +754,30 @@ if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST["post_action"]) ){
 			// Create user by Admin
 			case "Create_User_Admin":
 				if( $user->type==1){
-					if(filter_var($_POST["email"], FILTER_VALIDATE_EMAIL) && strlen($_POST["email"])<=50 ) {
-						if($_POST["password"] == $_POST["password_confirm"]){
-							if(strlen($_POST["telephone"])!=10){
-								$phone=NULL;
-							}else{
-								$phone=$_POST["telephone"];
-							}
-							$code = $gen->generate_code();
-							if($db->register_user($_POST["username"],$_POST["password"],$_POST["email"],$phone,$code,$_POST["active"],$_POST["type"])){
-								if($_POST["active"]==0){
-									if($phone!=NULL){
-										$message="Your activation code is : ".$code;
-										$gen->send_sms($message,$phone);
-									}
-									$subject = "HDL Everywhere Registration";
-									$message = "Welcome to our website!\r\rYou, or someone using your email address, has completed registration at HDL Everywhere. You can complete registration by clicking the following link:\r http://snf-703457.vm.okeanos.grnet.gr/vhdl/ \rAnd after logging in, enter the Activation Code : ".$code." \r\r If this is an error, ignore this email and you will be removed from our mailing list.";
-									$gen->send_email($message,$subject,$_POST["email"]);
-								}
-								array_push($_SESSION['vhdl_msg'], 'success_register');	
-								mkdir($BASE_DIR.$_POST["username"],0777);
-							}else{
-								array_push($_SESSION['vhdl_msg'], 'fail_register');
-							}
+					if($_POST["password"] == $_POST["password_confirm"]){
+						if(strlen($_POST["telephone"])!=10){
+							$phone=NULL;
 						}else{
-							array_push($_SESSION['vhdl_msg'], 'fail_register_confirm');	
+							$phone=$_POST["telephone"];
+						}
+						$code = $gen->generate_code();
+						if($db->register_user($_POST["username"],$_POST["password"],$_POST["email"],$phone,$code,$_POST["active"],$_POST["type"])){
+							if($_POST["active"]==0){
+								if($phone!=NULL){
+									$message="Your activation code is : ".$code;
+									$gen->send_sms($message,$phone);
+								}
+								$subject = "HDL Everywhere Registration";
+								$message = "Welcome to our website!\r\rYou, or someone using your email address, has completed registration at HDL Everywhere. You can complete registration by clicking the following link:\r http://snf-703457.vm.okeanos.grnet.gr/vhdl/ \rAnd after logging in, enter the Activation Code : ".$code." \r\r If this is an error, ignore this email and you will be removed from our mailing list.";
+								$gen->send_email($message,$subject,$_POST["email"]);
+							}
+							array_push($_SESSION['vhdl_msg'], 'success_register');	
+							mkdir($BASE_DIR.$_POST["username"],0777);
+						}else{
+							array_push($_SESSION['vhdl_msg'], 'fail_register');
 						}
 					}else{
-						array_push($_SESSION['vhdl_msg'], 'invalid_mail');
+						array_push($_SESSION['vhdl_msg'], 'fail_register_confirm');	
 					}
 					header("Location:".$BASE_URL."/admin");
 					exit();
@@ -913,7 +901,6 @@ if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST["post_action"]) ){
 
 		// register user
 		case "register":
-			if(filter_var($_POST["email"], FILTER_VALIDATE_EMAIL) && strlen($_POST["email"])<=50 ) {
 				if($_POST["password"] == $_POST["password_confirm"]){
 					if(strlen($_POST["telephone"])!=10){
 						$phone=NULL;
@@ -937,9 +924,6 @@ if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST["post_action"]) ){
 				}else{
 					array_push($_SESSION['vhdl_msg'], 'fail_register_confirm');	
 				}
-			}else{
-				array_push($_SESSION['vhdl_msg'], 'invalid_mail');
-			}
 			header("Location:".$BASE_URL);
 			exit();
 		break;

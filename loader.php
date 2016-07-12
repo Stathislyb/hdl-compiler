@@ -49,6 +49,8 @@ if( !isset($_SESSION['vhdl_msg']) ){
 	$_SESSION['vhdl_msg'] = array();
 }
 
+require_once('security.php');
+
 require_once('post_handler.php');
 
 ?>
