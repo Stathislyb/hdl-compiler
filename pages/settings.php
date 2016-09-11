@@ -32,7 +32,7 @@ if( isset($_SESSION['vhdl_user']['id']) ){
 		<div class="col-sm-6"> 
 			<label for="project_name">New Password:</label>
 			<div class="form-group">
-				<input type="text" name="new_password_edit" id="password_edit" size='25' autocomplete="off" class="form-control" data-error="Minimum of 5 characters" data-minlength="5" placeholder="New Password" />
+				<input type="password" name="new_password_edit" id="new_password_edit" size='25' autocomplete="off" class="form-control" data-error="Minimum of 5 characters" data-minlength="5" placeholder="New Password" />
 				<div class="help-block with-errors"></div>
 			</div>
 		</div>
@@ -48,7 +48,7 @@ if( isset($_SESSION['vhdl_user']['id']) ){
 		<div class="col-sm-6"> 
 			<label for="project_name">Repeat new Password:</label>
 			<div class="form-group">
-				<input type="text" name="rep_password_edit" size='25' class="form-control" autocomplete="off" data-error="Minimum of 5 characters" data-match="#new_password_edit" data-minlength="5" placeholder="Repeat new Password" />
+				<input type="password" name="rep_password_edit" size='25' class="form-control" autocomplete="off" data-error="Minimum of 5 characters" data-match="#new_password_edit" data-minlength="5" placeholder="Repeat new Password" />
 				<div class="help-block with-errors"></div>
 			</div>
 		</div>

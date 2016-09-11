@@ -11,7 +11,7 @@
 				</div>
 				<br />
 				<div id="download">
-					<center>The source code can be downloaded [<a href="https://github.com/Stathislyb/hdl-compiler">Here</a>].</center>
+					<center>The source code is available [<a href="https://github.com/Stathislyb/hdl-compiler">Here</a>].</center>
 				</div>
 			</div>
 		</div>

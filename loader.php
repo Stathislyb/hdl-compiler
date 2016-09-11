@@ -1,10 +1,13 @@
 <?php
 
+
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 ini_set('display_errors',1);
 ini_set('display_startup_errors',1);
 
+
+// Initiate session
 if (session_status() == PHP_SESSION_NONE) {
 	session_start();
 }
@@ -21,9 +24,12 @@ $BASE_SID = "/tmp/VHDL/";
 # --END--
 
 //Check the existance of the BASE directory and the JOBDIRECTORY
-if ( ! file_exists($BASE) ) { mkdir($BASE,0777,true);echo "TEMP1_MKD"; } 
-if ( ! file_exists($JOBDIRECTORY) ) { mkdir($JOBDIRECTORY,0777,true); echo "TEMP2_MKD2"; }
-if ( ! file_exists($STATUSDIR) ) { mkdir($STATUSDIR,0777,true); echo "TEMP3_MKD3"; }
+if ( ! file_exists($BASE) ) 
+	mkdir($BASE,0777,true); 
+if ( ! file_exists($JOBDIRECTORY) ) 
+	mkdir($JOBDIRECTORY,0777,true);
+if ( ! file_exists($STATUSDIR) ) 
+	mkdir($STATUSDIR,0777,true); 
 
 // Load Classes
 require_once('classes/Database.php');
@@ -50,7 +56,6 @@ if( !isset($_SESSION['vhdl_msg']) ){
 }
 
 require_once('security.php');
-
 require_once('post_handler.php');
 
 ?>

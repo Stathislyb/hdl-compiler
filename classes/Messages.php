@@ -1,7 +1,7 @@
 <?php
 
 class Messages {
-	// Database class variables
+	// Messages array
 	//success, info, warning, danger
 	public $messages=array(
 		"fail_login" => array("The Username or Password were wrong.","danger"),
@@ -55,6 +55,20 @@ class Messages {
 		"library_removed_fail" => array("Failed to remove the component.","danger"),
 		"invalid_POST" => array("Some of the posted data did not have values of the correct format.","danger")
 	);
+	
+	// Text array
+	/*
+	public $text=array(
+		"en" => array(
+			"home_header" => "HDL Everywhere.",
+			[...]
+		),
+		"gr" => array(
+			"home_header" => "HDL Παντού.",
+			[...]
+		)	
+	);
+	*/
 	
 	// Class constractor function
 	public function __construct(){

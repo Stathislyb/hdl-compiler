@@ -1,6 +1,8 @@
 /*
-   Copyright 2014, Minas Dasygenis, http://arch.icte.uowm.gr/mdasygenis
-
+   Copyright 2014, 
+	Minas Dasygenis, http://arch.icte.uowm.gr/mdasygenis
+	Lymperidis Efstathios, https://gr.linkedin.com/in/efstathios-lymperidis-98b5747b
+	
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
    You may obtain a copy of the License at
@@ -14,9 +16,6 @@
    limitations under the License.
 */
 
-//var auto_refresh = setInterval(function (){
-//$('#statusDIV').load('status.php').fadeIn("slow");
-//}, 5000); // refresh every 5000 milliseconds
 
 //Add Event listeners when the document is fully loaded
 $( document ).ready(function() {
@@ -80,7 +79,7 @@ $( document ).ready(function() {
 	$('#nav-search').on('keyup', function () {
 		var query = $('#nav-search').val();
 		var type = $('#nav-search-type').val();
-		var formData = {ajax_action:"search_navbar",query:query,type:type};
+		var formData = {ajax_action:"search_navbar",query:query,search_type:type};
 		$.ajax({
 			url : window.base_url+"/ajax_handler.php",
 			type: "POST",

@@ -9,7 +9,11 @@ if( !isset($db) ){
 	$search_user = $db->get_user_information($_GET['user'],"username");
 	$project = $db->get_project_shortcode($_GET['project'], $search_user['id']);
 	$editors = $db->get_project_editors($project['id']);
-	$is_editor = $user->validate_edit_rights($editors);
+	if(isset($user)){
+		$is_editor = $user->validate_edit_rights($editors);
+	}else{
+		$is_editor = false;
+	}
 	$path = $BASE_DIR.$search_user['username']."/".$_GET['project']."/".$_GET['file'];
 	$file = $db->get_file_byname($_GET['file'],$project['id']);
 	$ace_themes = array("Chrome","Clouds","Clouds Midnight","Cobalt","Crimson Editor","Dawn","Eclipse","Idle Fingers",

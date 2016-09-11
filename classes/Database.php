@@ -97,7 +97,7 @@ class Database {
 	// Update the user's settings
 	public function edit_user($pass,$phone,$email,$theme,$id,$space){
 		if($pass != NULL){
-			$pass_query = "password='".$pass."', ";
+			$pass_query = "password='".md5($pass)."', ";
 		}else{
 			$pass_query = " ";
 		}
@@ -111,7 +111,7 @@ class Database {
 		}else{
 			$space_query = " ";
 		}
-		$query = "UPDATE users SET ".$pass_query." ".$phone_query." ".$space_query." email= :mail, theme= :theme WHERE id = :id"; 
+		$query = "UPDATE users SET ".$pass_query." ".$phone_query." ".$space_query." email= :email, theme= :theme WHERE id = :id"; 
 		$statement = $this->conn->prepare($query); 
 		return $statement->execute(array(':email'=>$email,':theme'=>$theme,':id'=>$id));
 	}
@@ -376,7 +376,7 @@ class Database {
 	
 	// Return number of users
 	public function count_users($name) {
-		$query = "SELECT COUNT(*) FROM users WHERE username LIKE '".$name."%' "; 
+		$query = "SELECT COUNT(*) FROM users WHERE username LIKE '%".$name."%' "; 
 		$statement = $this->conn->prepare($query); 
 		$statement->execute();
 		$result = $statement->fetch();
@@ -385,7 +385,7 @@ class Database {
 	
 	// Select the libraries starting with given library name
 	public function find_libraries_like($name) {
-		$query = "SELECT name FROM libraries WHERE name LIKE '".$name."%' AND approved='1' LIMIT 10"; 
+		$query = "SELECT name FROM libraries WHERE name LIKE '%".$name."%' AND approved='1' LIMIT 10"; 
 		$statement = $this->conn->prepare($query); 
 		$statement->execute();
 		return $statement->fetchAll();
@@ -393,7 +393,7 @@ class Database {
 	
 	// Select the projects starting with given project name
 	public function find_projects_like($name) {
-		$query = "SELECT name FROM projects WHERE name LIKE '".$name."%' AND public='1' LIMIT 10"; 
+		$query = "SELECT name FROM projects WHERE name LIKE '%".$name."%' AND public='1' LIMIT 10"; 
 		$statement = $this->conn->prepare($query); 
 		$statement->execute();
 		return $statement->fetchAll();

@@ -18,7 +18,7 @@ class User {
 		$this->type = null;
 	}
 	
-	// Return true if the the user is the owner of the project
+	// Return true if the the user is the owner of the project, else return false
 	public function validate_ownership($editors){
 		if($this->type=='1'){
 			$valid = true; 

@@ -2,15 +2,16 @@
 // load necessary files
 include('loader.php');
 
-$allowed_action=false;
-if( isset($_GET['action']) ){
-	if($_GET['action']=="project-file"){
-		$allowed_action=true;
-	}
+// define actions allowed to any visitor
+$allowed_actions = array("project-file");
+if(isset( $_GET['action'] )){
+	$allowed_for_visitor = in_array($_GET['action'], $allowed_actions);
+}else{
+	$allowed_for_visitor = false;
 }
 
 // display the appropriate (or requested) page for logged in and out users
-if( (isset($_SESSION['vhdl_user']['loged_in']) && $_SESSION['vhdl_user']['loged_in']==1) || $allowed_action==true ){
+if( (isset($_SESSION['vhdl_user']['loged_in']) && $_SESSION['vhdl_user']['loged_in']==1) || $allowed_for_visitor ){
 	if( isset($_GET['action']) ){
 		$included_file = $_GET['action'].'.php';
 	}else{
@@ -39,7 +40,7 @@ include('theme/footer.php');
 ***********************************
 *****  DEBUG MESSAGES BELLOW ******
 ***********************************
-*/
+
 echo "<div class='hidden'>";
 if(isset($_GET)){
 	echo "<br/>GET :<br/>";
@@ -57,4 +58,5 @@ if(isset($_SESSION)){
 	echo "<br/>";
 }
 echo "</div>";
+*/
 ?>

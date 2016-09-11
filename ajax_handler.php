@@ -1,3 +1,9 @@
+<?php 
+if( !isset($db) ){
+	header("location: //".$_SERVER["SERVER_NAME"]); 
+	exit();
+}
+?>
 <?php
 // load necessary files
 include('loader.php');
@@ -25,13 +31,13 @@ if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST["ajax_action"]) && isset($
 			
 		// select users/projects/libraries for navbar search
 		case "search_navbar":
-			if($_POST["type"] == "Users"){
+			if($_POST["search_type"] == "Users"){
 				$possible_users = $db->find_users_like($_POST["query"]);
 				$suggestions = array();
 				foreach($possible_users as $user){ 
 					array_push($suggestions,$user['username']);
 				}
-			}elseif($_POST["type"] == "Projects"){
+			}elseif($_POST["search_type"] == "Projects"){
 				$possible_projects = $db->find_projects_like($_POST["query"]);
 				$suggestions = array();
 				foreach($possible_projects as $project){ 
@@ -363,3 +369,4 @@ if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST["ajax_action"]) && isset($
 }else{
 	header("Location:".$BASE_URL);
 }
+?>

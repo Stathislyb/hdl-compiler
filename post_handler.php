@@ -1,3 +1,9 @@
+<?php 
+if( !isset($db) ){
+	header("location: //".$_SERVER["SERVER_NAME"]); 
+	exit();
+}
+?>
 <?php
 
 //handles the post requests
@@ -673,7 +679,7 @@ if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST["post_action"]) ){
 					}else{
 						$phone=$_POST["phone_edit"];
 					}
-					if($db->edit_user($new_pass,$phone,$_POST["email_edit"],$_POST["ace_theme"],$user->id)){
+					if($db->edit_user($new_pass,$phone,$_POST["email_edit"],$_POST["ace_theme"],$user->id, NULL)){
 						array_push($_SESSION['vhdl_msg'], 'success_edit_user');
 					}else{
 						array_push($_SESSION['vhdl_msg'], 'fail_edit_user');
