@@ -47,7 +47,7 @@ $(function() {
 			url: window.base_url+"/ajax_handler.php",
 			data: data,
 			dataType: "json",
-			success: function(data){  
+			success: function(data){ 
 				var modules_array;
 				var module ;
 				var counter=0;
@@ -175,8 +175,8 @@ $(function() {
 	$("#WavesCanvas").mousedown(function(event){
 		x=event.pageX - $('#WavesCanvas').offset().left;
 		canvas_width = $('#WavesCanvas').width();
-		draw_wave(wave_data);
 		if(x > 110 && x < (canvas_width-20)){
+			draw_wave(wave_data);
 			var second_divisions = ["ds", "cs", "ms", "µs", "ns", "ps", "fs", "as", "zs", "yz"];
 			var second_div_index=second_divisions.indexOf(wave_data['time_info']['timescale']);
 			x_interval =(canvas_width-130) / (max_limit - low_limit) ;

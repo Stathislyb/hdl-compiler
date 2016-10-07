@@ -30,6 +30,14 @@ if ( ! file_exists($JOBDIRECTORY) )
 	mkdir($JOBDIRECTORY,0777,true);
 if ( ! file_exists($STATUSDIR) ) 
 	mkdir($STATUSDIR,0777,true); 
+if ( ! file_exists($BASE_DIR) ) 
+	mkdir($BASE_DIR,0777,true); 
+if ( ! file_exists($BASE_DIR.'libraries/') ) 
+	mkdir($BASE_DIR.'libraries/',0777,true); 
+if ( ! file_exists($BASE_DIR.'update_libraries/') ) 
+	mkdir($BASE_DIR.'update_libraries/',0777,true); 
+if ( ! file_exists($BASE_DIR.'admin/') ) 
+	mkdir($BASE_DIR.'admin/',0777,true); 
 
 // Load Classes
 require_once('classes/Database.php');

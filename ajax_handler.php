@@ -1,9 +1,3 @@
-<?php 
-if( !isset($db) ){
-	header("location: //".$_SERVER["SERVER_NAME"]); 
-	exit();
-}
-?>
 <?php
 // load necessary files
 include('loader.php');
