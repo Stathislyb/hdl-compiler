@@ -1,46 +1,16 @@
-# nginx configuration
-charset utf-8;
-location /vhdl/ {
-rewrite ^/vhdl/()$ /vhdl/index.php break;
-}
-location /vhdl/libraries {
-rewrite ^/vhdl/libraries/([^/]+)[\/]?$ /vhdl/index.php?action=libraries&short_code=$1 break;
-rewrite ^/vhdl/libraries/page/([^/]+)[\/]?$ /vhdl/index.php?action=libraries&page=$1 break;
-rewrite ^/vhdl/(admin|settings|profile|create-project|libraries|edit-project|project) /vhdl/index.php?action=$1 break;
-}
-location /vhdl/library_update {
-rewrite ^/vhdl/library_update/([^/]+)[\/]?$ /vhdl/index.php?action=library_update&short_code=$1 break;
-}
-location /vhdl/edit {
-rewrite ^/vhdl/edit-project/([^/]+)/([^/]+)[\/]?$ /vhdl/index.php?action=edit-project&user=$1&short_code=$2 break;
-}
-location /vhdl/project {
-rewrite ^/vhdl/project/([^/]+)/([^/]+)/(file)/(.*) /vhdl/index.php?action=project-file&user=$1&project=$2&file=$4 break;
-rewrite ^/vhdl/project/([^/]+)/([^/]+)[\/]?$ /vhdl/index.php?action=project-dir&user=$1&project=$2 break;
-rewrite ^/vhdl/project/([^/]+)[\/]?$ /vhdl/index.php?action=project-user&ptype=1&user=$1 break;
-rewrite ^/vhdl/(admin|settings|profile|create-project|libraries|edit-project|project) /vhdl/index.php?action=$1 break;
-}
-location /vhdl/file {
-rewrite ^/vhdl/file/(.*) /vhdl/index.php?action=sid-file&file=$1 break;
-}
-location /vhdl/create {
-rewrite ^/vhdl/create-project/(.*) /vhdl/index.php?action=create-project&user=$1 break;
-}
-location /vhdl/admin {
-rewrite ^/vhdl/admin/(users|components|projects)[\/]?$ /vhdl/index.php?action=admin&option=$1 break;
-rewrite ^/vhdl/admin/(users|components|projects)/page/([^/]+)[\/]?$ /vhdl/index.php?action=admin&option=$1&page=$2 break;
-rewrite ^/vhdl/(admin|settings|profile|create-project|libraries|edit-project|project) /vhdl/index.php?action=$1 break;
-}
-location /vhdl/settings {
-rewrite ^/vhdl/settings/(.*) /vhdl/index.php?action=settings&user_id=$1 break;
-rewrite ^/vhdl/(admin|settings|profile|create-project|libraries|edit-project|project) /vhdl/index.php?action=$1 break;
-}
-location /vhdl/profile {
-rewrite ^/vhdl/(admin|settings|profile|create-project|libraries|edit-project|project) /vhdl/index.php?action=$1 break;
-}
-location /vhdl/create-project {
-rewrite ^/vhdl/(admin|settings|profile|create-project|libraries|edit-project|project) /vhdl/index.php?action=$1 break;
-}
-location /vhdl/edit-project {
-rewrite ^/vhdl/(admin|settings|profile|create-project|libraries|edit-project|project) /vhdl/index.php?action=$1 break;
-}
+	# nginx configuration
+	location /vhdl {
+		rewrite ^/vhdl/libraries/([^/]+)[\/]?$ /vhdl/index.php?action=libraries&short_code=$1;
+		rewrite ^/vhdl/libraries/page/([^/]+)[\/]?$ /vhdl/index.php?action=libraries&page=$1;
+		rewrite ^/vhdl/library_update/([^/]+)[\/]?$ /vhdl/index.php?action=library_update&short_code=$1;
+		rewrite ^/vhdl/edit-project/([^/]+)/([^/]+)[\/]?$ /vhdl/index.php?action=edit-project&user=$1&short_code=$2;
+		rewrite ^/vhdl/project/([^/]+)/([^/]+)/(file)/(.*) /vhdl/index.php?action=project-file&user=$1&project=$2&file=$4;
+		rewrite ^/vhdl/project/([^/]+)/([^/]+)[\/]?$ /vhdl/index.php?action=project-dir&user=$1&project=$2;
+		rewrite ^/vhdl/project/([^/]+)[\/]?$ /vhdl/index.php?action=project-user&ptype=1&user=$1;
+		rewrite ^/vhdl/file/(.*) /vhdl/index.php?action=sid-file&file=$1;
+		rewrite ^/vhdl/create-project/(.*) /vhdl/index.php?action=create-project&user=$1;
+		rewrite ^/vhdl/admin/(users|components|projects)[\/]?$ /vhdl/index.php?action=admin&option=$1;
+		rewrite ^/vhdl/admin/(users|components|projects)/page/([^/]+)[\/]?$ /vhdl/index.php?action=admin&option=$1&page=$2;
+		rewrite ^/vhdl/(admin|settings|profile|create-project|libraries|edit-project|project) /vhdl/index.php?action=$1;
+		rewrite ^/vhdl/settings/(.*) /vhdl/index.php?action=settings&user_id=$1;
+	}
