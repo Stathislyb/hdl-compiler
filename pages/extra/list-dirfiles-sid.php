@@ -39,7 +39,7 @@ if( !isset($db) ){
 				echo "<span class='pull-right'><input type='checkbox' class='select_file' value='".$file['id']."' id='file_".$file['id']."'></span></li>";
 			}
 		}elseif($file['compiled']=='2'){
-			echo "<span class='compile-info compile-pending'> ".$messages->text[$_SESSION['vhdl_lang']]['list_dirfiles_6']."</span>";
+			echo "<span class='compile-info compile-pending hidden-sm hidden-xs'> ".$messages->text[$_SESSION['vhdl_lang']]['list_dirfiles_6']."</span>";
 			echo "<span class='pull-right'><input type='checkbox' class='select_file' value='".$file['id']."' id='file_".$file['id']."'></span></li>";
 		}else{
 			echo "<span class='pull-right'><input type='checkbox' class='select_file' value='".$file['id']."' id='file_".$file['id']."'></span></li>";

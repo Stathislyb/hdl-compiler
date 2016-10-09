@@ -1,5 +1,5 @@
 <div id="waveforms_shadow" class="waveforms_shadow hidden"></div>
-<div id="vcd_selection_container" class="row">
+<div id="vcd_selection_container" class="row hidden-sm hidden-xs">
 	<div class="col-sm-9 <?php echo (isset($project['id']) ? 'col-sm-offset-3':'' ); ?>">
 		<h3><?php echo $messages->text[$_SESSION['vhdl_lang']]['waveforms_viewer_1'] ?></h3>
 		<br/>
