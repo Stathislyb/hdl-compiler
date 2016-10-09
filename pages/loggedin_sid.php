@@ -19,11 +19,11 @@ if( !isset($db) ){
 <br/><br/><br/>
 <div class="row">
 	<div class="col-sm-3 divider-vertical-right"> 
-		Contents of : <?php echo $_SESSION['SID']; ?>/
+		<?php echo $messages->text[$_SESSION['vhdl_lang']]['project_dir_2'] ?> : <?php echo $_SESSION['SID']; ?>/
 	</div>
 	<div class="col-sm-9"> 
-		SID projects are removed in server maintenance.<br/>
-		SID Projects are always private.
+		<?php echo $messages->text[$_SESSION['vhdl_lang']]['project_dir_3'] ?><br/>
+		<?php echo $messages->text[$_SESSION['vhdl_lang']]['project_dir_4'] ?>
 	</div>
 </div>
 <hr/>
@@ -40,8 +40,8 @@ if( !isset($db) ){
 				<form action='' method='post' id='Selected_Action'>
 					<input type="hidden" value="" name="selected_ids" id="selected_ids" />
 					<input type="hidden" value="<?php echo $_SESSION['SID'] ?>" name="sid">
-					<button type="submit" name="post_action" value='SID_Compile_Selected' class="btn btn-success" >Compile Selected</button>
-					<button type="submit" name="post_action" value='SID_Remove_Selected' class="btn btn-danger" >Remove Selected</button>
+					<button type="submit" name="post_action" value='SID_Compile_Selected' class="btn btn-success" ><?php echo $messages->text[$_SESSION['vhdl_lang']]['project_dir_11'] ?></button>
+					<button type="submit" name="post_action" value='SID_Remove_Selected' class="btn btn-danger" ><?php echo $messages->text[$_SESSION['vhdl_lang']]['project_dir_12'] ?></button>
 				</form>
 			</div>
 		</div>
@@ -51,12 +51,12 @@ if( !isset($db) ){
 <?php if($is_compiled){ ?>
 	<div class="row">
 		<div class="col-sm-9">
-			<h3>Simulate Project</h3>
+			<h3><?php echo $messages->text[$_SESSION['vhdl_lang']]['project_dir_13'] ?></h3>
 			<br/>
 			<form action='' method='post' id='Selected_Action'>
 				<div class="row">
 					<div class="col-sm-4">
-						<label >Select Architecture:</label>
+						<label ><?php echo $messages->text[$_SESSION['vhdl_lang']]['project_dir_14'] ?>:</label>
 						<br/>
 						<div class="form-group space-top-10">
 							<select name='architecture' class="form-control width-auto">
@@ -71,18 +71,18 @@ if( !isset($db) ){
 						</div>
 					</div>
 					<div class="col-sm-6">
-						<label>Additional Option:</label>
+						<label><?php echo $messages->text[$_SESSION['vhdl_lang']]['project_dir_15'] ?>:</label>
 						<div class="checkbox">
-							<label><input type='checkbox' name='extralib' value='synopsys' />Include synopsis library for more primary units.</label>
+							<label><input type='checkbox' name='extralib' value='synopsys' /><?php echo $messages->text[$_SESSION['vhdl_lang']]['project_dir_16'] ?></label>
 						</div>
 						<div class="checkbox">
-							<label><input type='checkbox' name='extrasim' value='vcd' checked/>Create a value changed dump VCD wave trace file.</label>
+							<label><input type='checkbox' name='extrasim' value='vcd' checked/><?php echo $messages->text[$_SESSION['vhdl_lang']]['project_dir_17'] ?></label>
 						</div>
 					</div>
 				</div>
 				<div class="row">
 					<div class="form-group col-sm-4 space-top-10">
-						<button type="submit" name="post_action" value='SID_Simulate_Project' class="btn btn-info full-row" id="Simulate_Project">Simulate Project</button>
+						<button type="submit" name="post_action" value='SID_Simulate_Project' class="btn btn-info full-row" id="Simulate_Project"><?php echo $messages->text[$_SESSION['vhdl_lang']]['project_dir_13'] ?></button>
 					</div>
 				</div>
 			</form>
@@ -98,38 +98,38 @@ if( !isset($db) ){
 	<div class="modal-content">
 	  <div class="modal-header">
 		  <!-- Modal header menu-->
-		<h3>Add File</h3>
+		<h3><?php echo $messages->text[$_SESSION['vhdl_lang']]['project_dir_23'] ?></h3>
 	  </div>
 	  <div class="modal-body tab-content">
 		<!-- Modal Body Create File-->
 		<form action='' method='post'>
-			<h4>Create File</h4>
+			<h4><?php echo $messages->text[$_SESSION['vhdl_lang']]['project_dir_24'] ?></h4>
 			<span class="row">
 				<span class="col-sm-6">
 					<input type="text" name="file_name" size='15' placeholder="File Name"/>
 				</span>
 				<span class="col-sm-6">
-					<button type="submit" name="post_action" value='SID_Create_file' class="btn btn-default">Create File</button>
+					<button type="submit" name="post_action" value='SID_Create_file' class="btn btn-default"><?php echo $messages->text[$_SESSION['vhdl_lang']]['project_dir_24'] ?></button>
 				</span>
 			</span>
 		</form>
 		<br/>
 		<!-- Modal Body Upload File-->
 		<form enctype="multipart/form-data" action="" method="post">
-			<h4>Upload File</h4>
+			<h4><?php echo $messages->text[$_SESSION['vhdl_lang']]['project_dir_25'] ?></h4>
 			<span class="row">
 				<span class="col-sm-6">
 					<input name="userfile" type="file" />
 					<input type="hidden" name="MAX_FILE_SIZE" value="5242880" />
 				</span>
 				<span class="col-sm-6">
-					<button type="submit" name="post_action" value='SID_Upload_File' class="btn btn-default">Upload File</button>
+					<button type="submit" name="post_action" value='SID_Upload_File' class="btn btn-default"><?php echo $messages->text[$_SESSION['vhdl_lang']]['project_dir_25'] ?></button>
 				</span>
 			</span>
 		</form>
 	  </div>
 	  <div class="modal-footer">
-		<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+		<button type="button" class="btn btn-default" data-dismiss="modal"><?php echo $messages->text[$_SESSION['vhdl_lang']]['project_dir_22'] ?></button>
 	  </div>
 	</div>
 

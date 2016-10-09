@@ -9,7 +9,7 @@ if( !isset($db) ){
 	if($search_user['id'] != $user->id){
 ?>
 
-<h2>Projects by <?php echo $search_user['username']; ?></h2>
+<h2><?php echo $messages->text[$_SESSION['vhdl_lang']]['user_projects_4'] ?> <?php echo $search_user['username']; ?></h2>
 
 <?php 
 if($user->type == '0'){

@@ -9,8 +9,8 @@ if( !isset($db) ){
 ?>
 
 <div class="list-group">
-	<a href='<?php echo $BASE_URL; ?>/libraries' class="btn btn-primary btn-outline pull-right" role="button">View All Components </a>
-	<h3>Recent Components</h3>
+	<a href='<?php echo $BASE_URL; ?>/libraries' class="btn btn-primary btn-outline pull-right" role="button"><?php echo $messages->text[$_SESSION['vhdl_lang']]['display_lib_1'] ?></a>
+	<h3><?php echo $messages->text[$_SESSION['vhdl_lang']]['recent_libraries_1'] ?></h3>
 	<?php 
 	foreach($libraries as $library){ 
 		$link_library = $BASE_URL."/libraries/".$library['name']; 
@@ -20,7 +20,7 @@ if( !isset($db) ){
 			<h4 class="list-group-item-heading">
 				<?php echo $library['name']; ?>
 			</h4>
-			<p class="list-group-item-text"> Created By <?php echo $library['owner']; ?></p>
+			<p class="list-group-item-text"> <?php echo $messages->text[$_SESSION['vhdl_lang']]['project_dir_1'] ?> <?php echo $library['owner']; ?></p>
 		</a>
 	<?php } ?>
 </div>

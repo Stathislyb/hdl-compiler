@@ -18,7 +18,7 @@ if( !isset($db) ){
 			<h4 class="list-group-item-heading">
 				<?php echo $library['name']; ?>
 			</h4>
-			<p class="list-group-item-text"> Created By <?php echo $library['owner']; ?></p>
+			<p class="list-group-item-text"> <?php echo $messages->text[$_SESSION['vhdl_lang']]['project_dir_1'] ?> <?php echo $library['owner']; ?></p>
 		</a>
 	<?php } ?>
 </div>

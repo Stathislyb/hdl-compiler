@@ -23,75 +23,75 @@ if( !isset($db) ){
 ?>
 
 <div class="jumbotron">
-	<h1>HDL Everywhere</h1>
-	<h2>Welcome to the web based VHDL Compiler &amp; Simulator!</h2>
+	<h1><?php echo $messages->text[$_SESSION['vhdl_lang']]['home_header_1'] ?></h1>
+	<h2><?php echo $messages->text[$_SESSION['vhdl_lang']]['home_header_2'] ?></h2>
 </div>
 
 <div class="row">
 	<div class="col-sm-4 col-sm-offset-4">
 		<ul class="nav nav-tabs">
-			<li class="active"><a data-toggle="tab" href="#login-from">Log In</a></li>
-			<li><a data-toggle="tab" href="#sid-from">SID</a></li>
-			<li><a data-toggle="tab" href="#register-from">Register</a></li>
+			<li class="active"><a data-toggle="tab" href="#login-from"><?php echo $messages->text[$_SESSION['vhdl_lang']]['home_log_in'] ?></a></li>
+			<li><a data-toggle="tab" href="#sid-from"><?php echo $messages->text[$_SESSION['vhdl_lang']]['home_sid'] ?></a></li>
+			<li><a data-toggle="tab" href="#register-from"><?php echo $messages->text[$_SESSION['vhdl_lang']]['home_register'] ?></a></li>
 		</ul>
 		<div class="row tab-content" >
 			<div id="login-from" class="tab-pane fade in active">
-				<h2>Log In</h2>
+				<h2><?php echo $messages->text[$_SESSION['vhdl_lang']]['home_log_in'] ?></h2>
 				<form class="form" id="form_login" role="login" method="post" action="" data-toggle="validator">
 					<div class="form-group">
-						<label for="username">Username :</label>
-						<input type="text" name="username" class="form-control" placeholder="Username" data-error="Minimum of 5 characters" data-minlength="5" required/>
+						<label for="username"><?php echo $messages->text[$_SESSION['vhdl_lang']]['home_log_in_1'] ?> :</label>
+						<input type="text" name="username" class="form-control" placeholder="Username" data-error="<?php echo $messages->text[$_SESSION['vhdl_lang']]['home_dataerror_1'] ?>" data-minlength="5" required/>
 						<div class="help-block with-errors"></div>
 					</div>
 					<div class="form-group">
-						<label for="password">Password :</label>
-						<input type="password" name="password" class="form-control" placeholder="Password" data-error="Minimum of 5 characters" data-minlength="5" required/>
+						<label for="password"><?php echo $messages->text[$_SESSION['vhdl_lang']]['home_log_in_2'] ?> :</label>
+						<input type="password" name="password" class="form-control" placeholder="Password" data-error="<?php echo $messages->text[$_SESSION['vhdl_lang']]['home_dataerror_1'] ?>" data-minlength="5" required/>
 						<div class="help-block with-errors"></div>
 					</div>
-					<button type="submit" id="login_btn" class="btn btn-primary" name="post_action" value="login">Login</button>
+					<button type="submit" id="login_btn" class="btn btn-primary" name="post_action" value="login"><?php echo $messages->text[$_SESSION['vhdl_lang']]['home_log_in'] ?></button>
 				</form>
 			</div>
 			<div id="sid-from" class="tab-pane fade">
 				<h2>SID</h2>
 				<form class="form" role="login-sid" method="post" action="">
 					<div class="form-group">
-						<label for="pid">SID :</label>
-						<input type="text" name="pid" class="form-control" size='8' value="<?php echo (!empty($_SESSION['PID'])) ? $_SESSION['PID']:''; ?>" placeholder="SID" />
-						<button type="submit" class="btn btn-default" name="post_action" value='set_sid'>Set SessionID</button>
+						<label for="pid"><?php echo $messages->text[$_SESSION['vhdl_lang']]['home_sid'] ?> :</label>
+						<input type="text" name="pid" class="form-control" size='8' value="<?php echo (!empty($_SESSION['PID'])) ? $_SESSION['PID']:''; ?>" placeholder="<?php echo $messages->text[$_SESSION['vhdl_lang']]['home_sid'] ?>" />
+						<button type="submit" class="btn btn-default" name="post_action" value='set_sid'><?php echo $messages->text[$_SESSION['vhdl_lang']]['home_sid_1'] ?></button>
 					</div>
-					<button type="submit" class="btn btn-default" name="post_action" value='new_sid'>Create New Random SessionID</button>
+					<button type="submit" class="btn btn-default" name="post_action" value='new_sid'><?php echo $messages->text[$_SESSION['vhdl_lang']]['home_sid_2'] ?></button>
 				</form>
 			</div>
 			<div id="register-from" class="tab-pane fade">
-				<h2>Register</h2>
+				<h2><?php echo $messages->text[$_SESSION['vhdl_lang']]['home_register'] ?></h2>
 				<form class="form" id="form_register" role="register" action="" method="post" data-toggle="validator" novalidate="false">
 					<div class="form-group">
-						<label for="email">Email address :</label>
-						<input type="email" class="form-control" name="email" id="email" placeholder="Email address" data-error="The e-mail address you provided is invalid" required/>
+						<label for="email"><?php echo $messages->text[$_SESSION['vhdl_lang']]['home_register_1'] ?> :</label>
+						<input type="email" class="form-control" name="email" id="email" placeholder="<?php echo $messages->text[$_SESSION['vhdl_lang']]['home_register_1'] ?>" data-error="<?php echo $messages->text[$_SESSION['vhdl_lang']]['home_dataerror_2'] ?>" required/>
 						<div class="help-block with-errors"></div>
 					</div>
 					<div class="form-group">
-						<label for="username">Username :</label>
-						<input type="text" class="form-control" name="username" id="username_reg" placeholder="Username" data-minlength="5" required/>
-						<div class="help-block">Minimum of 5 characters</div>
+						<label for="username"><?php echo $messages->text[$_SESSION['vhdl_lang']]['home_register_2'] ?> :</label>
+						<input type="text" class="form-control" name="username" id="username_reg" placeholder="<?php echo $messages->text[$_SESSION['vhdl_lang']]['home_register_2'] ?>" data-minlength="5" required/>
+						<div class="help-block"><?php echo $messages->text[$_SESSION['vhdl_lang']]['home_dataerror_1'] ?></div>
 					</div>
 					<div class="form-group">
-						<label for="password">Password :</label>
-						<input type="password" class="form-control" name="password" id="password_reg" placeholder="Password" data-minlength="5" required/>
-						<div class="help-block">Minimum of 5 characters</div>
+						<label for="password"><?php echo $messages->text[$_SESSION['vhdl_lang']]['home_register_3'] ?> :</label>
+						<input type="password" class="form-control" name="password" id="password_reg" placeholder="<?php echo $messages->text[$_SESSION['vhdl_lang']]['home_register_3'] ?>" data-minlength="5" required/>
+						<div class="help-block"><?php echo $messages->text[$_SESSION['vhdl_lang']]['home_dataerror_1'] ?></div>
 					</div>
 					<div class="form-group">
-						<label for="password_confirm">Confirm Password :</label>
-						<input type="password" class="form-control" name="password_confirm" id="password_confirm" placeholder="Confirm Password" data-match="#password_reg" data-match-error="The passwords do not match" required/>
+						<label for="password_confirm"><?php echo $messages->text[$_SESSION['vhdl_lang']]['home_register_4'] ?> :</label>
+						<input type="password" class="form-control" name="password_confirm" id="password_confirm" placeholder="<?php echo $messages->text[$_SESSION['vhdl_lang']]['home_register_4'] ?>" data-match="#password_reg" data-match-error="<?php echo $messages->text[$_SESSION['vhdl_lang']]['home_dataerror_3'] ?>" required/>
 						<div class="help-block with-errors"></div>
 					</div>
 					<div class="form-group">
-						<label for="telephone">Mobile number (optional):</label>
-						<input type="telephone" class="form-control" name="telephone" id="telephone" placeholder="Mobile number (optional)" data-error="The mobile number you provided is invalid" data-minlength="10" />
+						<label for="telephone"><?php echo $messages->text[$_SESSION['vhdl_lang']]['home_register_5'] ?>:</label>
+						<input type="telephone" class="form-control" name="telephone" id="telephone" placeholder="<?php echo $messages->text[$_SESSION['vhdl_lang']]['home_register_5'] ?>" data-error="<?php echo $messages->text[$_SESSION['vhdl_lang']]['home_dataerror_4'] ?>" data-minlength="10" />
 						<div class="help-block with-errors"></div>
 					</div>
 					<div class="form-group">
-						<button type="submit" id="register_btn" class="btn btn-primary" name="post_action" value="register">Register</button>
+						<button type="submit" id="register_btn" class="btn btn-primary" name="post_action" value="register"><?php echo $messages->text[$_SESSION['vhdl_lang']]['home_register'] ?></button>
 					</div>
 				</form>
 			</div>

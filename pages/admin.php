@@ -25,9 +25,9 @@ if(isset($_POST['name'])){
 <div class="row">
 	<div class="pseudo-nav col-sm-offset-4 col-sm-4">
 		<ul class="pseudo-nav-ul row">
-			<li class="pseudo-nav-li col-sm-4 <?php echo ($option=='users')?"pseudo-nav-selected":""; ?>"><a class="pseudo-nav-link" href="<?php echo $BASE_URL; ?>/admin/users" >Users</a></li>
-			<li class="pseudo-nav-li col-sm-4 <?php echo ($option=='components')?"pseudo-nav-selected":""; ?>"><a class="pseudo-nav-link" href="<?php echo $BASE_URL; ?>/admin/components" >Components</a></li>
-			<li class="pseudo-nav-li col-sm-4 <?php echo ($option=='projects')?"pseudo-nav-selected":""; ?>"><a class="pseudo-nav-link" href="<?php echo $BASE_URL; ?>/admin/projects" >Projects</a></li>
+			<li class="pseudo-nav-li col-sm-4 <?php echo ($option=='users')?"pseudo-nav-selected":""; ?>"><a class="pseudo-nav-link" href="<?php echo $BASE_URL; ?>/admin/users" ><?php echo $messages->text[$_SESSION['vhdl_lang']]['Nav_search_2'] ?></a></li>
+			<li class="pseudo-nav-li col-sm-4 <?php echo ($option=='components')?"pseudo-nav-selected":""; ?>"><a class="pseudo-nav-link" href="<?php echo $BASE_URL; ?>/admin/components" ><?php echo $messages->text[$_SESSION['vhdl_lang']]['Nav_search_3'] ?></a></li>
+			<li class="pseudo-nav-li col-sm-4 <?php echo ($option=='projects')?"pseudo-nav-selected":""; ?>"><a class="pseudo-nav-link" href="<?php echo $BASE_URL; ?>/admin/projects" ><?php echo $messages->text[$_SESSION['vhdl_lang']]['Nav_search_1'] ?></a></li>
 		</ul>
 	</div>
 </div>
@@ -38,21 +38,21 @@ if(isset($_POST['name'])){
 <?php if($option=='users'){?>
 	<div class="form-group">
 		<form action="" method="post" id="filter_users" onsubmit="return false;">
-			<input name="name" type="text" value="<?php echo $name; ?>" class="form-control" placeholder="Search User" id="filter_users_input"/>
+			<input name="name" type="text" value="<?php echo $name; ?>" class="form-control" placeholder="<?php echo $messages->text[$_SESSION['vhdl_lang']]['Nav_search_4'] ?>" id="filter_users_input"/>
 		</form>
 	</div>
 	<?php require('pages/extra/list-all-users_admin.php'); 
 }elseif($option=='components'){?>
 	<div class="form-group">
 		<form action="" method="post" id="filter_components" onsubmit="return false;">
-			<input name="name" type="text" value="<?php echo $name; ?>" class="form-control" placeholder="Search Component" id="filter_components_input"/>
+			<input name="name" type="text" value="<?php echo $name; ?>" class="form-control" placeholder="<?php echo $messages->text[$_SESSION['vhdl_lang']]['Nav_search_4'] ?>" id="filter_components_input"/>
 		</form>
 	</div>
 	<?php require('pages/extra/list-all-components_admin.php'); 
 }elseif($option=='projects'){?>
 	<div class="form-group">
 		<form action="" method="post" id="filter_projects" onsubmit="return false;">
-			<input name="name" type="text" value="<?php echo $name; ?>" class="form-control" placeholder="Search Project" id="filter_projects_input"/>
+			<input name="name" type="text" value="<?php echo $name; ?>" class="form-control" placeholder="<?php echo $messages->text[$_SESSION['vhdl_lang']]['Nav_search_4'] ?>" id="filter_projects_input"/>
 		</form>
 	</div>
 	<?php require('pages/extra/list-all-projects_admin.php'); 

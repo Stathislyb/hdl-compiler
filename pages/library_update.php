@@ -22,10 +22,10 @@ if( !isset($db) ){
 
 <div class="row">
 	<div class="col-sm-3 divider-vertical-right"> 
-		<?php echo $library['name']."<br/> Created by ".$search_user['username']; ?>
+		<?php echo $library['name']."<br/> ".$messages->text[$_SESSION['vhdl_lang']]['project_dir_1']." ".$search_user['username']; ?>
 	</div>
 	<div class="col-sm-9"> 
-		<a href='<?php echo $BASE_URL; ?>/libraries' class="btn btn-primary btn-outline pull-right" role="button">View All Libraries </a>
+		<a href='<?php echo $BASE_URL; ?>/libraries' class="btn btn-primary btn-outline pull-right" role="button"><?php echo $messages->text[$_SESSION['vhdl_lang']]['display_lib_1'] ?></a>
 	</div>
 </div>
 
@@ -34,7 +34,7 @@ if( !isset($db) ){
 			<h3><?php echo $library['name']; ?></h3>
 			<div class="row">
 				<div class="col-sm-6">
-					<h4>Original :</h4>
+					<h4><?php echo $messages->text[$_SESSION['vhdl_lang']]['library_updates_1'] ?> :</h4>
 					<script src="<?php echo $BASE_URL; ?>/src/ace.js" type="text/javascript" charset="utf-8"></script>
 					<?php if (file_exists($path_original)  && is_writable($path_original)){ ?>
 						<div id="editor">
@@ -55,12 +55,12 @@ if( !isset($db) ){
 						</script>
 					<?php }else{ ?>
 						<div class="alert alert-danger">
-							Can not edit file. Make sure the file exists and has the right permissions.
+							<?php echo $messages->text[$_SESSION['vhdl_lang']]['ace_error'] ?>
 						</div>
 					<?php } ?>
 				</div>
 				<div class="col-sm-6">
-					<h4>Suggested Update :</h4>
+					<h4><?php echo $messages->text[$_SESSION['vhdl_lang']]['library_updates_2'] ?> :</h4>
 					<?php if (file_exists($path_suggestion)  && is_writable($path_suggestion)){ ?>
 						<div id="editor2">
 							<?php echo $gen->open_and_read_file($path_suggestion); ?>
@@ -81,7 +81,7 @@ if( !isset($db) ){
 						</script>
 					<?php }else{ ?>
 						<div class="alert alert-danger">
-							Can not edit file. Make sure the file exists and has the right permissions.
+							<?php echo $messages->text[$_SESSION['vhdl_lang']]['ace_error'] ?>
 						</div>
 					<?php } ?>
 				</div>
@@ -90,9 +90,9 @@ if( !isset($db) ){
 			<div class="row">
 				<form class="form" action="" method="post" >
 					<input type="hidden" name="library_id" value="<?php echo $library['id']; ?>" />
-					<button type="submit" class="btn btn-lg btn-success center-block" name="post_action" value="Apply_Update_Admin">Apply Update</button>
+					<button type="submit" class="btn btn-lg btn-success center-block" name="post_action" value="Apply_Update_Admin"><?php echo $messages->text[$_SESSION['vhdl_lang']]['library_updates_3'] ?></button>
 					<br/>
-					<button type="submit" class="btn btn-lg btn-danger center-block" name="post_action" value="Discard_Update_Admin">Discard Update</button>
+					<button type="submit" class="btn btn-lg btn-danger center-block" name="post_action" value="Discard_Update_Admin"><?php echo $messages->text[$_SESSION['vhdl_lang']]['library_updates_4'] ?></button>
 				</form>
 			</div>
 			<br />

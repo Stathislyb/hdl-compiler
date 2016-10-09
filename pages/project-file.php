@@ -40,7 +40,7 @@ if( !isset($db) ){
 <br/><br/><br/>
 <div class="row">
 	<div class="col-sm-3 divider-vertical-right"> 
-		<?php echo $project['name']."<br/> Created by ".$search_user['username']; ?>
+		<?php echo $project['name']."<br/> ".$messages->text[$_SESSION['vhdl_lang']]['project_dir_1']." ".$search_user['username']; ?>
 	</div>
 	<div class="col-sm-9"> 
 		<?php echo $project['description']; ?>
@@ -85,7 +85,7 @@ if( !isset($db) ){
 						<input type='hidden' value='<?php echo $path; ?>' id='path' />
 						<input type='hidden' value='<?php echo $file['id']; ?>' id='file_id' />
 						<input type='hidden' value='<?php echo $project['id']; ?>' id='project_id' />
-						<input type='button' id='ace_save_button' name='save' value='Save Changes' class='btn btn-lg btn-info center-block'>
+						<input type='button' id='ace_save_button' name='save' value='<?php echo $messages->text[$_SESSION['vhdl_lang']]['ace_save'] ?>' class='btn btn-lg btn-info center-block'>
 						<!-- //print_close_editor_window_button($file); -->
 					</div>
 					<script>
@@ -109,7 +109,7 @@ if( !isset($db) ){
 			<?php } ?>
 		<?php }else{ ?>
 			<div class="alert alert-danger">
-				Can not edit file. Make sure the file exists and has the right permissions.
+				<?php echo $messages->text[$_SESSION['vhdl_lang']]['ace_error'] ?>
 			</div>
 		<?php } ?>
 		<br />

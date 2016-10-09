@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>HDL Everywhere: A web based VHDL Compiler &amp; Simulator</title>
+	<title><?php echo $messages->text[$_SESSION['vhdl_lang']]['title'] ?></title>
 	
 	<meta charset="utf-8">
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 

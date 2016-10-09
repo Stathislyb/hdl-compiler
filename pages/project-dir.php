@@ -35,7 +35,7 @@ if( !isset($db) ){
 <br/><br/><br/>
 <div class="row">
 	<div class="col-sm-3 divider-vertical-right"> 
-		<?php echo $project['name']."<br/> Created by ".$search_user['username']; ?>
+		<?php echo $project['name']."<br/> ".$messages->text[$_SESSION['vhdl_lang']]['project_dir_1']." ".$search_user['username']; ?>
 	</div>
 	<div class="col-sm-9"> 
 		<?php echo $project['description']; ?>
@@ -45,24 +45,24 @@ if( !isset($db) ){
 <div class="row">
 	<div class="col-sm-3"> 
 		<?php  if( $is_editor ){ ?>
-			<button type="submit" name="post_action" value='Download_Project' class="btn btn-info full-row" data-toggle="modal" data-target="#Download-Project-Modal" >Download Project Files</button>
+			<button type="submit" name="post_action" value='Download_Project' class="btn btn-info full-row" data-toggle="modal" data-target="#Download-Project-Modal" ><?php echo $messages->text[$_SESSION['vhdl_lang']]['project_dir_5'] ?></button>
 			<br/>
 		<?php  } ?>
 		<?php  if( $user->validate_ownership($editors) ){ ?>
 			<a href='<?php echo $BASE_URL; ?>/edit-project/<?php echo $search_user['username']; ?>/<?php echo $project['short_code']; ?>'>
-				<button type='button' class='btn btn-primary full-row'>Edit Project</button>
+				<button type='button' class='btn btn-primary full-row'><?php echo $messages->text[$_SESSION['vhdl_lang']]['project_dir_6'] ?></button>
 			</a><br/>
 			<form action='' method='post' id="Remove_Project_form" >
 				<input type="hidden" value="<?php echo $project['id']; ?>" name="project_id">
-				<button type="submit" name="post_action" value='Remove_Project' class="btn btn-danger full-row" >Remove Project</button>
+				<button type="submit" name="post_action" value='Remove_Project' class="btn btn-danger full-row" ><?php echo $messages->text[$_SESSION['vhdl_lang']]['project_dir_7'] ?></button>
 			</form><br/>
 		<?php } ?>
 		<ul class="list-group text-center">
-			<li class='list-group-item list-header'>Owner</li>
+			<li class='list-group-item list-header'><?php echo $messages->text[$_SESSION['vhdl_lang']]['project_dir_8'] ?></li>
 			<li class='list-group-item'><?php echo "<a href='".$BASE_URL."/project/".$search_user['username']."'>".$search_user['username']."</a>"; ?></li>
 		</ul>
 		<ul class="list-group text-center">
-			<li class='list-group-item list-header'>Editors</li>
+			<li class='list-group-item list-header'><?php echo $messages->text[$_SESSION['vhdl_lang']]['project_dir_9'] ?></li>
 			<?php
 			foreach ($editors as $editor) {
 				if($editor['user_type'] == "0"){
@@ -87,9 +87,9 @@ if( !isset($db) ){
 					<form action='' method='post' id='Selected_Action'>
 						<input type="hidden" value="" name="selected_ids" id="selected_ids" />
 						<input type="hidden" value="<?php echo $project['id']; ?>" name="project_id">
-						<button type="submit" name="post_action" value='Post_Library_Selected' class="btn btn-info" >Post Selected as Component</button>
-						<button type="submit" name="post_action" value='Compile_Selected' class="btn btn-success" >Compile Selected</button>
-						<button type="submit" name="post_action" value='Remove_Selected' class="btn btn-danger" >Remove Selected</button>
+						<button type="submit" name="post_action" value='Post_Library_Selected' class="btn btn-info" ><?php echo $messages->text[$_SESSION['vhdl_lang']]['project_dir_10'] ?></button>
+						<button type="submit" name="post_action" value='Compile_Selected' class="btn btn-success" ><?php echo $messages->text[$_SESSION['vhdl_lang']]['project_dir_11'] ?></button>
+						<button type="submit" name="post_action" value='Remove_Selected' class="btn btn-danger" ><?php echo $messages->text[$_SESSION['vhdl_lang']]['project_dir_12'] ?></button>
 					</form>
 				</div>
 			</div>
@@ -100,12 +100,12 @@ if( !isset($db) ){
 <?php if( $is_editor && $is_compiled ){ ?>
 	<div class="row">
 		<div class="col-sm-9 col-sm-offset-3">
-			<h3>Simulate Project</h3>
+			<h3><?php echo $messages->text[$_SESSION['vhdl_lang']]['project_dir_13'] ?></h3>
 			<br/>
 			<form action='' method='post' id='Selected_Action'>
 				<div class="row">
 					<div class="col-sm-4">
-						<label >Select Architecture:</label>
+						<label ><?php echo $messages->text[$_SESSION['vhdl_lang']]['project_dir_14'] ?>:</label>
 						<br/>
 						<div class="form-group space-top-10">
 							<select name='architecture' class="form-control width-auto">
@@ -120,19 +120,19 @@ if( !isset($db) ){
 						</div>
 					</div>
 					<div class="col-sm-6">
-						<label>Additional Option:</label>
+						<label><?php echo $messages->text[$_SESSION['vhdl_lang']]['project_dir_15'] ?>:</label>
 						<div class="checkbox">
-							<label><input type='checkbox' name='extralib' value='synopsys' />Include synopsis library for more primary units.</label>
+							<label><input type='checkbox' name='extralib' value='synopsys' /><?php echo $messages->text[$_SESSION['vhdl_lang']]['project_dir_16'] ?></label>
 						</div>
 						<div class="checkbox">
-							<label><input type='checkbox' name='extrasim' value='vcd' checked/>Create a value changed dump VCD wave trace file.</label>
+							<label><input type='checkbox' name='extrasim' value='vcd' checked/><?php echo $messages->text[$_SESSION['vhdl_lang']]['project_dir_17'] ?></label>
 						</div>
 					</div>
 				</div>
 				<div class="row">
 					<div class="form-group col-sm-4 space-top-10">
 						<input type="hidden" value="<?php echo $project['id']; ?>" name="project_id">
-						<button type="submit" name="post_action" value='Simulate_Project' class="btn btn-info full-row" id="Simulate_Project">Simulate Project</button>
+						<button type="submit" name="post_action" value='Simulate_Project' class="btn btn-info full-row" id="Simulate_Project"><?php echo $messages->text[$_SESSION['vhdl_lang']]['project_dir_13'] ?></button>
 					</div>
 				</div>
 			</form>
@@ -150,23 +150,23 @@ if( !isset($db) ){
 		<div class="modal-content">
 		  <div class="modal-header">
 			  <!-- Modal header menu-->
-			<h3>Download Project</h3>
+			<h3><?php echo $messages->text[$_SESSION['vhdl_lang']]['project_dir_5'] ?></h3>
 		  </div>
 		  <div class="modal-body tab-content">
 			  <!-- Modal Body Directory-->
 			<form action='' method='post' id="download_project_form">
-				<h4>Chose File Types</h4>
+				<h4><?php echo $messages->text[$_SESSION['vhdl_lang']]['project_dir_18'] ?></h4>
 				<span class="row">
 					<span class="col-sm-4">
-						<label >Include .vhdl files : </label>
+						<label ><?php echo $messages->text[$_SESSION['vhdl_lang']]['project_dir_19'] ?> : </label>
 						<input type="checkbox" name="download_vhdl" id="download_vhdl" checked><br/>
 					</span>
 					<span class="col-sm-4">
-						<label >Include .vcd files : </label>
+						<label ><?php echo $messages->text[$_SESSION['vhdl_lang']]['project_dir_20'] ?> : </label>
 						<input type="checkbox" name="download_vcd"  id="download_vcd" checked><br/>
 					</span>
 					<span class="col-sm-4">
-						<label >Include .log files : </label>
+						<label ><?php echo $messages->text[$_SESSION['vhdl_lang']]['project_dir_21'] ?> : </label>
 						<input type="checkbox" name="download_log"  id="download_log" checked><br/>
 						<input type="hidden" value="<?php echo $project['id']; ?>" name="project_id">
 						<input type="hidden" value="111" name="file_types"><br/>
@@ -174,14 +174,14 @@ if( !isset($db) ){
 				</span>
 				<span class="row">
 					<span class="col-sm-12">
-						<button type="submit" name="post_action" value='Download_Project' class="btn btn-info full-row" >Download Project Files</button>
+						<button type="submit" name="post_action" value='Download_Project' class="btn btn-info full-row" ><?php echo $messages->text[$_SESSION['vhdl_lang']]['project_dir_5'] ?></button>
 					</span>
 				</span>
 			</form>
 			
 		  </div>
 		  <div class="modal-footer">
-			<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+			<button type="button" class="btn btn-default" data-dismiss="modal"><?php echo $messages->text[$_SESSION['vhdl_lang']]['project_dir_22'] ?></button>
 		  </div>
 		</div>
 	  </div>
@@ -195,12 +195,12 @@ if( !isset($db) ){
 		<div class="modal-content">
 		  <div class="modal-header">
 			  <!-- Modal header menu-->
-			<h3>Add File</h3>
+			<h3><?php echo $messages->text[$_SESSION['vhdl_lang']]['project_dir_23'] ?></h3>
 		  </div>
 		  <div class="modal-body tab-content">
 			<!-- Modal Body Create File-->
 			<form action='' method='post'>
-				<h4>Create File</h4>
+				<h4><?php echo $messages->text[$_SESSION['vhdl_lang']]['project_dir_24'] ?></h4>
 				<span class="row">
 					<span class="col-sm-6">
 						<input type="text" name="file_name" size='15' placeholder="File Name"/>
@@ -208,14 +208,14 @@ if( !isset($db) ){
 						<input type="hidden" value="<?php echo $search_user['username']; ?>" name="owner">
 					</span>
 					<span class="col-sm-6">
-						<button type="submit" name="post_action" value='Create_file' class="btn btn-default">Create File</button>
+						<button type="submit" name="post_action" value='Create_file' class="btn btn-default"><?php echo $messages->text[$_SESSION['vhdl_lang']]['project_dir_24'] ?></button>
 					</span>
 				</span>
 			</form>
 			<br/>
 			<!-- Modal Body Upload File-->
 			<form enctype="multipart/form-data" action="" method="post">
-				<h4>Upload File</h4>
+				<h4><?php echo $messages->text[$_SESSION['vhdl_lang']]['project_dir_25'] ?></h4>
 				<span class="row">
 					<span class="col-sm-6">
 						<input name="userfile" type="file" />
@@ -225,13 +225,13 @@ if( !isset($db) ){
 						<input type="hidden" value="<?php echo $search_user['username']; ?>" name="owner">
 					</span>
 					<span class="col-sm-6">
-						<button type="submit" name="post_action" value='Upload_File' class="btn btn-default">Upload File</button>
+						<button type="submit" name="post_action" value='Upload_File' class="btn btn-default"><?php echo $messages->text[$_SESSION['vhdl_lang']]['project_dir_25'] ?></button>
 					</span>
 				</span>
 			</form>
 		  </div>
 		  <div class="modal-footer">
-			<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+			<button type="button" class="btn btn-default" data-dismiss="modal"><?php echo $messages->text[$_SESSION['vhdl_lang']]['project_dir_22'] ?></button>
 		  </div>
 		</div>
 

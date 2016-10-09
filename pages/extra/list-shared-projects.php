@@ -8,7 +8,7 @@ if( !isset($db) ){
 	$shared_projects = $db->get_shared_projects($user->id);
 	if( !empty($shared_projects) ){
 		
-		echo "<h2>Shared with User</h2>";
+		echo "<h2>".$messages->text[$_SESSION['vhdl_lang']]['user_projects_3']."</h2>";
 		
 		$i=0;
 		echo '<div class="row">';

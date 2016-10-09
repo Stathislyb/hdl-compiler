@@ -12,6 +12,15 @@ if( !isset($user->type) || $user->type != '1' ){
 	$found_components = $db->get_latest_components_admin($name,$page,19);
 	$found_components_num = $db->count_users($name);
 	$alter=1;
+	if($_SESSION['vhdl_lang']=='gr'){
+		$col_offset_1 = '2';
+		$col_offset_2 = '4';
+		$col_size = '2';
+	}else{
+		$col_offset_1 = '3';
+		$col_offset_2 = '5';
+		$col_size = '1';
+	}
 ?>
 
 <div id="components_container">
@@ -30,23 +39,23 @@ if( !isset($user->type) || $user->type != '1' ){
 				</a>
 				<?php if($found_component['pending_suggestion']==1){ ?>
 					<div class="col-sm-2">
-						<a class="btn btn-info" href="<?php echo $link_suggestion ?>">Pending Suggestion</a>
+						<a class="btn btn-info" href="<?php echo $link_suggestion ?>"><?php echo $messages->text[$_SESSION['vhdl_lang']]['admin_choice_1'] ?></a>
 					</div>
 				<?php } ?>
 				<?php if($found_component['approved']==0){ ?>
 					<form class="form" action="" method="post" >
 						<input type="hidden" name="library_id" value="<?php echo $found_component['id']; ?>" />
-						<button type="submit" class="col-sm-offset-<?php echo ($found_component['pending_suggestion']==1)?"3":"5"; ?> col-sm-1 btn btn-success" name="post_action" value="Approve_Component_Admin">Approve</button>
+						<button type="submit" class="col-sm-offset-<?php echo ($found_component['pending_suggestion']==1)?$col_offset_1:$col_offset_2; ?> col-sm-1 btn btn-success" name="post_action" value="Approve_Component_Admin"><?php echo $messages->text[$_SESSION['vhdl_lang']]['admin_choice_2'] ?></button>
 					</form>
 				<?php }else{ ?>
 					<form class="form" action="" method="post" >
 						<input type="hidden" name="library_id" value="<?php echo $found_component['id']; ?>" />
-						<button type="submit" class="col-sm-offset-<?php echo ($found_component['pending_suggestion']==1)?"3":"5"; ?> col-sm-1 btn btn-warning" name="post_action" value="Disapprove_Component_Admin">Dispprove</button>
+						<button type="submit" class="col-sm-offset-<?php echo ($found_component['pending_suggestion']==1)?$col_offset_1:$col_offset_2; ?> col-sm-1 btn btn-warning" name="post_action" value="Disapprove_Component_Admin"><?php echo $messages->text[$_SESSION['vhdl_lang']]['admin_choice_3'] ?></button>
 					</form>
 				<?php } ?>
 				<form class="form" action="" method="post" onsubmit="confirm_component_removal_admin()" >
 					<input type="hidden" name="library_id" value="<?php echo $found_component['id']; ?>" />
-					<button type="submit" class="col-sm-offset-1 col-sm-1 btn btn-danger" name="post_action" value="Remove_Component_Admin">Remove</button>
+					<button type="submit" class="col-sm-offset-1 col-sm-<?php echo $col_size ?> btn btn-danger" name="post_action" value="Remove_Component_Admin"><?php echo $messages->text[$_SESSION['vhdl_lang']]['admin_choice_4'] ?></button>
 				</form>
 			</li>
 		<?php } ?>

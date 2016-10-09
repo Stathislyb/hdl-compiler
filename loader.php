@@ -62,6 +62,14 @@ if( isset($_SESSION['vhdl_user']) ){
 if( !isset($_SESSION['vhdl_msg']) ){
 	$_SESSION['vhdl_msg'] = array();
 }
+// Set language to coockie or default value; options: 'gr' (greek), 'en' (english)
+if( !isset($_SESSION['vhdl_lang']) ){
+	if (empty($_COOKIE['vhdl_lang'])) {
+		$_SESSION['vhdl_lang'] = "gr";
+	}else{
+		$_SESSION['vhdl_lang'] = $_COOKIE['vhdl_lang'];
+	}
+}
 
 require_once('security.php');
 require_once('post_handler.php');

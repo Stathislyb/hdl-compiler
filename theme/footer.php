@@ -2,16 +2,16 @@
 			<div class="footer">
 				<div id="copyright">
 					<center>
-					Copyright 2014-2016<br/>
-					Minas Dasygenis, <a href="http://arch.icte.uowm.gr/mdasygenis">http://arch.icte.uowm.gr/mdasygenis</a>.<br />
-					Lymperidis Efstathios, <a href="https://gr.linkedin.com/in/efstathios-lymperidis-98b5747b">https://gr.linkedin.com/in/efstathios-lymperidis-98b5747b</a>.<br />
-					Licensed under the Apache License, Version 2.0 (the "License").<br />
+					<?php echo $messages->text[$_SESSION['vhdl_lang']]['footer_credit_1'] ?><br/>
+					<?php echo $messages->text[$_SESSION['vhdl_lang']]['footer_credit_2'] ?>, <a href="http://arch.icte.uowm.gr/mdasygenis">http://arch.icte.uowm.gr/mdasygenis</a>.<br />
+					<?php echo $messages->text[$_SESSION['vhdl_lang']]['footer_credit_3'] ?>, <a href="https://gr.linkedin.com/in/efstathios-lymperidis-98b5747b">https://gr.linkedin.com/in/efstathios-lymperidis-98b5747b</a>.<br />
+					<?php echo $messages->text[$_SESSION['vhdl_lang']]['footer_credit_4'] ?><br />
 					http://www.apache.org/licenses/LICENSE-2.0<br />
 					</center>
 				</div>
 				<br />
 				<div id="download">
-					<center>The source code is available [<a href="https://github.com/Stathislyb/hdl-compiler">Here</a>].</center>
+					<center><?php echo $messages->text[$_SESSION['vhdl_lang']]['footer_download_1'] ?> [<a href="https://github.com/Stathislyb/hdl-compiler"><?php echo $messages->text[$_SESSION['vhdl_lang']]['footer_download_2'] ?></a>].</center>
 				</div>
 			</div>
 		</div>

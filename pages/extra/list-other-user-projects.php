@@ -41,6 +41,6 @@ if( !isset($db) ){
 			echo '</div>';
 		}
 	}else{
-		echo "The user has no public projects."; 
+		echo $messages->text[$_SESSION['vhdl_lang']]['user_projects_2']; 
 	}
 ?>

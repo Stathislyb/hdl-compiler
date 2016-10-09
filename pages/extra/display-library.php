@@ -18,10 +18,10 @@ if( !isset($db) ){
 
 <div class="row">
 	<div class="col-sm-3 divider-vertical-right"> 
-		<?php echo $library['name']."<br/> Created by ".$search_user['username']; ?>
+		<?php echo $library['name']."<br/> ".$messages->text[$_SESSION['vhdl_lang']]['project_dir_1']." ".$search_user['username']; ?>
 	</div>
 	<div class="col-sm-9"> 
-		<a href='<?php echo $BASE_URL; ?>/libraries' class="btn btn-primary btn-outline pull-right" role="button">View All Libraries </a>
+		<a href='<?php echo $BASE_URL; ?>/libraries' class="btn btn-primary btn-outline pull-right" role="button"><?php echo $messages->text[$_SESSION['vhdl_lang']]['display_lib_1'] ?></a>
 		<form action='' method='post'>
 			<select name="project_id" class="form-control input-width-fix">
 				<?php 
@@ -34,7 +34,7 @@ if( !isset($db) ){
 				?>
 			</select>
 			<input type="hidden" value="<?php echo $library['id']; ?>" name="library_id"/>
-			<button type="submit" name="post_action" value='Import_Library' class="btn btn-success" >Include to Project</button>
+			<button type="submit" name="post_action" value='Import_Library' class="btn btn-success" ><?php echo $messages->text[$_SESSION['vhdl_lang']]['display_lib_2'] ?></button>
 		</form>
 	</div>
 </div>
@@ -57,17 +57,17 @@ if( !isset($db) ){
 						<script type='text/javascript' charset='utf-8' src='<?php echo $BASE_URL; ?>/theme/js/ace-editor.js'></script>
 						<input type='hidden' value='<?php echo $path; ?>' id='path' />
 						<input type='hidden' value='<?php echo $library['id']; ?>' id='library_id' />
-						<input type='button' id='ace_save_button_library' name='save' value='Save Changes' class='btn btn-lg btn-info center-block'>
+						<input type='button' id='ace_save_button_library' name='save' value='<?php echo $messages->text[$_SESSION['vhdl_lang']]['ace_save'] ?>' class='btn btn-lg btn-info center-block'>
 						<br/>
 						<?php if($library['approved']==0){ ?>
 							<form class="form" action="" method="post" >
 								<input type="hidden" name="library_id" value="<?php echo $library['id']; ?>" />
-								<button type="submit" class="btn btn-lg btn-success center-block" name="post_action" value="Approve_Component_Admin">Approve</button>
+								<button type="submit" class="btn btn-lg btn-success center-block" name="post_action" value="Approve_Component_Admin"><?php echo $messages->text[$_SESSION['vhdl_lang']]['admin_choice_2'] ?></button>
 							</form>
 						<?php }else{ ?>
 							<form class="form" action="" method="post" >
 								<input type="hidden" name="library_id" value="<?php echo $library['id']; ?>" />
-								<button type="submit" class="btn btn-lg btn btn-warning center-block" name="post_action" value="Dispprove_Component_Admin">Dispprove</button>
+								<button type="submit" class="btn btn-lg btn btn-warning center-block" name="post_action" value="Dispprove_Component_Admin"><?php echo $messages->text[$_SESSION['vhdl_lang']]['admin_choice_3'] ?></button>
 							</form>
 						<?php } ?>
 						<!-- //print_close_editor_window_button($file); -->
@@ -92,7 +92,7 @@ if( !isset($db) ){
 				<?php } ?>
 			<?php }else{ ?>
 				<div class="alert alert-danger">
-					Can not edit file. Make sure the file exists and has the right permissions.
+					<?php echo $messages->text[$_SESSION['vhdl_lang']]['ace_error'] ?>
 				</div>
 			<?php } ?>
 			<br />

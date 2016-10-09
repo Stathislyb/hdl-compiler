@@ -17,11 +17,11 @@ if( !isset($_SESSION['SID']) ){
 <br/><br/><br/>
 <div class="row">
 	<div class="col-sm-3 divider-vertical-right"> 
-		Contents of : <?php echo $_SESSION['SID']; ?>/<?php echo $file_name; ?>
+		<?php echo $messages->text[$_SESSION['vhdl_lang']]['project_dir_2'] ?> : <?php echo $_SESSION['SID']; ?>/<?php echo $file_name; ?>
 	</div>
 	<div class="col-sm-9"> 
-		SID projects are removed in server maintenance.<br/>
-		SID Projects are always private.
+		<?php echo $messages->text[$_SESSION['vhdl_lang']]['project_dir_3'] ?><br/>
+		<?php echo $messages->text[$_SESSION['vhdl_lang']]['project_dir_4'] ?>
 	</div>
 </div>
 
@@ -43,7 +43,7 @@ if( !isset($_SESSION['SID']) ){
 					<input type='hidden' value='<?php echo $path; ?>' id='path' />
 					<input type='hidden' value='<?php echo $file['id']; ?>' id='file_id' />
 					<input type="hidden" value="SID" id="project_id">
-					<input type='button' id='ace_save_button' name='save' value='Save Changes' class='btn btn-lg btn-info center-block'>
+					<input type='button' id='ace_save_button' name='save' value='<?php echo $messages->text[$_SESSION['vhdl_lang']]['ace_save'] ?>' class='btn btn-lg btn-info center-block'>
 					<!-- //print_close_editor_window_button($file); -->
 				</div>
 				<script>
@@ -53,7 +53,7 @@ if( !isset($_SESSION['SID']) ){
 				</script>
 		<?php }else{ ?>
 			<div class="alert alert-danger">
-				Can not edit file. Make sure the file exists and has the right permissions.
+				<?php echo $messages->text[$_SESSION['vhdl_lang']]['ace_error'] ?>
 			</div>
 		<?php } ?>
 		<br />

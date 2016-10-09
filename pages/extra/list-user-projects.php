@@ -16,7 +16,7 @@ if( !isset($db) ){
 	}
 	$j=1;
 ?>
-<h2>User Projects</h2>
+<h2><?php echo $messages->text[$_SESSION['vhdl_lang']]['user_projects_1'] ?></h2>
 	<?php 
 		$i=0;
 		$size='col-sm-3';
@@ -50,11 +50,11 @@ if( !isset($db) ){
 		}
 		if($i<=3){
 			echo "<div class='".$size." square-tiles' onclick='window.location=\"".$BASE_URL."/create-project\";'><center>";
-			echo "<h3>Create New Project</h3>";
+			echo "<h3>".$messages->text[$_SESSION['vhdl_lang']]['create_project_1']."</h3>";
 			echo '<span class="glyphicon glyphicon-plus-sign pointer very-strong" aria-hidden="true"></span></center></div></div>';
 		}else{
 			echo "<div class='row'><div class='".$size." square-tiles' onclick='window.location=\"".$BASE_URL."/create-project\";'><center>";
-			echo "<h3>Create New Project</h3>";
+			echo "<h3>".$messages->text[$_SESSION['vhdl_lang']]['create_project_1']."</h3>";
 			echo '<span class="glyphicon glyphicon-plus-sign pointer very-strong" aria-hidden="true"></span></center></div></div></div>';
 		}
 	?>

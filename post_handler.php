@@ -934,6 +934,11 @@ if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST["post_action"]) ){
 			exit();
 		break;
 		
+		case "change_lang":
+			setcookie('vhdl_lang', $_POST["lang_value"], time()+60*60*24*90);
+			$_SESSION['vhdl_lang'] = $_POST["lang_value"];
+		break;
+		
 		case "set_sid":
 			$_SESSION['SID']=intval($_POST['pid']);
 			$_SESSION['vhdl_user']['username'] = "Guest";

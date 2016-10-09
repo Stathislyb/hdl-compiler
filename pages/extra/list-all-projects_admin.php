@@ -12,6 +12,13 @@ if( !isset($user->type) || $user->type != '1' ){
 	$found_projects = $db->get_latest_projects_admin($name,$page,19);
 	$found_projects_num = $db->count_users($name);
 	$alter=1;
+	if($_SESSION['vhdl_lang']=='gr'){
+		$col_offset = '3';
+		$col_size = '2';
+	}else{
+		$col_offset = '5';
+		$col_size = '1';
+	}
 ?>
 
 <div id="projects_container">
@@ -29,10 +36,10 @@ if( !isset($user->type) || $user->type != '1' ){
 						<?php echo $found_project['name']; ?>
 					</h3>
 				</a>
-				<a href="<?php echo $link_edit; ?>" class="col-sm-offset-5 col-sm-1 btn btn-info">Edit</a>
+				<a href="<?php echo $link_edit; ?>" class="col-sm-offset-<?php echo $col_offset ?> col-sm-<?php echo $col_size ?> btn btn-info"><?php echo $messages->text[$_SESSION['vhdl_lang']]['admin_choice_5'] ?></a>
 				<form class="form" action="" method="post" onsubmit="confirm_project_removal_admin()" >
 					<input type="hidden" name="project_id" value="<?php echo $found_project['id']; ?>" />
-					<button type="submit" class="col-sm-offset-1 col-sm-1 btn btn-danger" name="post_action" value="Remove_Project_Admin">Remove</button>
+					<button type="submit" class="col-sm-offset-1 col-sm-<?php echo $col_size ?> btn btn-danger" name="post_action" value="Remove_Project_Admin"><?php echo $messages->text[$_SESSION['vhdl_lang']]['admin_choice_4'] ?></button>
 				</form>
 			</li>
 		<?php } ?>

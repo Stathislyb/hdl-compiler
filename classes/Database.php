@@ -264,7 +264,7 @@ class Database {
 	
 	// Create new project, returns true on success and false on failure
 	public function edit_project($name, $description, $short_code, $project_id, $share_project) {
-		$query = "UPDATE projects SET name='".$name."', description= :description, short_code= :short_code, public= :public WHERE projects.id= :project_id"; 
+		$query = "UPDATE projects SET name=:name, description= :description, short_code= :short_code, public= :public WHERE projects.id= :project_id"; 
 		$statement = $this->conn->prepare($query); 
 		return $statement->execute(array(':name'=>$name, ':description'=>$description, ':short_code'=>$short_code, ':public'=>$share_project, ':project_id'=>$project_id));
 	}

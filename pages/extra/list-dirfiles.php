@@ -7,7 +7,7 @@ if( !isset($db) ){
 <ul class="list-group list-files">
 	<?php
 	if( count($files)==0 ){
-		echo "<li class='list-group-item'> There are no files in this directory </li>";
+		echo "<li class='list-group-item'> ".$messages->text[$_SESSION['vhdl_lang']]['list_dirfiles_1']." </li>";
 	}
 	foreach ($files as $file) {
 		$outdated = false;
@@ -18,7 +18,7 @@ if( !isset($db) ){
 		$path = $BASE_URL."/project/".$search_user['username']."/".$_GET['project']."/file/".$file['name'];
 		echo "<li class='list-group-item'><a href='".$path."'>".$file['name']."</a>";
 		if($outdated){
-			echo "<span class='compile-info compile-success'><a href='".$BASE_URL."/libraries/".$library['name']."'>New version available</a></span>";
+			echo "<span class='compile-info compile-success'><a href='".$BASE_URL."/libraries/".$library['name']."'>".$messages->text[$_SESSION['vhdl_lang']]['list_dirfiles_2']."</a></span>";
 		}
 		if($file['compiled']=='1'){
 			$full_path = $BASE_DIR.$search_user['username'].'/'.$_GET['project'].'/'.$file['name'];
@@ -27,27 +27,27 @@ if( !isset($db) ){
 			if( file_exists($log_file) ){
 				if( file_exists($bin_file) ){
 					if( filesize($log_file) == 0 ){
-						echo "<span class='compile-info compile-success'>Compiled</span>";
+						echo "<span class='compile-info compile-success'>".$messages->text[$_SESSION['vhdl_lang']]['list_dirfiles_3']."</span>";
 						echo ( $is_editor )?"<span class='pull-right'><input type='checkbox' class='select_file' value='".$file['id']."' id='file_".$file['id']."'></span></li>":"";
 						$is_compiled=true;
 					}else{
-						echo "<span class='compile-info compile-error'><a href='#error_compile_".$file['id']."' data-toggle='collapse'> Compile Failed <span class='glyphicon glyphicon-chevron-down'></span></a></span>";
+						echo "<span class='compile-info compile-error'><a href='#error_compile_".$file['id']."' data-toggle='collapse'> ".$messages->text[$_SESSION['vhdl_lang']]['list_dirfiles_4']." <span class='glyphicon glyphicon-chevron-down'></span></a></span>";
 						echo ( $is_editor )?"<span class='pull-right'><input type='checkbox' class='select_file' value='".$file['id']."' id='file_".$file['id']."'></span></li>":"";
 						echo "<div id='error_compile_".$file['id']."' class='collapse'><pre class='alert-danger'>".file_get_contents($log_file)."</pre></div>";
 					}
 				}else{
 					if( filesize($log_file) != 0 ){
-						echo "<span class='compile-info compile-error'><a href='#error_compile_".$file['id']."' data-toggle='collapse'> Compile Failed <span class='glyphicon glyphicon-chevron-down'></span></a></span>";
+						echo "<span class='compile-info compile-error'><a href='#error_compile_".$file['id']."' data-toggle='collapse'> ".$messages->text[$_SESSION['vhdl_lang']]['list_dirfiles_4']." <span class='glyphicon glyphicon-chevron-down'></span></a></span>";
 						echo ( $is_editor )?"<span class='pull-right'><input type='checkbox' class='select_file' value='".$file['id']."' id='file_".$file['id']."'></span></li>":"";
 						echo "<div id='error_compile_".$file['id']."' class='collapse'><pre class='alert-danger'>".file_get_contents($log_file)."</pre></div>";
 					}
 				}
 			}else{
-				echo "<span class='compile-info compile-pending'> Pending Compile</span>";
+				echo "<span class='compile-info compile-pending'> ".$messages->text[$_SESSION['vhdl_lang']]['list_dirfiles_5']."</span>";
 				echo ( $is_editor )?"<span class='pull-right'><input type='checkbox' class='select_file' value='".$file['id']."' id='file_".$file['id']."'></span></li>":"";
 			}
 		}elseif($file['compiled']=='2'){
-			echo "<span class='compile-info compile-pending'> File's contents changed since last compile</span>";
+			echo "<span class='compile-info compile-pending'> ".$messages->text[$_SESSION['vhdl_lang']]['list_dirfiles_6']."</span>";
 			echo ( $is_editor )?"<span class='pull-right'><input type='checkbox' class='select_file' value='".$file['id']."' id='file_".$file['id']."'></span></li>":"";
 		}else{
 			echo ( $is_editor )?"<span class='pull-right'><input type='checkbox' class='select_file' value='".$file['id']."' id='file_".$file['id']."'></span></li>":"";

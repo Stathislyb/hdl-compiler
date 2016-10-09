@@ -28,7 +28,7 @@ if( (isset($_SESSION['vhdl_user']['loged_in']) && $_SESSION['vhdl_user']['loged_
 //bring header and navbar
 include('theme/header.php');
 // display messages from the user's last interaction
-$messages->display_msg($_SESSION['vhdl_msg']);
+$messages->display_msg($_SESSION['vhdl_lang'],$_SESSION['vhdl_msg']);
 //bring the requested file
 include('pages/'.$included_file);
 //bring the footer

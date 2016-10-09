@@ -14,29 +14,29 @@ if( !isset($db) ){
 <div class="row">
 	<div class="col-sm-6 col-sm-offset-3">
 		<form action='' method='post' id='create-project'  data-toggle="validator">
-			<h4>Edit Project <?php echo $project['name']; ?></h4>
-			<label for="project_name">Project name:</label>
+			<h4><?php echo $messages->text[$_SESSION['vhdl_lang']]['edit_project_1'] ?> <?php echo $project['name']; ?></h4>
+			<label for="project_name"><?php echo $messages->text[$_SESSION['vhdl_lang']]['create_project_2'] ?>:</label>
 			<div class="form-group">
-				<input type="text" name="project_name" size='25' class="form-control" data-error="Minimum of 5 characters" data-minlength="5" placeholder="Project name" value="<?php echo $project['name']; ?>" required/>
+				<input type="text" name="project_name" size='25' class="form-control" data-error="<?php echo $messages->text[$_SESSION['vhdl_lang']]['home_dataerror_1'] ?>" data-minlength="5" placeholder="Project name" value="<?php echo $project['name']; ?>" required/>
 				<div class="help-block with-errors"></div>
 			</div>
-			<label for="projet_authors_lookup">Add other People to the Project:</label>
+			<label for="projet_authors_lookup"><?php echo $messages->text[$_SESSION['vhdl_lang']]['create_project_3'] ?>:</label>
 			<input type="text" name="projet_authors_lookup" size='25' class="form-control add-editors-typeahead" id="typeahead-input" autocomplete="off"/>
 			<ul class="list-group" id="editor-users">
 				<?php echo $gen->list_editors_li($editors); ?>
 			</ul>
 			<input type="hidden" name="projet_authors" id='projet_authors' value='<?php echo $gen->list_editors_comma($editors);  ?>' />
 			
-			<label for="project_share">Allow other people to view this project:</label><br />
-			<label class="radio-inline"><input type="radio" name="project_share" value="1" <?php echo ($project['public']==1)? 'checked':''; ?>>Public</label>
-			<label class="radio-inline"><input type="radio" name="project_share" value="0" <?php echo ($project['public']==0)? 'checked':''; ?>>Private</label>
+			<label for="project_share"><?php echo $messages->text[$_SESSION['vhdl_lang']]['create_project_4'] ?>:</label><br />
+			<label class="radio-inline"><input type="radio" name="project_share" value="1" <?php echo ($project['public']==1)? 'checked':''; ?>><?php echo $messages->text[$_SESSION['vhdl_lang']]['create_project_5'] ?></label>
+			<label class="radio-inline"><input type="radio" name="project_share" value="0" <?php echo ($project['public']==0)? 'checked':''; ?>><?php echo $messages->text[$_SESSION['vhdl_lang']]['create_project_6'] ?></label>
 			<br />
 			<br />
-			<label for="project_description">Project description :</label>
+			<label for="project_description"><?php echo $messages->text[$_SESSION['vhdl_lang']]['create_project_7'] ?> :</label>
 			<textarea form='create-project' name='project_description' class="form-control" rows="5" placeholder="Project description"><?php echo $project['description']; ?></textarea>
 			<br />
 			<input type="hidden" name="project_id" value='<?php echo $project['id']; ?>' />
-			<button type="submit" name="post_action" value='edit_project' class="btn btn-default" >Edit Project</button>
+			<button type="submit" name="post_action" value='edit_project' class="btn btn-default" ><?php echo $messages->text[$_SESSION['vhdl_lang']]['edit_project_1'] ?></button>
 		</form>
 	</div>
 </div>
