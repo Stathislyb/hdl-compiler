@@ -124,9 +124,6 @@ if( !isset($db) ){
 						<div class="checkbox">
 							<label><input type='checkbox' name='extralib' value='synopsys' /><?php echo $messages->text[$_SESSION['vhdl_lang']]['project_dir_16'] ?></label>
 						</div>
-						<div class="checkbox">
-							<label><input type='checkbox' name='extrasim' value='vcd' checked/><?php echo $messages->text[$_SESSION['vhdl_lang']]['project_dir_17'] ?></label>
-						</div>
 					</div>
 				</div>
 				<div class="row">

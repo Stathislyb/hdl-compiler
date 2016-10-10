@@ -6,7 +6,7 @@ $security_breach = false;
 $string_array = array('ajax_action','username','theme','query','name','directory','vcd_name','post_action','project_name',
 						'original_user','project_description','projet_authors','download_vhdl','download_vcd','download_log',
 						'file_name','owner','project_shortcode','upload_dir','architecture','extralib','extrasim',
-						'password_edit','new_password_edit','rep_password_edit','password','password_confirm', 'search_type');
+						'password_edit','new_password_edit','rep_password_edit','password','password_confirm', 'search_type','code');
 foreach($string_array as $string_element){
 	if( isset($_POST[$string_element]) ){
 		$security_temp = filter_var($_POST[$string_element], FILTER_SANITIZE_STRING);
@@ -17,7 +17,7 @@ foreach($string_array as $string_element){
 }
 
 // Sanitize integer POST data
-$int_array = array('file_id','library_id','code','project_share','phone_edit','ace_theme','user_id_edit',
+$int_array = array('file_id','library_id','project_share','phone_edit','ace_theme','user_id_edit',
 					'available_space_edit','user_id','telephone','active','type','pid');
 foreach($int_array as $int_element){
 	if( isset($_POST[$int_element]) ){
@@ -56,7 +56,7 @@ if( isset($_POST['email_edit'])) {
 }
 if( isset($_POST['email'])) {
 	$security_temp =  filter_var($_POST["email"], FILTER_VALIDATE_EMAIL);
-	if( $_POST['email'] != $security_temp || strlen($_POST["email_edit"])>50 ){
+	if( $_POST['email'] != $security_temp || strlen($_POST["email"])>50 ){
 		$security_breach = true;
 		array_push($_SESSION['vhdl_msg'], 'invalid_mail');
 	}

@@ -288,12 +288,7 @@ if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST["post_action"]) ){
 						}
 					}
 					$prefile="--elab-run ".$extra_pre;
-					$extra_post = '';
-					if ( isset($_POST['extrasim'] ) ){
-						if ( $_POST['extrasim'] == "vcd"){ 
-							$extra_post = " --vcd=".$project['short_code'].".vcd ";
-						}
-					}
+					$extra_post = " --vcd=".$project['short_code'].".vcd ";
 					$postfile=$architecture.$extra_post;
 					
 					$gen->create_job_file($JOBDIRECTORY,$directory,$unit,$prefile,$postfile);

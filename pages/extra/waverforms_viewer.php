@@ -60,10 +60,10 @@
 				</div>
 			</div>
 			<div class="row">
-				<div class="col-sm-4">
+				<div class="col-sm-5">
 				<a href="#" class="btn btn-success" id="btn-download-image" download="waveforms.png"><?php echo $messages->text[$_SESSION['vhdl_lang']]['waveforms_viewer_10'] ?></a>
 				</div>
-				<div class="col-sm-4">
+				<div class="col-sm-7">
 				<a href="#" class="btn btn-info" id="btn-sim-tutorial"><?php echo $messages->text[$_SESSION['vhdl_lang']]['waveforms_viewer_11'] ?></a>
 				</div>
 			</div>

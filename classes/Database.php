@@ -75,10 +75,16 @@ class Database {
 	
 	// Return true if user is successfully activated, false otherwise
 	public function activate_user($id, $code) {
-		$query = "UPDATE users SET activated='1' WHERE id = :id AND activ_code= :activ_code"; 
+		$query = "SELECT * FROM user_activation WHERE user_id = :id AND activ_code= :activ_code"; 
 		$statement = $this->conn->prepare($query); 
-		$statement->execute(array(':id'=>$id,':activ_code'=>$activ_code));
+		$statement->execute(array(':id'=>$id,':activ_code'=>$code));
 		if($statement->rowCount()==1){
+			$query = "UPDATE users SET activated='1' WHERE id = :id "; 
+			$statement = $this->conn->prepare($query); 
+			$statement->execute(array(':id'=>$id));
+			$query = "DELETE FROM user_activation WHERE user_id = :id "; 
+			$statement = $this->conn->prepare($query); 
+			$statement->execute(array(':id'=>$id));
 			return true;
 		}else{
 			return false;
@@ -86,12 +92,18 @@ class Database {
 	}
 	
 	// Register user in database, returns id on success and 0 on failure
-	public function register_user($username, $password, $email, $phone, $code, $active, $type) {
+	public function register_user($username, $password, $email, $phone, $code, $active, $type){
 		$password = md5($password);
-		$query = "INSERT INTO users (username, password, email, telephone, activ_code, activated, type) Values(:username,:password,:email,:phone,:code,:active,:type)"; 
+		$query = "INSERT INTO users (username, password, email, telephone, activated, type) Values(:username,:password,:email,:phone,:active,:type)"; 
 		$statement = $this->conn->prepare($query); 
-		$statement->execute(array(':username'=>$username,':password'=>$password,':email'=>$email,':phone'=>$phone,':code'=>$code,':active'=>$active,':type'=>$type));
-		return $this->conn->lastInsertId();
+		$statement->execute(array(':username'=>$username,':password'=>$password,':email'=>$email,':phone'=>$phone,':active'=>$active,':type'=>$type));
+		$user_id = $this->conn->lastInsertId();
+		if($user_id > 0){
+			$query = "INSERT INTO user_activation (user_id, activ_code) Values(:user_id,:code)"; 
+			$statement = $this->conn->prepare($query); 
+			$statement->execute(array(':user_id'=>$user_id,':code'=>$code));
+		}
+		return $user_id;
 	}
 	
 	// Update the user's settings
@@ -634,6 +646,9 @@ class Database {
 	
 	// Remove user from the editor's list of all projects
 	public function remove_user_editor($user_id) {
+		$query = "DELETE FROM user_activation WHERE user_id = :user_id "; 
+		$statement = $this->conn->prepare($query); 
+		$statement->execute(array(':user_id'=>$user_id));
 		$query = "DELETE FROM projects_editors WHERE user_id = :user_id AND user_type='0'"; 
 		$statement = $this->conn->prepare($query); 
 		return $statement->execute(array(':user_id'=>$user_id));
