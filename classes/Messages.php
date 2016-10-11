@@ -399,15 +399,15 @@ class Messages {
 	);
 	
 	// Class constractor function
-	public function __construct(){
+	function __construct(){
 	}
 	// Class destractor function
-	public function __destruct(){
+	function __destruct(){
 		$this->messages = null;
 	}
 	
 	// Display messages
-	public function display_msg($lang, $msg_codes_array) {
+	function display_msg($lang, $msg_codes_array) {
 		foreach($msg_codes_array as $msg_id){
 			
 			echo '<div class="alert alert-'.$this->messages[$lang][$msg_id][1].'">'

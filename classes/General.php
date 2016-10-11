@@ -3,14 +3,14 @@ class General {
 	
 	// Class constractor function
 	//  initialise the user variables through the session
-	public function __construct(){
+	function __construct(){
 	}
-	public function __destruct(){
+	function __destruct(){
 	}
 	
 	
 	// Return the shortcode of a string
-	public function create_short_code($string){
+	function create_short_code($string){
 		$replace_pairs = array(
 			" " => "-",
 			"α" => "a",
@@ -85,7 +85,7 @@ class General {
 	}
 	
 	// Return a list of editors comma seperated.
-	public function list_editors_comma($editors){
+	function list_editors_comma($editors){
 		$list="";
 		foreach($editors as $editor){
 			$list.= $editor['username'].",";
@@ -94,7 +94,7 @@ class General {
 	}
 	
 	// Return a list of editors with li format.
-	public function list_editors_li($editors){
+	function list_editors_li($editors){
 		$list="";
 		foreach($editors as $editor){
 			if( $editor['user_type']==1 ){
@@ -108,7 +108,7 @@ class General {
 	
 	// Return part of string with about 160 characters.
 	//   it's not exact because it considers cutting words in half and avoids it.
-	public function fix_string_length($string){
+	function fix_string_length($string){
 		if( strlen($string) >105 ){
 			$output = substr($string,0,105);
 			$output = substr($output,0, strrpos($output,' ') )."...";
@@ -119,7 +119,7 @@ class General {
 	}
 	
 	// Return the contents of a file.
-	public function open_and_read_file($file){
+	function open_and_read_file($file){
 		$output='';
 		$file_handle = fopen($file, "r");
 		while (!feof($file_handle)) {
@@ -130,7 +130,7 @@ class General {
 	}
 	
 	// Extract file and update the database
-	public function extract_file($file, $directory, $project_id){
+	function extract_file($file, $directory, $project_id){
 		$zip = new ZipArchive;
 		$db = new Database;
 		
@@ -155,7 +155,7 @@ class General {
 	}
 	
 	// Extract file and update the database for SID
-	public function extract_file_sid($file, $directory, $sid){
+	function extract_file_sid($file, $directory, $sid){
 		$zip = new ZipArchive;
 		$db = new Database;
 		
@@ -181,14 +181,14 @@ class General {
 	}
 	
 	// Filter string for invalide characters
-	public function filter_letters($string){
+	function filter_letters($string){
 		$var=filter_var($string,FILTER_SANITIZE_STRING);
 		$var2=preg_replace("/\.\./",".",$var);
 		return $var2;
 	}
 	
 	// Generate random user activation code
-	public function generate_code(){
+	function generate_code(){
 		$char_array="ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 		$code="";
 		for ($i = 1; $i <= 6; $i++) {
@@ -199,7 +199,7 @@ class General {
 	
 	
 	// Send SMS to mobile
-	public function send_sms($message, $mobile){
+	function send_sms($message, $mobile){
 		$url = 'http://vlsi.gr/sms/webservice/process.php';
 		$data = array('authcode' => '2002415', 'mobilenr' => $mobile,'message'=>$message);
 		$options = array(
@@ -215,13 +215,13 @@ class General {
 	}
 	
 	// Send Email 
-	public function send_email($message, $subject, $mail){
+	function send_email($message, $subject, $mail){
 		$headers = 'From: noreply@spam.vlsi.gr'."\r\n".'Reply-To: noreply@spam.vlsi.gr'."\r\n".'X-Mailer: PHP/'.phpversion();
 		return mail($mail, $subject, $message, $headers);
 	}
 	
 	// Return an array of the files in the path that match the file types provided 
-	public function get_directory_files($path, $file_types, $filename){
+	function get_directory_files($path, $file_types, $filename){
 		$files = array($filename);
 		$scanned_files = array_diff(scandir($path), array('..', '.'));
 		foreach ($scanned_files as $scanned_file) {
@@ -243,7 +243,7 @@ class General {
 	}
 	
 	// Adds files from the list to the zip object 
-	public function addfiles_to_zip($zip,$files,$path,$folder_name){
+	function addfiles_to_zip($zip,$files,$path,$folder_name){
 		foreach($files as $file) {
 			if(is_array($file)){
 				$inner_folder_name = ($folder_name !='')? $folder_name.$file[0]."/" : $file[0]."/";

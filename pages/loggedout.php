@@ -37,14 +37,14 @@ if( !isset($db) ){
 		<div class="row tab-content" >
 			<div id="login-from" class="tab-pane fade in active">
 				<h2><?php echo $messages->text[$_SESSION['vhdl_lang']]['home_log_in'] ?></h2>
-				<form class="form" id="form_login" role="login" method="post" action="" data-toggle="validator">
+				<form class="form" id="form_login" method="post" action="#" data-toggle="validator">
 					<div class="form-group">
-						<label for="username"><?php echo $messages->text[$_SESSION['vhdl_lang']]['home_log_in_1'] ?> :</label>
+						<label><?php echo $messages->text[$_SESSION['vhdl_lang']]['home_log_in_1'] ?> :</label>
 						<input type="text" name="username" class="form-control" placeholder="Username" data-error="<?php echo $messages->text[$_SESSION['vhdl_lang']]['home_dataerror_1'] ?>" data-minlength="5" required/>
 						<div class="help-block with-errors"></div>
 					</div>
 					<div class="form-group">
-						<label for="password"><?php echo $messages->text[$_SESSION['vhdl_lang']]['home_log_in_2'] ?> :</label>
+						<label><?php echo $messages->text[$_SESSION['vhdl_lang']]['home_log_in_2'] ?> :</label>
 						<input type="password" name="password" class="form-control" placeholder="Password" data-error="<?php echo $messages->text[$_SESSION['vhdl_lang']]['home_dataerror_1'] ?>" data-minlength="5" required/>
 						<div class="help-block with-errors"></div>
 					</div>
@@ -53,9 +53,9 @@ if( !isset($db) ){
 			</div>
 			<div id="sid-from" class="tab-pane fade">
 				<h2>SID</h2>
-				<form class="form" role="login-sid" method="post" action="">
+				<form class="form" method="post" action="#">
 					<div class="form-group">
-						<label for="pid"><?php echo $messages->text[$_SESSION['vhdl_lang']]['home_sid'] ?> :</label>
+						<label><?php echo $messages->text[$_SESSION['vhdl_lang']]['home_sid'] ?> :</label>
 						<input type="text" name="pid" class="form-control" size='8' value="<?php echo (!empty($_SESSION['PID'])) ? $_SESSION['PID']:''; ?>" placeholder="<?php echo $messages->text[$_SESSION['vhdl_lang']]['home_sid'] ?>" />
 						<button type="submit" class="btn btn-default" name="post_action" value='set_sid'><?php echo $messages->text[$_SESSION['vhdl_lang']]['home_sid_1'] ?></button>
 					</div>
@@ -64,30 +64,30 @@ if( !isset($db) ){
 			</div>
 			<div id="register-from" class="tab-pane fade">
 				<h2><?php echo $messages->text[$_SESSION['vhdl_lang']]['home_register'] ?></h2>
-				<form class="form" id="form_register" role="register" action="" method="post" data-toggle="validator" novalidate="false">
+				<form class="form" id="form_register" action="#" method="post" data-toggle="validator">
 					<div class="form-group">
-						<label for="email"><?php echo $messages->text[$_SESSION['vhdl_lang']]['home_register_1'] ?> :</label>
+						<label><?php echo $messages->text[$_SESSION['vhdl_lang']]['home_register_1'] ?> :</label>
 						<input type="email" class="form-control" name="email" id="email" placeholder="<?php echo $messages->text[$_SESSION['vhdl_lang']]['home_register_1'] ?>" data-error="<?php echo $messages->text[$_SESSION['vhdl_lang']]['home_dataerror_2'] ?>" required/>
 						<div class="help-block with-errors"></div>
 					</div>
 					<div class="form-group">
-						<label for="username"><?php echo $messages->text[$_SESSION['vhdl_lang']]['home_register_2'] ?> :</label>
+						<label><?php echo $messages->text[$_SESSION['vhdl_lang']]['home_register_2'] ?> :</label>
 						<input type="text" class="form-control" name="username" id="username_reg" placeholder="<?php echo $messages->text[$_SESSION['vhdl_lang']]['home_register_2'] ?>" data-minlength="5" required/>
 						<div class="help-block"><?php echo $messages->text[$_SESSION['vhdl_lang']]['home_dataerror_1'] ?></div>
 					</div>
 					<div class="form-group">
-						<label for="password"><?php echo $messages->text[$_SESSION['vhdl_lang']]['home_register_3'] ?> :</label>
+						<label><?php echo $messages->text[$_SESSION['vhdl_lang']]['home_register_3'] ?> :</label>
 						<input type="password" class="form-control" name="password" id="password_reg" placeholder="<?php echo $messages->text[$_SESSION['vhdl_lang']]['home_register_3'] ?>" data-minlength="5" required/>
 						<div class="help-block"><?php echo $messages->text[$_SESSION['vhdl_lang']]['home_dataerror_1'] ?></div>
 					</div>
 					<div class="form-group">
-						<label for="password_confirm"><?php echo $messages->text[$_SESSION['vhdl_lang']]['home_register_4'] ?> :</label>
+						<label><?php echo $messages->text[$_SESSION['vhdl_lang']]['home_register_4'] ?> :</label>
 						<input type="password" class="form-control" name="password_confirm" id="password_confirm" placeholder="<?php echo $messages->text[$_SESSION['vhdl_lang']]['home_register_4'] ?>" data-match="#password_reg" data-match-error="<?php echo $messages->text[$_SESSION['vhdl_lang']]['home_dataerror_3'] ?>" required/>
 						<div class="help-block with-errors"></div>
 					</div>
 					<div class="form-group">
-						<label for="telephone"><?php echo $messages->text[$_SESSION['vhdl_lang']]['home_register_5'] ?>:</label>
-						<input type="telephone" class="form-control" name="telephone" id="telephone" placeholder="<?php echo $messages->text[$_SESSION['vhdl_lang']]['home_register_5'] ?>" data-error="<?php echo $messages->text[$_SESSION['vhdl_lang']]['home_dataerror_4'] ?>" data-minlength="10" />
+						<label><?php echo $messages->text[$_SESSION['vhdl_lang']]['home_register_5'] ?>:</label>
+						<input type="tel" class="form-control" name="telephone" id="telephone" placeholder="<?php echo $messages->text[$_SESSION['vhdl_lang']]['home_register_5'] ?>" data-error="<?php echo $messages->text[$_SESSION['vhdl_lang']]['home_dataerror_4'] ?>" data-minlength="10" />
 						<div class="help-block with-errors"></div>
 					</div>
 					<div class="form-group">

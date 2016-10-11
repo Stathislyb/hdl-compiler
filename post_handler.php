@@ -762,18 +762,22 @@ if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST["post_action"]) ){
 							$phone=$_POST["telephone"];
 						}
 						$code = $gen->generate_code();
-						if($db->register_user($_POST["username"],$_POST["password"],$_POST["email"],$phone,$code,$_POST["active"],$_POST["type"])){
-							if($_POST["active"]==0){
-								if($phone!=NULL){
-									$message="Your activation code is : ".$code;
-									$gen->send_sms($message,$phone);
+						if( !$db->taken_username ){
+							if($db->register_user($_POST["username"],$_POST["password"],$_POST["email"],$phone,$code,$_POST["active"],$_POST["type"])){
+								if($_POST["active"]==0){
+									if($phone!=NULL){
+										$message="Your activation code is : ".$code;
+										$gen->send_sms($message,$phone);
+									}
+									$subject = "HDL Everywhere Registration";
+									$message = "Welcome to our website!\r\rYou, or someone using your email address, has completed registration at HDL Everywhere. You can complete registration by clicking the following link:\r http://snf-703457.vm.okeanos.grnet.gr/vhdl/ \rAnd after logging in, enter the Activation Code : ".$code." \r\r If this is an error, ignore this email and you will be removed from our mailing list.";
+									$gen->send_email($message,$subject,$_POST["email"]);
 								}
-								$subject = "HDL Everywhere Registration";
-								$message = "Welcome to our website!\r\rYou, or someone using your email address, has completed registration at HDL Everywhere. You can complete registration by clicking the following link:\r http://snf-703457.vm.okeanos.grnet.gr/vhdl/ \rAnd after logging in, enter the Activation Code : ".$code." \r\r If this is an error, ignore this email and you will be removed from our mailing list.";
-								$gen->send_email($message,$subject,$_POST["email"]);
+								array_push($_SESSION['vhdl_msg'], 'success_register');	
+								mkdir($BASE_DIR.$_POST["username"],0777);
+							}else{
+								array_push($_SESSION['vhdl_msg'], 'fail_register');
 							}
-							array_push($_SESSION['vhdl_msg'], 'success_register');	
-							mkdir($BASE_DIR.$_POST["username"],0777);
 						}else{
 							array_push($_SESSION['vhdl_msg'], 'fail_register');
 						}
@@ -909,16 +913,20 @@ if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST["post_action"]) ){
 						$phone=$_POST["telephone"];
 					}
 					$code = $gen->generate_code();
-					if($db->register_user($_POST["username"],$_POST["password"],$_POST["email"],$phone,$code,0,0)){
-						if($phone!=NULL){
-							$message="Your activation code is : ".$code;
-							$gen->send_sms($message,$phone);
+					if( !$db->taken_username ){
+						if($db->register_user($_POST["username"],$_POST["password"],$_POST["email"],$phone,$code,0,0)){
+							if($phone!=NULL){
+								$message="Your activation code is : ".$code;
+								$gen->send_sms($message,$phone);
+							}
+							$subject = "HDL Everywhere Registration";
+							$message = "Welcome to our website!\r\rYou, or someone using your email address, has completed registration at HDL Everywhere. You can complete registration by clicking the following link:\r http://snf-703457.vm.okeanos.grnet.gr/vhdl/ \rAnd after logging in, enter the Activation Code : ".$code." \r\r If this is an error, ignore this email and you will be removed from our mailing list.";
+							$gen->send_email($message,$subject,$_POST["email"]);
+							array_push($_SESSION['vhdl_msg'], 'success_register');	
+							mkdir($BASE_DIR.$_POST["username"],0777);
+						}else{
+							array_push($_SESSION['vhdl_msg'], 'fail_register');
 						}
-						$subject = "HDL Everywhere Registration";
-						$message = "Welcome to our website!\r\rYou, or someone using your email address, has completed registration at HDL Everywhere. You can complete registration by clicking the following link:\r http://snf-703457.vm.okeanos.grnet.gr/vhdl/ \rAnd after logging in, enter the Activation Code : ".$code." \r\r If this is an error, ignore this email and you will be removed from our mailing list.";
-						$gen->send_email($message,$subject,$_POST["email"]);
-						array_push($_SESSION['vhdl_msg'], 'success_register');	
-						mkdir($BASE_DIR.$_POST["username"],0777);
 					}else{
 						array_push($_SESSION['vhdl_msg'], 'fail_register');
 					}

@@ -15,22 +15,22 @@
 						<input type="text" class="form-control nav-search-typeahead" autocomplete="off" placeholder="<?php echo $messages->text[$_SESSION['vhdl_lang']]['Nav_search_4'] ?>" id="nav-search">
 					</li>
 				</ul>
-				<form class="navbar-form pull-right" role="logout" method="post" action="">
+				<form class="navbar-form pull-right" method="post" action="#">
 					<?php if($_SESSION['vhdl_lang']=='gr'){ 
-								$lang_image = "icon_United-Kingdom.png";
+								$lang_class = "button_lang_en";
 								$lang_value = "en";
 							}else{
-								$lang_image = "icon_Greece.png";
+								$lang_class = "button_lang_gr";
 								$lang_value = "gr";
 							}
 					?>
 					<input type="hidden" name="lang_value" value="<?php echo $lang_value ?>">
-					<input type="image" height="30" width="44" src="<?php echo $BASE_URL ?>/theme/images/<?php echo $lang_image ?>" name="post_action" value="change_lang">
+					<button type="submit" class="<?php echo $lang_class ?>" name="post_action" value="change_lang"></button>
 				</form>
 			</div>
 			<div class="navbar-user pull-right">
 				<?php if(isset($_SESSION['vhdl_user']['loged_in']) && $_SESSION['vhdl_user']['loged_in']==1){ ?>
-					<form class="navbar-form pull-right" role="logout" method="post" action="">
+					<form class="navbar-form pull-right" method="post" action="#">
 						<button type="submit" class="btn btn-default" name="post_action" value="logout"><?php echo $messages->text[$_SESSION['vhdl_lang']]['Nav_logout'] ?></button>
 					</form>
 					<div class="navbar-form pull-left nav-home">

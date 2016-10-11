@@ -1,12 +1,9 @@
 <!DOCTYPE html>
-<html>
+<html lang="<?php echo ( $_SESSION['vhdl_lang']=='gr' ) ? 'el' : 'en'; ?>">
 <head>
 	<title><?php echo $messages->text[$_SESSION['vhdl_lang']]['title'] ?></title>
 	
-	<meta charset="utf-8">
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
-	<meta http-equiv="Content-Style-Type" content="text/css" /> 
-	<meta http-equiv="Content-Script-Type" content="text/javascript" /> 
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	
 	<link rel="stylesheet" type="text/css" href="<?php echo $BASE_URL ?>/theme/bootstrap/bootstrap.min.css">

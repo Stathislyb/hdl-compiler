@@ -322,6 +322,9 @@ font-family:Tahoma, Geneva, sans-serif;
     margin-top: 5px;
 }
 
+.center{
+	text-align:center;
+}
 .vertical-center{
 	min-height: 100%;
 	display: flex;
@@ -578,4 +581,19 @@ font-family:Tahoma, Geneva, sans-serif;
 
 .hidden_soft{
 	display:none;
+}
+
+.button_lang_en{
+	background-image: url(./../images/icon_United-Kingdom.png);
+    width: 44px;
+    height: 30px;
+    border: none;
+    background-size: 44px 30px;
+}
+.button_lang_gr{
+	background-image: url(./../images/icon_Greece.png);
+    width: 44px;
+    height: 30px;
+    border: none;
+    background-size: 44px 30px;
 }
