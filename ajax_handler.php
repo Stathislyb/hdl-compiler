@@ -103,7 +103,7 @@ if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST["ajax_action"]) && isset($
 						$directory=$gen->filter_letters($_POST['directory']);
 						$log_file = $directory.".log";
 						$bin_file = str_replace(".vhdl", ".o", $directory);
-						$contents=$_POST['data'];
+						$contents=html_entity_decode($_POST['data'], ENT_QUOTES | ENT_XML1, 'UTF-8');
 						if (file_exists($directory)  && is_writable($directory) ){
 							$ret=file_put_contents($directory,$contents);
 							if(!$ret) { 

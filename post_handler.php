@@ -249,7 +249,7 @@ if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST["post_action"]) ){
 						if (file_exists($full_path)){
 							$extra=$gen->process_pre_options($_POST);
 							//$prefile="-a ".$extra;
-							$prefile="-a ";
+							$prefile="-a --ieee=synopsys ";
 							$postfile="";
 							$executable='/usr/lib/ghdl/bin/ghdl';
 							$timeout=6;
